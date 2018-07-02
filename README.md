@@ -50,7 +50,7 @@ to start building the diagram.
 - This application doesn't focus too much on Postgres usage so I will be using the public schema.
 
 # Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/master/graph/badge.svg)
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/authenticationProvider/graph/badge.svg)
 
 # CircleCI build status:
 ![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
