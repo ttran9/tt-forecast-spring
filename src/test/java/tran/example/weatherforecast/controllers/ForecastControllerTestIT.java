@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,9 +30,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class ForecastControllerTestIT {
 
-    private static final String USER_ROLE = "User";
+    /**
+     * a string representing a role that does not have the authorization to access certain URL
+     * mappings.
+     */
     private static final String INVALID_ROLE = "NoRole";
+    /**
+     * Entry point for MVC testing.
+     */
     private MockMvc mockMvc;
+    /**
+     * Holds the configuration of the context for the below tests.
+     */
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -43,8 +53,12 @@ public class ForecastControllerTestIT {
                 .build();
     }
 
+    /**
+     * simulates when a user is authenticated and has the proper role to view the page.
+     * @throws Exception If there is an error performing the get request.
+     */
     @Test
-    @WithMockUser(authorities = USER_ROLE)
+    @WithMockUser(authorities = SpringJPABootstrap.USER)
     public void getSearchesPage() throws Exception {
           mockMvc.perform(get(ForecastController.BASE_URL +
                 IndexController.URL_PATH_SEPARATOR +
@@ -54,7 +68,10 @@ public class ForecastControllerTestIT {
                 .andExpect(status().isOk());
     }
 
-    // simulates when the user is authenticated but not authorized to view the page.
+    /**
+     * simulates when the user is authenticated but not authorized to view the page.
+     * @throws Exception If there is an error performing the get request.
+     */
     @Test
     @WithMockUser(authorities = INVALID_ROLE)
     public void getSearchesPageInvalidUserRole() throws Exception {
@@ -64,8 +81,11 @@ public class ForecastControllerTestIT {
                 .andExpect(status().is4xxClientError());
     }
 
-    // simulates when the user is not logged in and trying to view a page that requires
-    // authentication.
+    /**
+     * simulates when the user is not logged in and trying to view a page that requires
+     * authentication.
+     * @throws Exception If there is an error performing the get request.
+     */
     @Test
     @WithAnonymousUser
     public void getSearchesPageUserNotLoggedIn() throws Exception {
