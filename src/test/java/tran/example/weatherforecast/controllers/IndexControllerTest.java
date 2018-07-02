@@ -15,18 +15,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * expected view name.
  */
 public class IndexControllerTest {
-
-    private IndexController indexController;
-
-    MockMvc mockMvc;
+    /**
+     * Entry point for MVC testing.
+     */
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
-        indexController = new IndexController();
+        IndexController indexController = new IndexController();
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
     }
 
+    /**
+     * Tests if the user can go to the index page with the http status code of 200 (ok).
+     * @throws Exception If there is an error performing the get request.
+     */
     @Test
     public void getIndexPage() throws Exception {
         mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR))
@@ -34,6 +38,10 @@ public class IndexControllerTest {
             .andExpect(status().isOk());
     }
 
+    /**
+     * Tests if the user can view the denied page which is open to all users.
+     * @throws Exception If there is an error performing the get request.
+     */
     @Test
     public void getAccessDeniedPage() throws Exception {
         mockMvc.perform(get(IndexController.DENIED_PAGE_MAPPING))
@@ -41,10 +49,16 @@ public class IndexControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /**
+     *Tests if the user can view the login/signin page which is open to all users.
+     * @throws Exception If there is an error performing the get request.
+     */
     @Test
     public void getLoginForm() throws Exception {
-        mockMvc.perform(get(IndexController.LOGIN_PAGE_MAPPING))
+        mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR +
+                IndexController.LOGIN_PAGE_MAPPING))
                 .andExpect(status().isOk())
-                .andExpect(view().name(IndexController.LOGIN_VIEW_NAME));
+                .andExpect(view().name(IndexController.SIGNIN_VIEW_NAME));
     }
+
 }
