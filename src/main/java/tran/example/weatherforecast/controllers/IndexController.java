@@ -22,7 +22,7 @@ public class IndexController {
     /**
      * The name of the view/page to display the access denied page.
      */
-    public static final String DENIED_VIEW_NAME = "access_denied";
+    public static final String DENIED_VIEW_NAME = "accessdenied";
     /**
      * The name of the view/page to display the login page.
      */
