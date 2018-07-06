@@ -7,8 +7,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * This class consists of simple unit tests to verify if a user can go to a mapping and get back an
@@ -35,6 +34,7 @@ public class IndexControllerTest {
     public void getIndexPage() throws Exception {
         mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR))
             .andExpect(view().name(IndexController.INDEX_VIEW_NAME))
+            .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.INDEX_PAGE_TITLE))
             .andExpect(status().isOk());
     }
 
@@ -46,11 +46,12 @@ public class IndexControllerTest {
     public void getAccessDeniedPage() throws Exception {
         mockMvc.perform(get(IndexController.DENIED_PAGE_MAPPING))
                 .andExpect(view().name(IndexController.DENIED_VIEW_NAME))
+                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.ACCESS_DENIED_PAGE_TITLE))
                 .andExpect(status().isOk());
     }
 
     /**
-     *Tests if the user can view the login/signin page which is open to all users.
+     * Tests if the user can view the login/signin page which is open to all users.
      * @throws Exception If there is an error performing the get request.
      */
     @Test
@@ -58,7 +59,21 @@ public class IndexControllerTest {
         mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR +
                 IndexController.LOGIN_PAGE_MAPPING))
                 .andExpect(status().isOk())
-                .andExpect(view().name(IndexController.SIGNIN_VIEW_NAME));
+                .andExpect(view().name(IndexController.SIGNIN_VIEW_NAME))
+                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.LOGIN_PAGE_TITLE));
+    }
+
+    /**
+     * Tests if the user can view the resource not found page which is open to all users.
+     * @throws Exception If there is an error performing the get request.
+     */
+    @Test
+    public void getNotFoundPage() throws Exception {
+        mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR +
+                IndexController.NOT_FOUND_MAPPING))
+                .andExpect(status().isOk())
+                .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
+                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.RESOURCE_NOT_FOUND_PAGE_TITLE));
     }
 
 }
