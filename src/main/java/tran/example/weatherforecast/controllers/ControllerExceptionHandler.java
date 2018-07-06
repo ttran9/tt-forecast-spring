@@ -15,7 +15,6 @@ import tran.example.weatherforecast.exceptions.NotFoundException;
 @ControllerAdvice
 @Slf4j
 public class ControllerExceptionHandler {
-
     /**
      * @param exception An object containing information about the bad request such as trying to
      *                  find a non-existent user.
@@ -26,7 +25,7 @@ public class ControllerExceptionHandler {
     public ModelAndView handleBadRequest(Exception exception) {
         log.error("Handling not found exception!");
         log.error(exception.getMessage());
-        ModelAndView modelAndView = new ModelAndView("notfound");
+        ModelAndView modelAndView = new ModelAndView(IndexController.NOT_FOUND_VIEW_NAME);
         modelAndView.addObject("exception", exception);
         return modelAndView;
     }
