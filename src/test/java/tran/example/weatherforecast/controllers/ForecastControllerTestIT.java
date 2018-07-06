@@ -1,5 +1,6 @@
 package tran.example.weatherforecast.controllers;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -65,6 +67,7 @@ public class ForecastControllerTestIT {
                 ForecastController.USER_SEARCH_VIEW_NAME))
                 .andExpect(view().name(ForecastController.BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR + ForecastController.USER_SEARCH_VIEW_NAME))
+                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, ForecastController.PRIOR_USER_SEARCHES_TITLE))
                 .andExpect(status().isOk());
     }
 
