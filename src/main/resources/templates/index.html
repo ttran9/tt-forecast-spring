@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:include="/headcontent :: metaContent"></th:block>
+    <th:block th:include="/headcontent :: titleContent"></th:block>
+    <th:block th:include="/headcontent :: cssContent"></th:block>
+    <th:block th:include="/headcontent :: javascriptContent"></th:block>
 </head>
 <body>
+    <th:block th:include="/navigationcontent :: navigationContent"></th:block>
 
-    <h4>Your Home Page!</h4>
+    <div class="container">
+        <h4>The home page!</h4>
+    </div>
 
 </body>
 </html>
