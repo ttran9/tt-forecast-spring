@@ -24,10 +24,10 @@ public class Forecast {
      */
     @JsonProperty(value = "longitude")
     private double longitude;
-    @JsonProperty(value = "hourly")
     /**
      * An object holding the hourly forecasts.
      */
+    @JsonProperty(value = "hourly")
     private HourlyForecastList hourlyForecastList;
     /**
      * An object holding the daily forecasts.
