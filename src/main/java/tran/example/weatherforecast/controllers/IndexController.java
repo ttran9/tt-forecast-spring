@@ -1,9 +1,11 @@
 package tran.example.weatherforecast.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 /**
  * A class to hold mappings for views/pages not related to forecasts.
@@ -64,6 +66,19 @@ public class IndexController extends BaseController {
      * The name of the not found page.
      */
     public static final String NOT_FOUND_VIEW_NAME = "resourcenotfound";
+    /**
+     * String to redirect to the home/index page.
+     */
+    public static final String REDIRECT_TO_INDEX_PAGE = "redirect:/";
+    /**
+     * A service used to determine if the user is logged in.
+      */
+    private final UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    public IndexController(UserAuthenticationService userAuthenticationService) {
+        this.userAuthenticationService = userAuthenticationService;
+    }
 
     /**
      * Processes the request to retrieve the index page.
@@ -97,8 +112,12 @@ public class IndexController extends BaseController {
     @RequestMapping(LOGIN_PAGE_MAPPING)
     public String loginForm(Model model) {
         log.debug("Displaying the login page/form!");
-        addTitleAttribute(model, LOGIN_PAGE_TITLE);
-        return SIGNIN_VIEW_NAME;
+        if(!userAuthenticationService.checkIfUserIsLoggedIn()) {
+            addTitleAttribute(model, LOGIN_PAGE_TITLE);
+            return SIGNIN_VIEW_NAME;
+        }
+        return REDIRECT_TO_INDEX_PAGE;
+
     }
 
     /**
