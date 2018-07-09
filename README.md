@@ -13,7 +13,15 @@ built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weath
     - Some technologies used would be Spring Boot, Java 8, Hibernate 5, PostgreSQL (used locally and 
     on Heroku).
         - For a local database I ran the latest PostgreSQL docker image inside of a docker container.
-        
+
+# Summary of this branch
+- This branch is integrating the services that make calls to Google's Geocoding API and the 
+Darksky API to get the forecast results.
+
+- I will also be writing some unit tests to ensure the services are working as expected.
+    - The tests will not be testing for content but just that the services are making expected 
+    method calls.
+    
 # Details about this Repository
 
 - For this application there will also be another user account that I created that has limited 
