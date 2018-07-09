@@ -3,8 +3,16 @@ package tran.example.weatherforecast.controllers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
+import tran.example.weatherforecast.services.security.UserAuthenticationServiceImpl;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,8 +29,8 @@ public class IndexControllerTest {
 
     @Before
     public void setUp() {
-        IndexController indexController = new IndexController();
         MockitoAnnotations.initMocks(this);
+        IndexController indexController = new IndexController(new UserAuthenticationServiceImpl());
         mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
     }
 
@@ -62,6 +70,21 @@ public class IndexControllerTest {
                 .andExpect(view().name(IndexController.SIGNIN_VIEW_NAME))
                 .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.LOGIN_PAGE_TITLE));
     }
+
+    /**
+     * Tests when the user is already logged in and attempting to view the signin page.
+     * @throws Exception If there is an error performing the get request.
+     */
+    @Test
+    public void getLoginFormWhileLoggedIn() throws Exception {
+        Collection<GrantedAuthority> authorities = new LinkedList<>();
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken
+                (SpringJPABootstrap.MWESTON, SpringJPABootstrap.PASSWORD, authorities));
+        mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR +
+                IndexController.LOGIN_PAGE_MAPPING))
+                .andExpect(status().is3xxRedirection());
+    }
+
 
     /**
      * Tests if the user can view the resource not found page which is open to all users.
