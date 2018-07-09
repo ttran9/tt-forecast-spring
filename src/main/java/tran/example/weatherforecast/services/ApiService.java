@@ -1,5 +1,7 @@
 package tran.example.weatherforecast.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,6 +15,8 @@ import java.io.InputStreamReader;
 /**
  * This class provides a default implementation for creating a HTTP GET request to grab
  * information from an API such as Darksky and Google Geocoding.
+ * There will be a method to help parse content related to errors when making erroneous/improper
+ * API calls (missing a required parameter).
  */
 @Slf4j
 public abstract class ApiService {
@@ -31,7 +35,7 @@ public abstract class ApiService {
      * @throws IOException Throws an exception if there is an error making the request or reading
      * the content returned from the GET request.
      */
-    protected String getData(String url) throws IOException {
+    public String getData(String url) throws IOException {
         String line;
         StringBuilder result = new StringBuilder();
 
@@ -51,5 +55,17 @@ public abstract class ApiService {
             result.append(line).append("\n");
         }
         return result.toString();
+    }
+
+    /**
+     * Takes the response from the API call which contains JSON content and information about
+     * the error and returns detailed based on a specified key.
+     * @param errorContent The response of the API call.
+     * @param keyOfError The key to obtain information about the error.
+     * @return A string which contains information about the error.
+     */
+    public String getErrorFromContent(String errorContent, String keyOfError) throws IOException {
+        JsonNode jsonNode = new ObjectMapper().readTree(errorContent);
+        return jsonNode.get(keyOfError).asText();
     }
 }
