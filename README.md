@@ -19,8 +19,6 @@ built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weath
 Darksky API to get the forecast results.
 
 - I will also be writing some unit tests to ensure the services are working as expected.
-    - The tests will not be testing for content but just that the services are making expected 
-    method calls.
     
 # Details about this Repository
 
