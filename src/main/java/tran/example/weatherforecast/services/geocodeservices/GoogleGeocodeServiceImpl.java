@@ -39,7 +39,8 @@ public class GoogleGeocodeServiceImpl extends ApiService implements GoogleGeocod
         String geocodeUrlKeyParam = "&key=";
         String geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
         String urlEncodedAddress = URLEncoder.encode(address, encodeScheme);
-        String geocodeApiKey = System.getenv("GOOGLE_MAPS_GC_KEY");
+        String googleGeocodeApiKeyVariableName = "GOOGLE_MAPS_GC_KEY";
+        String geocodeApiKey = System.getenv(googleGeocodeApiKeyVariableName);
         String url = geocodeUrl + urlEncodedAddress + geocodeUrlKeyParam + geocodeApiKey;
         return getData(url);
     }

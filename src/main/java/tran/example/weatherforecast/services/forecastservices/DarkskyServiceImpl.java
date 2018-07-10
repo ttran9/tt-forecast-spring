@@ -20,10 +20,6 @@ public class DarkskyServiceImpl extends ApiService implements DarkskyService {
      * The URL of the Darksky API which requests will be made to.
      */
     public final static String DARKSKY_URL = "https://api.darksky.net/forecast/";
-    /**
-     * The name of the key to reference the environment variable storing the Darksky API key.
-     */
-    public final static String DARK_SKY_API_KEY_NAME = "DARK_SKY_KEY";
 
     /**
      * This calls a parent helper method with a specified URL that contains the URL, the API key,
@@ -38,7 +34,8 @@ public class DarkskyServiceImpl extends ApiService implements DarkskyService {
     @Override
     public String getContent(String latitude, String longitude) throws IOException {
         log.debug("Making a request to get forecasts from the Darksky API!");
-        String darkskyApiKey = System.getenv(DARK_SKY_API_KEY_NAME);
+        String darkskyApiKeyVariableName = "DARK_SKY_KEY";
+        String darkskyApiKey = System.getenv(darkskyApiKeyVariableName);
         String url = DARKSKY_URL + darkskyApiKey + "/" + latitude + "," + longitude;
         return getData(url);
     }
