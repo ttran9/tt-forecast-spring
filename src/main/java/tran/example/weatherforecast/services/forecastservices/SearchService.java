@@ -17,7 +17,7 @@ public interface SearchService {
     List<Search> getSearchesByUserId(Long userId);
 
     /**
-     * Saves the search into the database.
+     * Saves the search into the database if the user is logged in.
      * Note: The search will have the daily and hourly forecasts in it allowing those to be
      * persisted when the search is saved.
      * @param search The search object to be persisted.
