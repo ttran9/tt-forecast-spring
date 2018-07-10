@@ -51,7 +51,7 @@ public class RoleServiceRepositoryImpl implements RoleService {
      * @return A role object with the specified id.
      */
     @Override
-    public Role getById(Integer id) {
+    public Role getById(Long id) {
         Optional<Role> roleOptional = roleRepository.findById(id);
         if(roleOptional.isPresent()) {
             log.debug("Retrieving a role by ID");
@@ -78,7 +78,7 @@ public class RoleServiceRepositoryImpl implements RoleService {
      * @param id The id of the role to be removed.
      */
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         log.debug("Removing a role!");
         roleRepository.deleteById(id);
     }

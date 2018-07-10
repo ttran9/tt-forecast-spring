@@ -65,7 +65,7 @@ public class UserServiceRepositoryImpl implements UserService {
      * @return A user object with the specified id.
      */
     @Override
-    public User getById(Integer id) {
+    public User getById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()) {
             log.debug("Retrieving a user by ID!");
@@ -96,7 +96,7 @@ public class UserServiceRepositoryImpl implements UserService {
      * @param id The id of the user to be removed.
      */
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         log.debug("Deleting a user!");
         userRepository.deleteById(id);
     }
@@ -109,7 +109,6 @@ public class UserServiceRepositoryImpl implements UserService {
     @Override
     public User findByUserName(String userName) {
         log.debug("Attempting to find a user by the specified user name!");
-        User user =  userRepository.findByUsername(userName);
-        return user;
+        return userRepository.findByUsername(userName);
     }
 }

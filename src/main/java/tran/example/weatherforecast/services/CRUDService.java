@@ -17,7 +17,7 @@ public interface CRUDService<T> {
      * @param id The id of the object to be retrieved.
      * @return The object with the associated id.
      */
-    T getById(Integer id);
+    T getById(Long id);
 
     /**
      * Saves the object if not in the database and updates it if already persisted.
@@ -30,5 +30,5 @@ public interface CRUDService<T> {
      * Removes an object based on the specified id.
      * @param id The id of the object to be removed.
      */
-    void delete(Integer id);
+    void delete(Long id);
 }
