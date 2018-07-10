@@ -112,7 +112,7 @@ public class IndexController extends BaseController {
     @RequestMapping(LOGIN_PAGE_MAPPING)
     public String loginForm(Model model) {
         log.debug("Displaying the login page/form!");
-        if(!userAuthenticationService.checkIfUserIsLoggedIn()) {
+        if(userAuthenticationService.checkIfUserIsLoggedIn() == null) {
             addTitleAttribute(model, LOGIN_PAGE_TITLE);
             return SIGNIN_VIEW_NAME;
         }
