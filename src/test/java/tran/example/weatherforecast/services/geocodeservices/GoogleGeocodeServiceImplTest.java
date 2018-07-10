@@ -18,6 +18,10 @@ public class GoogleGeocodeServiceImplTest {
      * Accesses the service that makes requests to the Google Geocoding API.
      */
     private GoogleGeocodeServiceImpl googleGeocodeService;
+    public static final String ERROR_MESSAGE_KEY = "error_message";
+    public static final String EXPECTED_ERROR_MESSAGE = "Invalid request. Missing the 'address', " +
+            "'components', " +
+            "'latlng' or 'place_id' parameter.";
 
     @Before
     public void setUp() throws Exception {
@@ -53,12 +57,9 @@ public class GoogleGeocodeServiceImplTest {
      * @throws IOException Throws an exception if the request cannot be made.
      */
     @Test
-    public void getContent() throws IOException {
-        String errorMessageKey = "error_message";
-        String expectedErrorMessage = "Invalid request. Missing the 'address', 'components', " +
-                "'latlng' or 'place_id' parameter.";
+    public void getContentWithInvalidAddress() throws IOException {
         String response = googleGeocodeService.getContent("");
-        String errorMessage = googleGeocodeService.getErrorFromContent(response, errorMessageKey);
-        assertEquals(expectedErrorMessage, errorMessage);
+        String errorMessage = googleGeocodeService.getErrorFromContent(response, ERROR_MESSAGE_KEY);
+        assertEquals(EXPECTED_ERROR_MESSAGE, errorMessage);
     }
 }
