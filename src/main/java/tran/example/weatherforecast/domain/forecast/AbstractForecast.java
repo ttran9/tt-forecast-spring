@@ -3,6 +3,7 @@ package tran.example.weatherforecast.domain.forecast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import tran.example.weatherforecast.domain.AbstractDomainClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public abstract class AbstractForecast {
+public abstract class AbstractForecast extends AbstractDomainClass {
     /**
      * The summary of the forecast.
      */
