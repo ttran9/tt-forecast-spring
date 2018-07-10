@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import tran.example.weatherforecast.domain.Search;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 
 /**
@@ -53,6 +55,11 @@ public class DailyForecast extends AbstractForecast {
      * The date of the low temperature in a custom format defined by a helper method.
      */
     private String formattedTemperatureLowTime;
+    /**
+     * The search that contains this associated daily forecast.
+     */
+    @ManyToOne
+    private Search search;
 
     /**
      * Uses the seconds from Jan 1st 1970 to convert this into a custom formatted string which

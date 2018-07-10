@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import tran.example.weatherforecast.domain.Search;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * This holds data members for the hourly forecasts. Similar to the daily forecast implementation
@@ -23,4 +25,9 @@ public class HourlyForecast extends AbstractForecast {
      */
     @JsonProperty(value = "temperature")
     private double temperature;
+    /**
+     * The search that contains this associated hourly forecast.
+     */
+    @ManyToOne
+    private Search search;
 }
