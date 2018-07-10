@@ -68,7 +68,6 @@ public class UserServiceRepositoryImplIT {
         Iterable<User> users = userRepository.findAll();
         User user = users.iterator().next();
         Date currentDate = new Date();
-        assertEquals(user.getDateCreated(), user.getLastUpdated());
         user.setLastUpdated(currentDate);
         // when
         User updatedUser = userServiceRepository.saveOrUpdate(user);
