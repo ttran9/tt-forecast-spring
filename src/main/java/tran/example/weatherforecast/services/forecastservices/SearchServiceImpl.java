@@ -50,7 +50,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Adds the search to a list of searches made by the user and then updates this user object
+     * Adds the search to a list of searches made by the user and then updates this user object and
+     * returns the search object.
+     * The search will not be saved if the user is not logged in.
      * which saves the search into the database.
      * @param search The search object to be persisted.
      * @param userId The id value to identify a user.
@@ -62,21 +64,27 @@ public class SearchServiceImpl implements SearchService {
                 userId;
         String exceptionMessage = "The user could not be found while attempting to retrieve" +
                 " the searches";
-        User user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
-        // do other things to save the search.
-        user.addSearch(search);
-        User userWithUpdatedSearches = userRepository.save(user);
-        /**
-         * returning the last element in the searches list because I assume the user cannot save
-         * the same search twice and if this was possible it would have identical content except
-         * the ID would differ which would not make a difference to the user viewing forecasts.
-         */
-        return userWithUpdatedSearches.getSearches().get(userWithUpdatedSearches.getSearches()
-                .size() - 1);
+        try {
+            User user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
+            // do other things to save the search.
+            user.addSearch(search);
+            User userWithUpdatedSearches = userRepository.save(user);
+            /**
+             * returning the last element in the searches list because I assume the user cannot save
+             * the same search twice and if this was possible it would have identical content except
+             * the ID would differ which would not make a difference to the user viewing forecasts.
+             */
+            return userWithUpdatedSearches.getSearches().get(userWithUpdatedSearches.getSearches()
+                    .size() - 1);
+        } catch (NotFoundException notFoundException) {
+            log.debug("user is not logged in so this search will not be saved");
+            return search;
+        }
     }
 
     /**
-     * helper method to check if the user can be found from the specified user id..
+     * helper method to check if the user can be found from the specified user id.
+     * This is necessary if the operation requires for the user to be logged in.
      * @param debugMessage The debug message to print to the console.
      * @param notFoundExceptionMessage The message that indicates there was an error finding the
      *                                 user if applicable
