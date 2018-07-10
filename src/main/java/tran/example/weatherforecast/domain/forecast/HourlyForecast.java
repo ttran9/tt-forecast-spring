@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+
 /**
  * This holds data members for the hourly forecasts. Similar to the daily forecast implementation
  * there are many fields which are excluded in this application.
  */
 @Getter
 @Setter
+@Entity
 @JsonIgnoreProperties(value = {"icon", "precipIntensity", "precipProbability",
         "precipType", "apparentTemperature", "dewPoint", "humidity", "pressure", "windSpeed",
         "windGust", "windBearing", "cloudCover", "uvIndex", "visibility", "ozone"})

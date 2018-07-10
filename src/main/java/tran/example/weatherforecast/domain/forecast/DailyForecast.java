@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
 import java.util.Date;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
+@Entity
 @JsonIgnoreProperties(value = {"icon", "sunriseTime", "sunsetTime", "moonPhase", "precipIntensity",
         "precipIntensityMax", "precipIntensityMaxTime", "precipProbability", "precipType",
         "apparentTemperatureHigh", "apparentTemperatureHighTime", "apparentTemperatureLow",
