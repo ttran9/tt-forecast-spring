@@ -36,9 +36,14 @@ public class AbstractDomainClass implements DomainObject {
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {
-        lastUpdated = new Date();
+        /**
+         * initially if there is no dateCreated when there is an update this would be when the
+         * object is first created so the creation and updated should be the same.
+         */
+        Date currentTime = new Date();
+        lastUpdated = currentTime;
         if (dateCreated==null) {
-            dateCreated = new Date();
+            dateCreated = currentTime;
         }
     }
 }
