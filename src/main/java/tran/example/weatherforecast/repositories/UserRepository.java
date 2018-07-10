@@ -7,7 +7,7 @@ import tran.example.weatherforecast.domain.User;
  * An interface which will allow Spring Data JPA to create CRUD method implementations at runtime
  * for the User object(s).
  */
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
     /**
      * The implementation of this method will utilize a UserService to query the database
