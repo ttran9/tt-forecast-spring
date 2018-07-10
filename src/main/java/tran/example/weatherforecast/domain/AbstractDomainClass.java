@@ -19,7 +19,7 @@ public class AbstractDomainClass implements DomainObject {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer id;
+    Long id;
 
     /**
      * A field to store when an object was first persisted into the database.
