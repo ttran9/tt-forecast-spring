@@ -18,6 +18,9 @@ built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weath
 - This branch is integrating the services that make calls to Google's Geocoding API and the 
 Darksky API to get the forecast results.
 
+- There is also another service that is added which allows for the saving of searches which will 
+store the associated hourly and daily forecast.
+
 - I will also be writing some unit tests to ensure the services are working as expected.
     
 # Details about this Repository
