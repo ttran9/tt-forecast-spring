@@ -6,7 +6,9 @@ import tran.example.weatherforecast.domain.security.Role;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A persisted object holding fields for an authenticated User.
@@ -15,7 +17,6 @@ import java.util.List;
 @Getter
 @Setter
 public class User extends AbstractDomainClass {
-
     /**
      * The user name.
      */
@@ -41,7 +42,12 @@ public class User extends AbstractDomainClass {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
+    /**
+     * A list of the searches made by the user.
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Search> searches = new ArrayList<>();
 
     /**
      * Adds an association between a user and a role if not present.
@@ -65,6 +71,18 @@ public class User extends AbstractDomainClass {
     public void removeRole(Role role){
         this.roles.remove(role);
         role.getUsers().remove(this);
+    }
+
+    /**
+     * Two searches are not likely made by the user at the same time so there is on need to check
+     * if the search already exists before appending it to the list of searches.
+     * @param search The search to be added.
+     */
+    public void addSearch(Search search) {
+        // associate the search to the user.
+        search.setUser(this);
+        // add the search to the list of searches.
+        this.searches.add(search);
     }
 
 }
