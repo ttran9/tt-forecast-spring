@@ -14,7 +14,6 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 /**
@@ -72,14 +71,14 @@ public class UserServiceRepositoryImplTest {
         // given
         User user = new User();
         Optional<User> optionalUser = Optional.of(user);
-        when(userRepository.findById(anyInt())).thenReturn(optionalUser);
+        when(userRepository.findById(anyLong())).thenReturn(optionalUser);
 
         // when
-        User obtainedUser = userServiceRepository.getById(anyInt());
+        User obtainedUser = userServiceRepository.getById(anyLong());
 
         // then
         assertNotNull(obtainedUser);
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(userRepository, times(1)).findById(anyLong());
     }
 
     /**
@@ -108,7 +107,7 @@ public class UserServiceRepositoryImplTest {
     @Test
     public void delete() {
         // when
-        int idToDelete = 1;
+        long idToDelete = 1;
         userServiceRepository.delete(idToDelete);
         // then
         verify(userRepository, times(1)).deleteById(idToDelete);

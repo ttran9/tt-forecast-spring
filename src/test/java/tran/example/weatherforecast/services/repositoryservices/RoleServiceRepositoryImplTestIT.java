@@ -65,7 +65,7 @@ public class RoleServiceRepositoryImplTestIT {
      */
     @Test(expected = NotFoundException.class)
     public void getByIdFailure() {
-        int invalidId = -1;
+        Long invalidId = -1L;
         roleServiceRepository.getById(invalidId);
     }
 

@@ -15,10 +15,8 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 /**
  * The tests below will test for the expected behavior when using the role repository service.
@@ -74,13 +72,13 @@ public class RoleServiceRepositoryImplTest {
         Role role = new Role();
         role.setRole(SpringJPABootstrap.USER);
         Optional<Role> roleOptional = Optional.of(role);
-        when(roleRepository.findById(anyInt())).thenReturn(roleOptional);
+        when(roleRepository.findById(anyLong())).thenReturn(roleOptional);
         // when
-        Role returnedRole = roleServiceRepository.getById(anyInt());
+        Role returnedRole = roleServiceRepository.getById(anyLong());
 
         // then
         assertNotNull(returnedRole);
-        verify(roleRepository, times(1)).findById(anyInt());
+        verify(roleRepository, times(1)).findById(anyLong());
     }
 
     /**
@@ -110,10 +108,10 @@ public class RoleServiceRepositoryImplTest {
     @Test
     public void delete() {
         // when
-        int idToDelete = 1;
+        Long idToDelete = 1L;
         roleServiceRepository.delete(idToDelete);
         // then
-        verify(roleRepository, times(1)).deleteById(anyInt());
+        verify(roleRepository, times(1)).deleteById(anyLong());
     }
 
 

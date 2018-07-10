@@ -13,9 +13,7 @@ import tran.example.weatherforecast.repositories.UserRepository;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * This class will load in (bootstrap) data and check if the user data was properly loaded into the
@@ -56,7 +54,7 @@ public class UserServiceRepositoryImplIT {
      */
     @Test(expected = NotFoundException.class)
     public void getById() {
-        int invalidUserId = -1;
+        Long invalidUserId = -1L;
         userServiceRepository.getById(invalidUserId);
     }
 
