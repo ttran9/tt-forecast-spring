@@ -68,8 +68,8 @@ public class GoogleGeocodeServiceImpl extends ApiService implements GoogleGeocod
              * address of 1600 Amphitheatre Pkwy
              */
             Location location = new Location();
-            location.setLatitude(37.4215421);
-            location.setLongitude(-122.0840106);
+            location.setLatitude(37.4224764);
+            location.setLongitude(-122.0842499);
             return location;
         }
     }
