@@ -8,11 +8,11 @@ public interface DomainObject {
     /**
      * @return The unique identifier for a persisted object.
      */
-    Integer getId();
+    Long getId();
 
     /**
      * Sets the unique identifier for an object.
      * @param id The unique ID to be associated with this object.
      */
-    void setId(Integer id);
+    void setId(Long id);
 }
