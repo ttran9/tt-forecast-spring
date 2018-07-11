@@ -28,11 +28,11 @@ public class SearchServiceImplTest {
     /**
      * The expected number of hourly forecasts from a search.
      */
-    public static final int expectedNumberOfHourlyForecasts = 49;
+    public static final int EXPECTED_NUMBER_OF_HOURLY_FORECASTS = 49;
     /**
      * The expected number of daily forecasts from a search.
      */
-    public static final int expectedNumberOfDailyForecasts = 8;
+    public static final int EXPECTED_NUMBER_OF_DAILY_FORECASTS = 8;
     /**
      * Object which will make the search using an address to get forecasts.
      */
@@ -123,15 +123,14 @@ public class SearchServiceImplTest {
         // given
         Search search = new Search();
         search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
-        search.setId(1L);
 
         // when
         Search createdSearch = searchService.createSearch(search.getAddress());
 
         // then
         assertEquals(search.getAddress(), createdSearch.getAddress());
-        assertEquals(expectedNumberOfHourlyForecasts, createdSearch.getHourlyForecasts().size());
-        assertEquals(expectedNumberOfDailyForecasts, createdSearch.getDailyForecasts().size());
+        assertEquals(EXPECTED_NUMBER_OF_HOURLY_FORECASTS, createdSearch.getHourlyForecasts().size());
+        assertEquals(EXPECTED_NUMBER_OF_DAILY_FORECASTS, createdSearch.getDailyForecasts().size());
     }
 
     /**
