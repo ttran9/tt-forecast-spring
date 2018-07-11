@@ -25,4 +25,12 @@ public interface SearchService {
      * @return Returns the object that was saved into the database.
      */
     Search saveSearch(Search search, Long userId);
+
+    /**
+     * Takes in an address and queries the Google Geocoding API to get the location and the
+     * Darksky API to get the forecasts for the location.
+     * @param address The address to get the forecasts for.
+     * @return Returns a search object that contains the hourly and daily forecasts.
+     */
+    Search createSearch(String address);
 }

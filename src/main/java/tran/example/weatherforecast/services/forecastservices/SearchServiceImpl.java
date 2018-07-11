@@ -5,9 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.forecast.Forecast;
+import tran.example.weatherforecast.domain.geocode.Location;
 import tran.example.weatherforecast.exceptions.NotFoundException;
 import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
+import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +28,18 @@ public class SearchServiceImpl implements SearchService {
      * Allows access to retrieve the User and to update the associated user object.
      */
     private UserRepository userRepository;
+    /**
+     * Allows access to make API requests to get the latitude and longitude of an address.
+     */
+    private GoogleGeocodeService googleGeocodeService;
+    /**
+     * Allows access to make API requests to obtain forecasts.
+     */
+    private DarkskyService darkskyService;
+    /**
+     * Interfaces with the Security context to check if the user is logged in.
+     */
+    private UserAuthenticationService userAuthenticationService;
 
     /**
      * Performs DI and wires the userRepository object accordingly so CRUD operations can be
@@ -31,8 +48,13 @@ public class SearchServiceImpl implements SearchService {
      *                       operations.
      */
     @Autowired
-    public SearchServiceImpl(UserRepository userRepository) {
+    public SearchServiceImpl(UserRepository userRepository, GoogleGeocodeService
+            googleGeocodeService, DarkskyService darkskyService, UserAuthenticationService
+            userAuthenticationService) {
         this.userRepository = userRepository;
+        this.googleGeocodeService = googleGeocodeService;
+        this.darkskyService = darkskyService;
+        this.userAuthenticationService = userAuthenticationService;
     }
 
     /**
@@ -66,7 +88,6 @@ public class SearchServiceImpl implements SearchService {
                 " the searches";
         try {
             User user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
-            // do other things to save the search.
             user.addSearch(search);
             User userWithUpdatedSearches = userRepository.save(user);
             /**
@@ -79,6 +100,47 @@ public class SearchServiceImpl implements SearchService {
         } catch (NotFoundException notFoundException) {
             log.debug("user is not logged in so this search will not be saved");
             return search;
+        }
+    }
+
+    /**
+     * Takes in an address and obtains a location and gets forecasts for the location specified.
+     * If the user is not logged in this method does not attempt to save the search.
+     * @param address The address to get the forecasts for.
+     * @return A search object with the user entered address and the forecasts.
+     */
+    @Override
+    public Search createSearch(String address) {
+        try {
+            // get the location
+            String locationContent = googleGeocodeService.getContent(address);
+            Location location = googleGeocodeService.getLatitudeAndLongitude(locationContent);
+            // use the obtained location to get the forecasts.
+            String forecastContent = darkskyService.getContent(String.valueOf(location
+                            .getLatitude()), String.valueOf(location.getLongitude()));
+            Forecast forecast = darkskyService.getForecasts(forecastContent);
+            // transfer data from the forecast object to the search object.
+            Search search = new Search();
+            search.setAddress(address);
+            // create a reference from the forecast to this search.
+            search.setDailyForecasts(forecast.getDailyForecastList().getDailyForecasts());
+            search.setHourlyForecasts(forecast.getHourlyForecastList().getHourlyForecasts());
+            search.getDailyForecasts().forEach(dailyForecast -> {
+                dailyForecast.setSearch(search);
+            });
+            search.getHourlyForecasts().forEach(hourlyForecast -> {
+                hourlyForecast.setSearch(search);
+            });
+            // get the user id of the currently logged in user.
+            User user = userAuthenticationService.checkIfUserIsLoggedIn();
+            if(user != null) {
+                // make the search if the user is logged in.
+                return saveSearch(search, user.getId());
+            }
+            return search;
+        } catch(IOException ex) {
+            log.debug("while searching there was an error!");
+            return null;
         }
     }
 
@@ -99,4 +161,6 @@ public class SearchServiceImpl implements SearchService {
         }
         return userOptional.get();
     }
+
+
 }
