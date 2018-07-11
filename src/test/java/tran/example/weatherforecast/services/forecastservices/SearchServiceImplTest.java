@@ -8,7 +8,6 @@ import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.exceptions.NotFoundException;
-import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.UserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeServiceImpl;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
@@ -48,17 +47,12 @@ public class SearchServiceImplTest {
      */
     @Mock
     private UserAuthenticationService userAuthenticationService;
-    /**
-     * Allows access to data layer and the Search table.
-     */
-    @Mock
-    private SearchRepository searchRepository;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         searchService = new SearchServiceImpl(userRepository, new GoogleGeocodeServiceImpl(),
-                new DarkskyServiceImpl(), userAuthenticationService, searchRepository);
+                new DarkskyServiceImpl(), userAuthenticationService);
     }
 
     /**
