@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.domain.security.Role;
 import tran.example.weatherforecast.services.RoleService;
 import tran.example.weatherforecast.services.UserService;
+import tran.example.weatherforecast.services.forecastservices.SearchService;
 
 import java.util.List;
 
@@ -21,7 +24,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedEvent> {
-
     /**
      * A generic role that is required to view certain pages.
      */
@@ -44,6 +46,10 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     public static final String SECOND_ACCOUNT_PASSWORD = "badpw";
     /**
+     * The address to make a sample search and forecast research for.
+     */
+    public static final String SAMPLE_ADDRESS = "1600 amphitheater pkwy";
+    /**
      * An object allowing for interfacing with the data layer and the User table.
      */
     private UserService userService;
@@ -51,15 +57,40 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * An object allowing for interfacing with the data layer and the Role table.
      */
     private RoleService roleService;
+    /**
+     * A service which allows requests to be made to the Google Geocoding and Darksky APIs and
+     * the parsing of the results.
+     */
+    private SearchService searchService;
 
+    /**
+     * Wires up the userService to this class in order use necessary CRUD operations such as
+     * creating a user.
+     * @param userService The UserService implementation to be used at run time.
+     */
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * Wires up the roleService to this class in order use necessary CRUD operations such as
+     * creating a role.
+     * @param roleService The RoleService implementation to be used at run time.
+     */
     @Autowired
     public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    /**
+     * Wires up the searchService to this class in order use necessary CRUD operations such as
+     * creating a search.
+     * @param searchService The SearchService implementation to be used at run time.
+     */
+    @Autowired
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 
     /**
@@ -67,10 +98,12 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * @param contextRefreshedEvent An ApplicationContext event.
      */
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         loadUsers();
         loadRoles();
         assignUsersToDefaultRole();
+        createSampleSearch();
     }
 
     /**
@@ -122,6 +155,28 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         roleService.saveOrUpdate(role);
 
         log.debug("Test roles have been loaded!");
+    }
+
+    /**
+     * Helper method to make a request for the fore at 1600 amphitheater pkwy by the user "mweston".
+     */
+    private void createSampleSearch() {
+        String userNameToFind = "mweston";
+        User user = userService.findByUserName(userNameToFind);
+        List<Search> searches = user.getSearches();
+        /**
+         * The below check is done because when using a mysql database I will not be using the
+         * create-drop but instead validate so I do not want to make too many sample API requests
+         * (such as every time I start up this application).
+         */
+        searches.forEach(search -> {
+            if(search.getAddress().equals(SAMPLE_ADDRESS)) {
+                return ;
+            }
+        });
+
+        Search search = searchService.createSearch(SAMPLE_ADDRESS);
+        searchService.saveSearch(search, 1L);
     }
 
 }
