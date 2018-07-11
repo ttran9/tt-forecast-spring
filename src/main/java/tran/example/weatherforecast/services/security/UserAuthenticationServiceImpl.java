@@ -1,10 +1,13 @@
 package tran.example.weatherforecast.services.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.services.UserService;
 
 
 /**
@@ -15,7 +18,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserAuthenticationServiceImpl implements UserAuthenticationService {
 
+    /**
+     * The name of a user that is not currently logged in.
+     */
     private static final String ANONYMOUS_USER = "anonymousUser";
+
+    /**
+     * A service used to get the user by username.
+     */
+    private UserService userService;
+
+    /**
+     * Wires up the userService and injects it into this service to find a user by user name.
+     * @param userService An object to be injected into this service.
+     */
+    @Autowired
+    public UserAuthenticationServiceImpl(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * The security context is analyzed (if present) to determine if the user has been
@@ -23,17 +43,22 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
      * @return True if the user has been authenticated, false otherwise.
      */
     @Override
-    public boolean checkIfUserIsLoggedIn() {
+    public User checkIfUserIsLoggedIn() {
         log.debug("check if user is logged in");
         SecurityContext securityContext = SecurityContextHolder.getContext();
         if(securityContext != null) {
             Authentication authentication = securityContext.getAuthentication();
             if(authentication != null) {
                 if(authentication.getName() != null) {
-                    return !authentication.getName().equals(ANONYMOUS_USER);
+                    String userName = authentication.getName();
+                    if (userName.equals(ANONYMOUS_USER)) {
+                        return null;
+                    } else {
+                        return userService.findByUserName(userName);
+                    }
                 }
             }
         }
-        return false;
+        return null;
     }
 }
