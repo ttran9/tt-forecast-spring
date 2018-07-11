@@ -4,15 +4,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.exceptions.NotFoundException;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeServiceImpl;
+import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -21,15 +26,39 @@ import static org.mockito.Mockito.*;
  * The ability to save a search and retrieve the searches made by a user are tested in this class.
  */
 public class SearchServiceImplTest {
-
-    SearchServiceImpl searchService;
+    /**
+     * The expected number of hourly forecasts from a search.
+     */
+    public static final int expectedNumberOfHourlyForecasts = 49;
+    /**
+     * The expected number of daily forecasts from a search.
+     */
+    public static final int expectedNumberOfDailyForecasts = 8;
+    /**
+     * Object which will make the search using an address to get forecasts.
+     */
+    private SearchService searchService;
+    /**
+     * Allows access to the data layer and to the users table.
+     */
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    /**
+     * Allows access to the data layer to verify if the user is logged in.
+     */
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
+    /**
+     * Allows access to data layer and the Search table.
+     */
+    @Mock
+    private SearchRepository searchRepository;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        searchService = new SearchServiceImpl(userRepository);
+        searchService = new SearchServiceImpl(userRepository, new GoogleGeocodeServiceImpl(),
+                new DarkskyServiceImpl(), userAuthenticationService, searchRepository);
     }
 
     /**
@@ -55,7 +84,7 @@ public class SearchServiceImplTest {
 
     /**
      * When we search by an invalid ID (such as a negative value it is expected that a
-     * notfoundexception will be thrown since a user with that id cannot exist.
+     * NotFoundException will be thrown since a user with that id cannot exist.
      */
     @Test(expected = NotFoundException.class)
     public void getSearchesByUserInvalidId() {
@@ -63,6 +92,11 @@ public class SearchServiceImplTest {
         searchService.getSearchesByUserId(-1L);
     }
 
+    /**
+     * This will test for an expected number of times for method calls used by the service
+     * performing the search as well as checking if the search after being persisted was assigned
+     * an ID value.
+     */
     @Test
     public void saveSearch() {
         // given
@@ -84,5 +118,39 @@ public class SearchServiceImplTest {
         assertEquals(search.getId(), savedSearch.getId());
         verify(userRepository, times(1)).findById(anyLong());
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    /**
+     * This will perform a search with a valid entered address so it is expected the search
+     * object being returned will have an expected number of daily and hourly forecasts.
+     */
+    @Test
+    public void createSearchWhenNotLoggedIn() {
+        // given
+        Search search = new Search();
+        search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
+        search.setId(1L);
+
+        // when
+        Search createdSearch = searchService.createSearch(search.getAddress());
+
+        // then
+        assertEquals(search.getAddress(), createdSearch.getAddress());
+        assertEquals(expectedNumberOfHourlyForecasts, createdSearch.getHourlyForecasts().size());
+        assertEquals(expectedNumberOfDailyForecasts, createdSearch.getDailyForecasts().size());
+    }
+
+    /**
+     * A search without an address (blank) will return a default latitude and longitude.
+     * This test will expect a null Search object because the response from the Google Geocoding
+     * API cannot be parsed.
+     */
+    @Test
+    public void createSearchWithBlankAddress() {
+        // when
+        Search createdSearch = searchService.createSearch("");
+
+        // then
+        assertNull(createdSearch);
     }
 }
