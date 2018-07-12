@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"location_type", "viewport"})
+@JsonIgnoreProperties(value = {"location_type", "viewport", "bounds"})
 public class Geometry {
     /**
      * An object holding the latitude and longitude.
