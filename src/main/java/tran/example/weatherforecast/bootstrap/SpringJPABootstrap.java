@@ -50,6 +50,10 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     public static final String SAMPLE_ADDRESS = "1600 amphitheater pkwy";
     /**
+     * A sample address create another sample search.
+     */
+    public static final String SAMPLE_ADDRESS_TWO = "2855 Stevens Creek Blvd";
+    /**
      * An object allowing for interfacing with the data layer and the User table.
      */
     private UserService userService;
@@ -177,6 +181,9 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
         Search search = searchService.createSearch(SAMPLE_ADDRESS);
         searchService.saveSearch(search, 1L);
+
+        Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
+        searchService.saveSearch(secondSearch, 1L);
     }
 
 }
