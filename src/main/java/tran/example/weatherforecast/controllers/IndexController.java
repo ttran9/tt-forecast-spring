@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 /**
@@ -85,7 +85,7 @@ public class IndexController extends BaseController {
      * @param model UI component holding attributes to be used in the view.
      * @return The name of the index page.
      */
-    @RequestMapping(URL_PATH_SEPARATOR)
+    @GetMapping(URL_PATH_SEPARATOR)
     public String getIndexPage(Model model) {
         log.debug("At the home/index page!");
         addTitleAttribute(model, INDEX_PAGE_TITLE);
@@ -97,7 +97,7 @@ public class IndexController extends BaseController {
      * @param model UI component holding attributes to be used in the view.
      * @return The name of the access denied page.
      */
-    @RequestMapping(DENIED_PAGE_MAPPING)
+    @GetMapping(DENIED_PAGE_MAPPING)
     public String getAccessDeniedPage(Model model) {
         log.debug("At the access denied page!");
         addTitleAttribute(model, ACCESS_DENIED_PAGE_TITLE);
@@ -109,7 +109,7 @@ public class IndexController extends BaseController {
      * @param model UI component holding attributes to be used in the view.
      * @return The name of the login page.
      */
-    @RequestMapping(LOGIN_PAGE_MAPPING)
+    @GetMapping(LOGIN_PAGE_MAPPING)
     public String loginForm(Model model) {
         log.debug("Displaying the login page/form!");
         if(userAuthenticationService.checkIfUserIsLoggedIn() == null) {
@@ -125,7 +125,7 @@ public class IndexController extends BaseController {
      * @param model UI component holding attributes to be used in the view.
      * @return The name of the not found page.
      */
-    @RequestMapping(NOT_FOUND_MAPPING)
+    @GetMapping(NOT_FOUND_MAPPING)
     public String notFoundPage(Model model) {
         log.debug("Returning the not found page!");
         addTitleAttribute(model, RESOURCE_NOT_FOUND_PAGE_TITLE);
