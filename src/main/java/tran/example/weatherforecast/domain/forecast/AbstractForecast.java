@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import tran.example.weatherforecast.domain.AbstractDomainClass;
 
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,6 +16,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
+@MappedSuperclass
 public abstract class AbstractForecast extends AbstractDomainClass {
     /**
      * The summary of the forecast.
@@ -24,27 +27,33 @@ public abstract class AbstractForecast extends AbstractDomainClass {
      * The time of this forecast object since Jan 1, 1970 in seconds.
      */
     @JsonProperty(value = "time")
+    @Transient
     private long time;
 
     /**
      * An object to define how the date portion of the formattedTime string will appear.
      */
+    @Transient
     protected SimpleDateFormat monthDayYear = new SimpleDateFormat("MMMMM d yyyy");
     /**
      * An object to define how the time portion of the formattedTime string will appear.
      */
+    @Transient
     protected SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
     /**
      * A factor to convert from seconds to milliseconds.
      */
+    @Transient
     protected int secondsToMilliSecondsFactor = 1000;
     /**
      * A string to separate the date from the time.
      */
+    @Transient
     protected String at = " at ";
     /**
      * The date of the forecast in a custom format defined by a helper method.
      */
+    @Transient
     protected String formattedTime;
 
     /**
