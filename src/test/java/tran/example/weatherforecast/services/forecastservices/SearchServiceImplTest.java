@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.exceptions.NotFoundException;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.UserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeServiceImpl;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -25,14 +24,6 @@ import static org.mockito.Mockito.*;
  * The ability to save a search and retrieve the searches made by a user are tested in this class.
  */
 public class SearchServiceImplTest {
-    /**
-     * The expected number of hourly forecasts from a search.
-     */
-    public static final int EXPECTED_NUMBER_OF_HOURLY_FORECASTS = 49;
-    /**
-     * The expected number of daily forecasts from a search.
-     */
-    public static final int EXPECTED_NUMBER_OF_DAILY_FORECASTS = 8;
     /**
      * Object which will make the search using an address to get forecasts.
      */
@@ -47,12 +38,17 @@ public class SearchServiceImplTest {
      */
     @Mock
     private UserAuthenticationService userAuthenticationService;
+    /**
+     * Allows for the retrieval and creation of searches.
+     */
+    @Mock
+    private SearchRepository searchRepository;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         searchService = new SearchServiceImpl(userRepository, new GoogleGeocodeServiceImpl(),
-                new DarkskyServiceImpl(), userAuthenticationService);
+                new DarkskyServiceImpl(), userAuthenticationService, searchRepository);
     }
 
     /**
@@ -84,53 +80,6 @@ public class SearchServiceImplTest {
     public void getSearchesByUserInvalidId() {
         // when
         searchService.getSearchesByUserId(-1L);
-    }
-
-    /**
-     * This will test for an expected number of times for method calls used by the service
-     * performing the search as well as checking if the search after being persisted was assigned
-     * an ID value.
-     */
-    @Test
-    public void saveSearch() {
-        // given
-        Search search = new Search();
-        long userId = 1L;
-        search.setId(userId);
-        User user = new User();
-        user.setId(userId);
-        user.addSearch(search);
-        Optional<User> userOptional = Optional.of(user);
-
-        when(userRepository.findById(anyLong())).thenReturn(userOptional);
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        // when
-        Search savedSearch = searchService.saveSearch(search, userId);
-
-        // then
-        assertEquals(search.getId(), savedSearch.getId());
-        verify(userRepository, times(1)).findById(anyLong());
-        verify(userRepository, times(1)).save(any(User.class));
-    }
-
-    /**
-     * This will perform a search with a valid entered address so it is expected the search
-     * object being returned will have an expected number of daily and hourly forecasts.
-     */
-    @Test
-    public void createSearchWhenNotLoggedIn() {
-        // given
-        Search search = new Search();
-        search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
-
-        // when
-        Search createdSearch = searchService.createSearch(search.getAddress());
-
-        // then
-        assertEquals(search.getAddress(), createdSearch.getAddress());
-        assertEquals(EXPECTED_NUMBER_OF_HOURLY_FORECASTS, createdSearch.getHourlyForecasts().size());
-        assertEquals(EXPECTED_NUMBER_OF_DAILY_FORECASTS, createdSearch.getDailyForecasts().size());
     }
 
     /**
