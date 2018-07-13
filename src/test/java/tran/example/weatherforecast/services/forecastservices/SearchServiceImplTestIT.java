@@ -13,20 +13,28 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.UserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
-import javax.swing.*;
-
 import java.util.Collection;
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SearchServiceImplTestIT {
+    /**
+     * The expected number of hourly forecasts from a search.
+     */
+    public static final int EXPECTED_NUMBER_OF_HOURLY_FORECASTS = 49;
+    /**
+     * The expected number of daily forecasts from a search.
+     */
+    public static final int EXPECTED_NUMBER_OF_DAILY_FORECASTS = 8;
     /**
      * Allows access to retrieve the User and to update the associated user object.
      */
@@ -51,11 +59,16 @@ public class SearchServiceImplTestIT {
      * Service to create the search.
      */
     private SearchService searchService;
+    /**
+     * Allows for the retrieval and creation of searches.
+     */
+    @Autowired
+    private SearchRepository searchRepository;
 
     @Before
     public void setUp() {
         searchService = new SearchServiceImpl(userRepository, googleGeocodeService,
-                darkskyService, userAuthenticationService);
+                darkskyService, userAuthenticationService, searchRepository);
     }
 
     /**
@@ -81,9 +94,9 @@ public class SearchServiceImplTestIT {
 
         // then
         assertEquals(search.getAddress(), createdSearch.getAddress());
-        assertEquals(SearchServiceImplTest.EXPECTED_NUMBER_OF_HOURLY_FORECASTS,
+        assertEquals(EXPECTED_NUMBER_OF_HOURLY_FORECASTS,
                 createdSearch.getHourlyForecasts().size());
-        assertEquals(SearchServiceImplTest.EXPECTED_NUMBER_OF_DAILY_FORECASTS,
+        assertEquals(EXPECTED_NUMBER_OF_DAILY_FORECASTS,
                 createdSearch.getDailyForecasts().size());
         /**
          * ensure the persistence was done properly by checking the search ID after the save
@@ -99,5 +112,47 @@ public class SearchServiceImplTestIT {
         createdSearch.getHourlyForecasts().forEach(hourlyForecast -> {
             assertEquals(createdSearchId, hourlyForecast.getSearch().getId());
         });
+    }
+
+    /**
+     * This will test for the search to be successful so it will look at the search object being
+     * persisted (being assigned an ID) as well as properly saving the entered address (used in
+     * the search), and to ensure the correct user ID was associated with the search.
+     * Note: this is simulating to saving a search to when a user is logged in.
+     */
+    @Test
+    public void saveSearch() {
+        // given
+        String enteredAddress = SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS;
+        Long userId = 1L;
+        Search search = new Search();
+        search.setAddress(enteredAddress);
+
+        // when
+        Search savedSearch = searchService.saveSearch(search, userId);
+
+        // then
+        assertNotNull(savedSearch.getId());
+        assertEquals(enteredAddress, savedSearch.getAddress());
+        assertEquals(userId, search.getUser().getId());
+    }
+
+    /**
+     * This will perform a search with a valid entered address so it is expected the search
+     * object being returned will have an expected number of daily and hourly forecasts.
+     */
+    @Test
+    public void createSearchWhenNotLoggedIn() {
+        // given
+        Search search = new Search();
+        search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
+
+        // when
+        Search createdSearch = searchService.createSearch(search.getAddress());
+
+        // then
+        assertEquals(search.getAddress(), createdSearch.getAddress());
+        assertEquals(EXPECTED_NUMBER_OF_HOURLY_FORECASTS, createdSearch.getHourlyForecasts().size());
+        assertEquals(EXPECTED_NUMBER_OF_DAILY_FORECASTS, createdSearch.getDailyForecasts().size());
     }
 }
