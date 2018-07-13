@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -69,6 +70,24 @@ public class SearchServiceImplTestIT {
     public void setUp() {
         searchService = new SearchServiceImpl(userRepository, googleGeocodeService,
                 darkskyService, userAuthenticationService, searchRepository);
+    }
+
+    /**
+     * Tests if the service is able to get the searches bootstrapped into the application made by
+     * the user with id of 1.
+     */
+    @Test()
+    public void getSearchesByUserId() {
+        int expectedNumberOfSearchesByUser = 2;
+        Long userId = 1L;
+        int firstPage = 0; // 0th based index.
+        // given
+
+        // when
+        Page<Search> searchesFromService = searchService.getSearchesByUserId(userId, firstPage);
+
+        // then
+        assertEquals(expectedNumberOfSearchesByUser, searchesFromService.getNumberOfElements());
     }
 
     /**
