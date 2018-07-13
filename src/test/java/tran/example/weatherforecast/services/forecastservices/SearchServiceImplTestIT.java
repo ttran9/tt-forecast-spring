@@ -152,6 +152,7 @@ public class SearchServiceImplTestIT {
 
         // then
         assertEquals(search.getAddress(), createdSearch.getAddress());
+        assertNotNull(createdSearch.getId()); // ensure persistence.
         assertEquals(EXPECTED_NUMBER_OF_HOURLY_FORECASTS, createdSearch.getHourlyForecasts().size());
         assertEquals(EXPECTED_NUMBER_OF_DAILY_FORECASTS, createdSearch.getDailyForecasts().size());
     }
