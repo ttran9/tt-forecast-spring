@@ -54,6 +54,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     public static final String SAMPLE_ADDRESS_TWO = "2855 Stevens Creek Blvd";
     /**
+     * A sample address used to create a search without an associated user.
+     * This is used in the search service integration test.
+     */
+    public static final String STONERIDGE_MALL_RD_SAMPLE_ADDRESS = "1 Stoneridge Mall Rd";
+    /**
      * An object allowing for interfacing with the data layer and the User table.
      */
     private UserService userService;
@@ -184,6 +189,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
         Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
         searchService.saveSearch(secondSearch, 1L);
+
+        searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
     }
 
 }
