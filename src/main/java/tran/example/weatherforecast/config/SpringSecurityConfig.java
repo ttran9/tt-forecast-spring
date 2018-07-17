@@ -13,8 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tran.example.weatherforecast.controllers.ForecastController;
 import tran.example.weatherforecast.controllers.IndexController;
+import tran.example.weatherforecast.controllers.SearchController;
 
 /**
  * A class to set up mappings which will require users to be authenticated and have the proper
@@ -85,9 +85,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin().loginPage(IndexController.URL_PATH_SEPARATOR + IndexController
                 .LOGIN_PAGE_MAPPING).permitAll()
                 .and().authorizeRequests().antMatchers(IndexController.URL_PATH_SEPARATOR).permitAll()
-                .and().authorizeRequests().antMatchers(ForecastController.BASE_URL +
-                                        IndexController.URL_PATH_SEPARATOR +
-                                        IndexController.PRIOR_SEARCHES_VIEW_NAME).hasAnyAuthority("User")
+                .and().authorizeRequests().antMatchers(SearchController.BASE_URL +
+                                        SearchController.PRIOR_USER_SEARCHES_MAPPING).hasAnyAuthority("User")
                 .and().exceptionHandling().accessDeniedPage(IndexController.DENIED_PAGE_MAPPING);
     }
 }
