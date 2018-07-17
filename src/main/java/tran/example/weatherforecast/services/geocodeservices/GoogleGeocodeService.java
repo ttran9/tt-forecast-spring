@@ -1,5 +1,6 @@
 package tran.example.weatherforecast.services.geocodeservices;
 
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.geocode.Location;
 
 import java.io.IOException;
@@ -17,8 +18,10 @@ public interface GoogleGeocodeService {
      * the location.
      * @throws IOException Throws an IOException if there is an error while trying to make the
      * API request.
+     * @throws MissingServletRequestParameterException Throws this exception if the address is
+     * null (wasn't provided from the controller or in the tests).
      */
-    String getContent(String address) throws IOException;
+    String getContent(String address) throws IOException, MissingServletRequestParameterException;
 
     /**
      * Parses the JSON content to get an object which consists of the latitude and longitude.

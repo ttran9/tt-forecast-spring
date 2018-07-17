@@ -3,6 +3,7 @@ package tran.example.weatherforecast.services.geocodeservices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.geocode.GeocodeResult;
 import tran.example.weatherforecast.domain.geocode.Geometry;
 import tran.example.weatherforecast.domain.geocode.Location;
@@ -31,13 +32,18 @@ public class GoogleGeocodeServiceImpl extends ApiService implements GoogleGeocod
      * longitude values.
      * @throws IOException Throws an IOException if there is an error while trying to make the
      * API request.
+     * @throws MissingServletRequestParameterException Throws this exception if the address is
+     * null (wasn't provided from the controller or in the tests).
      */
     @Override
-    public String getContent(String address) throws IOException {
+    public String getContent(String address) throws IOException, MissingServletRequestParameterException {
         log.debug("Making a GET request to get the latitude and longitude from the Geocoding API!");
         String encodeScheme = "UTF-8";
         String geocodeUrlKeyParam = "&key=";
         String geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+        if(address == null) {
+            throw new MissingServletRequestParameterException("address", "String/string");
+        }
         String urlEncodedAddress = URLEncoder.encode(address, encodeScheme);
         String googleGeocodeApiKeyVariableName = "GOOGLE_MAPS_GC_KEY";
         String geocodeApiKey = System.getenv(googleGeocodeApiKeyVariableName);
