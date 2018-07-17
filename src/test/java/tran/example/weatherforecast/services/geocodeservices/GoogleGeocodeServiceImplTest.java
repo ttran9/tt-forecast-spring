@@ -2,6 +2,7 @@ package tran.example.weatherforecast.services.geocodeservices;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.geocode.Location;
 
 import java.io.IOException;
@@ -33,9 +34,11 @@ public class GoogleGeocodeServiceImplTest {
      * obtain a latitude and longitude pair.
      * A sample latitude and longitude value will be expected for validity.
      * @throws IOException Throws an exception if the request cannot be made.
+     * @throws MissingServletRequestParameterException Throws this exception if the address passed
+     * into the getContent method is a null value.
      */
     @Test
-    public void getLatitudeAndLongitude() throws IOException {
+    public void getLatitudeAndLongitude() throws IOException, MissingServletRequestParameterException {
         final String address = "1600 Amphitheatre Parkway";
 
         final double expectedLatitude = 37.4215421;
@@ -55,9 +58,11 @@ public class GoogleGeocodeServiceImplTest {
      * return content but this will not contain the latitude and longitude but instead key/value
      * pairs which contain information about the error.
      * @throws IOException Throws an exception if the request cannot be made.
+     * @throws MissingServletRequestParameterException Throws this exception if the address
+     * passed into the getContent method is a null value.
      */
     @Test
-    public void getContentWithInvalidAddress() throws IOException {
+    public void getContentWithInvalidAddress() throws IOException, MissingServletRequestParameterException {
         String response = googleGeocodeService.getContent("");
         String errorMessage = googleGeocodeService.getErrorFromContent(response, ERROR_MESSAGE_KEY);
         assertEquals(EXPECTED_ERROR_MESSAGE, errorMessage);

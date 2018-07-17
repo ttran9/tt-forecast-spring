@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.repositories.SearchRepository;
@@ -78,7 +79,7 @@ public class SearchServiceImplTestIT {
      */
     @Test()
     public void getSearchesByUserId() {
-        int expectedNumberOfSearchesByUser = 2;
+        int expectedNumberOfSearchesByUser = 5;
         Long userId = 1L;
         int firstPage = 0; // 0th based index.
         // given
@@ -95,10 +96,12 @@ public class SearchServiceImplTestIT {
      * search is persisted/saved so the returned Search object is expected to have an ID field
      * and all of its forecasts should have the same ID referencing this search object
      * (the variable, createdSearch).
+     * @throws MissingServletRequestParameterException Throws this exception if the address
+     * passed into the createSearch method is a null value.
      */
     @Test
     @Transactional
-    public void createSearchWhenLoggedIn() {
+    public void createSearchWhenLoggedIn() throws MissingServletRequestParameterException {
         // given
         Search search = new Search();
         search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
@@ -159,9 +162,11 @@ public class SearchServiceImplTestIT {
     /**
      * This will perform a search with a valid entered address so it is expected the search
      * object being returned will have an expected number of daily and hourly forecasts.
+     * @throws MissingServletRequestParameterException Throws this exception if the address
+     * passed into the createSearch method is a null value.
      */
     @Test
-    public void createSearchWhenNotLoggedIn() {
+    public void createSearchWhenNotLoggedIn() throws MissingServletRequestParameterException {
         // given
         Search search = new Search();
         search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
