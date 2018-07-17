@@ -27,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This class consists of simple unit tests to verify if a user can go to a mapping and get back an
  * expected view name.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class IndexControllerTest {
     /**
      * Entry point for MVC testing.
@@ -38,7 +36,7 @@ public class IndexControllerTest {
      * Object used to verify if the user is logged in.
      */
     @Mock
-    UserService userService;
+    private UserService userService;
 
     @Before
     public void setUp() {
@@ -55,7 +53,7 @@ public class IndexControllerTest {
     public void getIndexPage() throws Exception {
         mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR))
             .andExpect(view().name(IndexController.INDEX_VIEW_NAME))
-            .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.INDEX_PAGE_TITLE))
+            .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE, IndexController.INDEX_PAGE_TITLE))
             .andExpect(status().isOk());
     }
 
@@ -67,7 +65,7 @@ public class IndexControllerTest {
     public void getAccessDeniedPage() throws Exception {
         mockMvc.perform(get(IndexController.DENIED_PAGE_MAPPING))
                 .andExpect(view().name(IndexController.DENIED_VIEW_NAME))
-                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.ACCESS_DENIED_PAGE_TITLE))
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE, IndexController.ACCESS_DENIED_PAGE_TITLE))
                 .andExpect(status().isOk());
     }
 
@@ -81,7 +79,7 @@ public class IndexControllerTest {
                 IndexController.LOGIN_PAGE_MAPPING))
                 .andExpect(status().isOk())
                 .andExpect(view().name(IndexController.SIGNIN_VIEW_NAME))
-                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.LOGIN_PAGE_TITLE));
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE, IndexController.LOGIN_PAGE_TITLE));
     }
 
     /**
@@ -94,7 +92,7 @@ public class IndexControllerTest {
                 IndexController.NOT_FOUND_MAPPING))
                 .andExpect(status().isOk())
                 .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
-                .andExpect(model().attribute(BaseController.PAGE_ATTRIBUTE, IndexController.RESOURCE_NOT_FOUND_PAGE_TITLE));
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE, IndexController.RESOURCE_NOT_FOUND_PAGE_TITLE));
     }
 
 }
