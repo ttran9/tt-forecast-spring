@@ -27,9 +27,7 @@ public abstract class AbstractForecast extends AbstractDomainClass {
      * The time of this forecast object since Jan 1, 1970 in seconds.
      */
     @JsonProperty(value = "time")
-    @Transient
     private long time;
-
     /**
      * An object to define how the date portion of the formattedTime string will appear.
      */
