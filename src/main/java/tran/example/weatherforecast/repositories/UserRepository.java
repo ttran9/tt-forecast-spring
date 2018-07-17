@@ -1,12 +1,14 @@
 package tran.example.weatherforecast.repositories;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import tran.example.weatherforecast.domain.User;
 
 /**
  * An interface which will allow Spring Data JPA to create CRUD method implementations at runtime
  * for the User object(s).
  */
+@Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
     /**
