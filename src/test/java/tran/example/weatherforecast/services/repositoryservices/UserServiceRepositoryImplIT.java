@@ -44,7 +44,7 @@ public class UserServiceRepositoryImplIT {
     @Test
     public void listAll() {
         List<User> users = userServiceRepository.listAll();
-        int expectedNumberOfUsers = 2;
+        long expectedNumberOfUsers = userRepository.count();
         assertEquals(expectedNumberOfUsers, users.size());
     }
 
