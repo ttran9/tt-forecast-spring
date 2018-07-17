@@ -1,8 +1,8 @@
 package tran.example.weatherforecast.services.forecastservices;
 
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
-
-import java.util.List;
 
 /**
  * Declares methods to perform read and insertion operations for Search object(s).
@@ -12,9 +12,10 @@ public interface SearchService {
     /**
      * Gets a list of searches made by a user based on the id of the user provided.
      * @param userId The id value to identify a user.
-     * @return Returns a list of Search objects.
+     * @param page The current page of searches.
+     * @return Returns a sublist of a list containing search objects.
      */
-    List<Search> getSearchesByUserId(Long userId);
+    Page<Search> getSearchesByUserId(Long userId, int page);
 
     /**
      * Saves the search into the database if the user is logged in.
@@ -32,5 +33,5 @@ public interface SearchService {
      * @param address The address to get the forecasts for.
      * @return Returns a search object that contains the hourly and daily forecasts.
      */
-    Search createSearch(String address);
+    Search createSearch(String address) throws MissingServletRequestParameterException;
 }

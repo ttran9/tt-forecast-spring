@@ -2,12 +2,16 @@ package tran.example.weatherforecast.services.forecastservices;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.domain.forecast.Forecast;
 import tran.example.weatherforecast.domain.geocode.Location;
 import tran.example.weatherforecast.exceptions.NotFoundException;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.UserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
@@ -23,7 +27,10 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class SearchServiceImpl implements SearchService {
-
+    /**
+     * 0th indexed original page number.
+     */
+    public static final int INITIAL_PAGE = 0;
     /**
      * Allows access to retrieve the User and to update the associated user object.
      */
@@ -40,6 +47,10 @@ public class SearchServiceImpl implements SearchService {
      * Interfaces with the Security context to check if the user is logged in.
      */
     private UserAuthenticationService userAuthenticationService;
+    /**
+     * Allows for the retrieval and creation of searches.
+     */
+    private SearchRepository searchRepository;
 
     /**
      * Performs DI and wires the userRepository object accordingly so CRUD operations can be
@@ -50,25 +61,36 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     public SearchServiceImpl(UserRepository userRepository, GoogleGeocodeService
             googleGeocodeService, DarkskyService darkskyService, UserAuthenticationService
-            userAuthenticationService) {
+            userAuthenticationService, SearchRepository searchRepository) {
         this.userRepository = userRepository;
         this.googleGeocodeService = googleGeocodeService;
         this.darkskyService = darkskyService;
         this.userAuthenticationService = userAuthenticationService;
+        this.searchRepository = searchRepository;
     }
 
     /**
-     * Finds a user based on the specified id and returns a list of the searches made by the user.
+     * Finds a user based on the specified id and returns a paginated list of the searches made by
+     * the user.
+     * For now I will be hard-coding how many entries are on each page and the initial page
+     * should be hardcoded to the first page.
      * @param userId The id value to identify a user.
-     * @return Returns a list of searches made by a user.
+     * @param currentPage The current page of searches.
+     * @return Returns a sublist of a list containing search objects.
      */
     @Override
-    public List<Search> getSearchesByUserId(Long userId) {
+    public Page<Search> getSearchesByUserId(Long userId, int currentPage) {
         String debugMessage = "attempting to find the searches made by a user with id: " + userId;
         String exceptionMessage = "The user could not be found while attempting to retrieve" +
                 " the searches";
-        User user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
-        return user.getSearches();
+        int searchesPerPage = 5;
+        checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
+
+        Optional<Integer> optionalPage = Optional.of(currentPage);
+        // PageRequest is 0th based index while this currentPage parameter is 1th based.
+        // if the page is an invalid parameter we will start at the first page.
+        int evaluatedPage = (optionalPage.orElse(INITIAL_PAGE) < 1) ? INITIAL_PAGE : optionalPage.get() - 1;
+        return searchRepository.findAllByUserId(PageRequest.of(evaluatedPage, searchesPerPage), userId);
     }
 
     /**
@@ -88,17 +110,12 @@ public class SearchServiceImpl implements SearchService {
                 " the searches";
         try {
             User user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
-            user.addSearch(search);
-            User userWithUpdatedSearches = userRepository.save(user);
-            /**
-             * returning the last element in the searches list because I assume the user cannot save
-             * the same search twice and if this was possible it would have identical content except
-             * the ID would differ which would not make a difference to the user viewing forecasts.
-             */
-            return userWithUpdatedSearches.getSearches().get(userWithUpdatedSearches.getSearches()
-                    .size() - 1);
+            search.setUser(user);
+            Search savedSearch = searchRepository.save(search);
+            savedSearch.setFormattedDateSearch();
+            return savedSearch;
         } catch (NotFoundException notFoundException) {
-            log.debug("user is not logged in so this search will not be saved");
+            log.debug("user that is logged in cannot be found!");
             return search;
         }
     }
@@ -107,10 +124,12 @@ public class SearchServiceImpl implements SearchService {
      * Takes in an address and obtains a location and gets forecasts for the location specified.
      * If the user is not logged in this method does not attempt to save the search.
      * @param address The address to get the forecasts for.
+     * @throws MissingServletRequestParameterException Throws this exception if the address is
+     * null (wasn't provided from the controller).
      * @return A search object with the user entered address and the forecasts.
      */
     @Override
-    public Search createSearch(String address) {
+    public Search createSearch(String address) throws MissingServletRequestParameterException {
         try {
             // get the location
             String locationContent = googleGeocodeService.getContent(address);
@@ -136,8 +155,13 @@ public class SearchServiceImpl implements SearchService {
             if(user != null) {
                 // make the search if the user is logged in.
                 return saveSearch(search, user.getId());
+            } else {
+                /*
+                 * save it using the search repository which gives it an ID but has no user
+                 * associated with it.
+                 */
+               return searchRepository.save(search);
             }
-            return search;
         } catch(IOException ex) {
             log.debug("while searching there was an error!");
             return null;
