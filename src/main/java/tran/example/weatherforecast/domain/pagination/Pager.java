@@ -54,7 +54,7 @@ public class Pager {
              * you still want to show five pages but you have hit the minimum page where if you
              * start at will give the user an option to select a page greater than the totalPages.
              */
-            setStartPage(currentPage - pageButtonsToDisplay);
+            setStartPage(currentPage - pagesToShowOnEachHalf);
             setEndPage(totalPages);
         } else if(currentPage + pagesToShowOnEachHalf > totalPages) {
             /**
