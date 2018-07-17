@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import tran.example.weatherforecast.commands.SearchCommand;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 /**
@@ -12,7 +14,7 @@ import tran.example.weatherforecast.services.security.UserAuthenticationService;
  */
 @Slf4j
 @Controller
-public class IndexController extends BaseController {
+public class IndexController extends ControllerHelper {
     /**
      * The name of the view to display the index/home page.
      */
@@ -37,10 +39,6 @@ public class IndexController extends BaseController {
      * The mapping to process a GET request to send the user to the access denied page.
      */
     public static final String DENIED_PAGE_MAPPING = "/denied";
-    /**
-     * The name of the page to display prior user searches.
-     */
-    public static final String PRIOR_SEARCHES_VIEW_NAME = "searches";
     /**
      * The title of the index page.
      */
@@ -83,10 +81,12 @@ public class IndexController extends BaseController {
     /**
      * Processes the request to retrieve the index page.
      * @param model UI component holding attributes to be used in the view.
+     * @param searchCommand An object which will assist with binding the contents from the form
+     *                      (the entered address) to a domain object.
      * @return The name of the index page.
      */
     @GetMapping(URL_PATH_SEPARATOR)
-    public String getIndexPage(Model model) {
+    public String getIndexPage(Model model, @ModelAttribute(value = "search") SearchCommand searchCommand) {
         log.debug("At the home/index page!");
         addTitleAttribute(model, INDEX_PAGE_TITLE);
         return INDEX_VIEW_NAME;
