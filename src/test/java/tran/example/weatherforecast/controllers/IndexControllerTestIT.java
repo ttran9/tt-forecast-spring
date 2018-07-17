@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.repositories.UserRepository;
 import tran.example.weatherforecast.services.UserService;
@@ -21,6 +22,7 @@ import tran.example.weatherforecast.services.security.UserAuthenticationServiceI
 import java.util.Collection;
 import java.util.LinkedList;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,13 +43,15 @@ public class IndexControllerTestIT {
      */
     @Autowired
     private UserRepository userRepository;
+    /**
+     * Holds the configuration of the context for the below tests.
+     */
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        userService = new UserServiceRepositoryImpl(userRepository);
-        IndexController indexController = new IndexController(new UserAuthenticationServiceImpl(userService));
-        mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     /**
