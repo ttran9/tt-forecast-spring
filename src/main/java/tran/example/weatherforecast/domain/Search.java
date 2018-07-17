@@ -5,10 +5,8 @@ import lombok.Setter;
 import tran.example.weatherforecast.domain.forecast.DailyForecast;
 import tran.example.weatherforecast.domain.forecast.HourlyForecast;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +37,35 @@ public class Search extends AbstractDomainClass {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "search")
     private List<DailyForecast> dailyForecasts = new ArrayList<>();
+    /**
+     * A string holding when this object was created (when the search was made).
+     */
+    private String formattedDateSearch;
+    /**
+     * An object to define how the date portion of the formattedTime string will appear.
+     */
+    @Transient
+    protected SimpleDateFormat monthDayYear = new SimpleDateFormat("MMMMM d yyyy");
+    /**
+     * An object to define how the time portion of the formattedTime string will appear.
+     */
+    @Transient
+    protected SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+    /**
+     * A string to separate the date from the time.
+     */
+    @Transient
+    protected String at = " at ";
+
+    /**
+     * Method to convert the creation timestamp to a formatted string which will display when
+     * this search was made.
+     */
+    public void setFormattedDateSearch() {
+        // Multiplied a factor of one thousand because it is in seconds when it is
+        // obtained from the Darksky API.
+        formattedDateSearch = monthDayYear.format(dateCreated) + at + timeFormat.format(dateCreated);
+    }
 
 
 }
