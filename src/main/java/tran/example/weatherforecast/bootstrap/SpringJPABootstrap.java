@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.domain.security.Role;
@@ -38,13 +39,13 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     public static final String PASSWORD = "password";
     /**
-     * An account without a role, this account is not able to view past searches.
+     * A user that doesn't make searches but has a role.
      */
-    public static final String USER_WITH_NO_ROLE = "toddnorole";
+    public static final String USER_WITH_ROLE = "testAccount";
     /**
-     * Password for the account without a role.
+     * The password for this test account
      */
-    public static final String SECOND_ACCOUNT_PASSWORD = "badpw";
+    public static final String THIRD_ACCOUNT_PASSWORD = "samplepw";
     /**
      * The address to make a sample search and forecast research for.
      */
@@ -123,16 +124,13 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         List<Role> roles = (List<Role>) roleService.listAll();
         List<User> users = (List<User>) userService.listAll();
 
-
         users.forEach(user -> {
-            if(!user.getUsername().equals(USER_WITH_NO_ROLE)) {
-                roles.forEach(role -> {
-                    if(role.getRole().equals(USER)) {
-                        user.addRole(role);
-                        userService.saveOrUpdate(user);
-                    }
-                });
-            }
+            roles.forEach(role -> {
+                if(role.getRole().equals(USER)) {
+                    user.addRole(role);
+                    userService.saveOrUpdate(user);
+                }
+            });
         });
         log.debug("Default roles have been assigned to users!");
     }
@@ -146,8 +144,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         user1.setPassword(PASSWORD);
 
         User user2 = new User();
-        user2.setUsername(USER_WITH_NO_ROLE);
-        user2.setPassword(SECOND_ACCOUNT_PASSWORD);
+        user2.setUsername(USER_WITH_ROLE);
+        user2.setPassword(THIRD_ACCOUNT_PASSWORD);
 
         userService.saveOrUpdate(user1);
         userService.saveOrUpdate(user2);
@@ -183,14 +181,29 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
                 return ;
             }
         });
+        try {
+            Search search = searchService.createSearch(SAMPLE_ADDRESS);
+            searchService.saveSearch(search, 1L);
 
-        Search search = searchService.createSearch(SAMPLE_ADDRESS);
-        searchService.saveSearch(search, 1L);
+            Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
+            searchService.saveSearch(secondSearch, 1L);
 
-        Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
-        searchService.saveSearch(secondSearch, 1L);
+            searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
 
-        searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
+            search = searchService.createSearch(SAMPLE_ADDRESS);
+            searchService.saveSearch(search, 1L);
+
+            search = searchService.createSearch(SAMPLE_ADDRESS);
+            searchService.saveSearch(search, 1L);
+
+            search = searchService.createSearch(SAMPLE_ADDRESS);
+            searchService.saveSearch(search, 1L);
+
+            search = searchService.createSearch(SAMPLE_ADDRESS);
+            searchService.saveSearch(search, 1L);
+        } catch(MissingServletRequestParameterException exception) {
+            log.debug("error while trying to create sample/bootstrapped searches!");
+        }
     }
 
 }
