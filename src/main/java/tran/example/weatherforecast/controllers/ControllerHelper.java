@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
  * This class will contain methods used in all the controllers.
  */
 @Slf4j
-public abstract class BaseController {
+public abstract class ControllerHelper {
     /**
      * The title attribute as part of the title tag on the views.
      */
