@@ -83,7 +83,6 @@ public class RegistrationControllerIT {
                 .andExpect(status().is3xxRedirection());
         long updatedNumberOfUsers = userRepository.count();
         assertEquals(numberOfExpectedUsers, updatedNumberOfUsers);
-
     }
 
     /**
@@ -100,7 +99,6 @@ public class RegistrationControllerIT {
                 .param(verifyPasswordField, samplePasswordValue))
                 .andExpect(view().name(expectedErrorViewName))
                 .andExpect(status().isOk());
-
     }
 
     /**
