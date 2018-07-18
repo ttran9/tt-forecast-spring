@@ -16,10 +16,10 @@ public abstract class AbstractLocation {
      * The latitude portion of the address the user is searching for.
      */
     @JsonProperty("lat")
-    private double latitude;
+    private Double latitude;
     /**
      * The longitude portion of the address the user is searching for.
      */
     @JsonProperty("lng")
-    private double longitude;
+    private Double longitude;
 }
