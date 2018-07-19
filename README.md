@@ -20,42 +20,34 @@ built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weath
 
 # Summary of this branch (this branch will be more detailed than the prior branches!)
 
-- At this point I have been testing this application using an in-memory h2 database. The next 
-branch I will provide a yml file that will set up a connection to a PostgreSQL database and I'm 
-choosing Postgres as it will be the database in use when I upload this to Heroku.
+- The main focus of this branch will be to go from using a H2 database to a Postgres database.
 
-- I added a few searches made by the first user "mweston" that has the User role.
+- I will be using the .gitignore file for the application-production.properties from here as it 
+will be storing credentials I do not want to be made public.
 
-- I added in a second user which will have no searches made but has a User role.
-    - This user is added in so you can see that this user has no prior searches and this will be 
-    presented slightly differently than if the user has made at least one search.
-    
-- I created three repositories which all inherit from the PagingAndSortingRepository which allowed
- me to implement pagination for the searches and the forecasts.  
- 
-- I realize there is a lot of code that is redundant and could further be refactored (in the 
-tests, services, controllers, etc.)
-    - I will attempt to do this after I upload this application and I feel its met the 
-    requirements and I have covered enough of the basics. 
-    
-- A change that led to refactoring code in many different places was when I was 
-refactoring  the search sequence to encode the address, in prior branches I did not check if the 
-address being encoded was null and that would return a NPE, instead of it is null I throw a MissingServletRequestParameterException
-which is handled by the ControllerExceptionHandler class.
-    
-- There were a few tests where I pulled out tests from the controllers (unit tests) and put them 
-into integration tests, while this may not be a best practice I felt pulling in the Spring Context 
-would more accurately test for the behaviors I was looking for such as ensuring that Model 
-objects were being populated and that I was not just testing if I was getting a proper HTTP status
- code and getting the expected view name back.
- 
-- One note to make is that although a user can view their prior searches, a user that is not 
-logged in can guess the search ID and view the search as well.
-    - I plan to implement the below bullet point(s)/idea(s) in a future branch.
-    - One solution to this would be when the search is retrieved to look at the associated user 
-    ID and see if it matches the user that is logged in. 
-     
+- Currently the test coverage for this application is only 60% as can be seen above, in future 
+releases I will be looking into the tests and seeing if I can get the coverage back to around 
+70-80%.
+
+- Previously I was using the domain class User, but because this is a keyword in postgres it is 
+recommended to avoid creating tables with the same name as a reserved word so there will be much 
+refactoring/renaming of variables, fields, and a few classes.
+
+# Docker Information (for using the database in development mode)
+
+- I created a development database using the command below:
+    - docker run --name dockerpsql -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=hidden -e 
+    POSTGRES_DB=forecast_dev -p 5432:5432 -d postgres
+    - note: this is just a simple example set of user credentials, for your own you would want to 
+    have a more secure password for the postgres user.
+        - if you use the above command keep in mind that the latest postgres version is pulled down 
+        so your version will change in case some undesired results occur.
+
 # Details about this Repository
+
+- For the applications.properties file simply change spring.profiles.active to a profile of your 
+choice to use a certain type of datastore, I will be adding it to the .gitignore as I will be 
+modifying it across branches and don't want to commit a minor change every time I push a new change.
 
 - For this application there will also be another user account that I created that has limited 
 permissions, such as DML and not DDL as I do not want to give all user accounts as much power as 
@@ -82,16 +74,3 @@ coverage of my automated tests.
 [J Hipster](https://start.jhipster.tech/#/design-entities) and "Create a new JDL model" if you are 
 logged in and if you are not logged in you can go [here](https://start.jhipster.tech/jdl-studio/)
 to start building the diagram.
-
-# Docker Information (for using the database in development mode)
-
-- I created a development database using the command below:
-    - docker run --name dockerpsql -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=hidden -e 
-    POSTGRES_DB=forecast_dev -p 5432:5432 -d postgres
-    - note: this is just a simple example set of user credentials, for your own you would want to 
-    have a more secure password for the postgres user.
-        - if you use the above command keep in mind that the latest postgres version is pulled down 
-        so your version will change in case some undesired results occur.
-
-- This application doesn't focus too much on Postgres usage so I will be using the public schema.
-
