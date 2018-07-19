@@ -1,10 +1,6 @@
 # Weather-Forecast Prototype
 - Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/displaying-forecasts/graph/badge.svg)
-    - The next branch will focus more on getting more test coverage done as well as adding in a 
-    properties file to use a Postgres database.
-        
-    
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/postgres-integration/graph/badge.svg)
     
 - CircleCI build status:
 ![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
