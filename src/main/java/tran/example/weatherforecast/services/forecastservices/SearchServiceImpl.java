@@ -144,12 +144,8 @@ public class SearchServiceImpl implements SearchService {
             // create a reference from the forecast to this search.
             search.setDailyForecasts(forecast.getDailyForecastList().getDailyForecasts());
             search.setHourlyForecasts(forecast.getHourlyForecastList().getHourlyForecasts());
-            search.getDailyForecasts().forEach(dailyForecast -> {
-                dailyForecast.setSearch(search);
-            });
-            search.getHourlyForecasts().forEach(hourlyForecast -> {
-                hourlyForecast.setSearch(search);
-            });
+            search.getDailyForecasts().forEach(dailyForecast -> dailyForecast.setSearch(search));
+            search.getHourlyForecasts().forEach(hourlyForecast -> hourlyForecast.setSearch(search));
             // get the user id of the currently logged in user.
             User user = userAuthenticationService.checkIfUserIsLoggedIn();
             if(user != null) {
