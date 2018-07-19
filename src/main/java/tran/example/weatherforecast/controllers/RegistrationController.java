@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
+import tran.example.weatherforecast.commands.SearchCommand;
 import tran.example.weatherforecast.services.registrationservices.RegistrationService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
@@ -85,8 +86,9 @@ public class RegistrationController extends ControllerHelper {
         if(userAuthenticationService.checkIfUserIsLoggedIn() == null) {
             return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
         }
-        model.addAttribute(ControllerExceptionHandler.EXCEPTION_KEY, UNABLE_TO_REGISTER);
-        return IndexController.INDEX_VIEW_NAME;
+        model.addAttribute(ControllerExceptionHandler.EXCEPTION_KEY, new Exception(UNABLE_TO_REGISTER));
+        model.addAttribute(ForecastController.SEARCH_PARAMETER, new SearchCommand());
+        return IndexController.URL_PATH_SEPARATOR + IndexController.INDEX_VIEW_NAME;
     }
 
     /**
