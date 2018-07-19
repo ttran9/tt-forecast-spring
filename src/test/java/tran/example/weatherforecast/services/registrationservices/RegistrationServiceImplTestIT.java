@@ -9,10 +9,10 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.test.context.junit4.SpringRunner;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.security.Role;
 import tran.example.weatherforecast.repositories.RoleRepository;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.security.EncryptionService;
 
 import java.util.Optional;
@@ -23,21 +23,21 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class RegistrationServiceImplTestIT {
     /**
-     * Used to save the user to the User table.
+     * Used to save the user to the CustomUser table.
      */
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
-     * Used to get the role object with the role "User"
+     * Used to get the role object with the role "CustomUser"
      */
     @Autowired
     private RoleRepository roleRepository;
     /**
-     * Used to assign the user name and password from the registration form into a User object's
+     * Used to assign the user name and password from the registration form into a CustomUser object's
      * username and password fields.
      */
     @Autowired
-    private Converter<RegistrationFormCommand, User> converter;
+    private Converter<RegistrationFormCommand, CustomUser> converter;
     /**
      * Used to encrypt the password.
      */
@@ -56,7 +56,7 @@ public class RegistrationServiceImplTestIT {
 
     /**
      * This will test a successful user registration, the user is expected to have the default
-     * a role object which has the role "User" as well as having an encrypted password and the
+     * a role object which has the role "CustomUser" as well as having an encrypted password and the
      * username specified.
      */
     @Test
@@ -69,7 +69,7 @@ public class RegistrationServiceImplTestIT {
         registrationFormCommand.setPassword(SpringJPABootstrap.PASSWORD);
 
         // when
-        User registeredUser = registrationService.registerUser(registrationFormCommand);
+        CustomUser registeredUser = registrationService.registerUser(registrationFormCommand);
 
         assertTrue(encryptionService.checkPassword(SpringJPABootstrap.PASSWORD, registeredUser
                 .getEncryptedPassword()));

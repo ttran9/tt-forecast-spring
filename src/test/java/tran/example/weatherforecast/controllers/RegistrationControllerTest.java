@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.repositories.RoleRepository;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.registrationservices.RegistrationService;
 import tran.example.weatherforecast.services.registrationservices.RegistrationServiceImpl;
 import tran.example.weatherforecast.services.security.EncryptionService;
@@ -37,21 +37,21 @@ public class RegistrationControllerTest {
      */
     private MockMvc mockMvc;
     /**
-     * Used to save the user to the User table.
+     * Used to save the user to the CustomUser table.
      */
     @Mock
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
-     * Used to get the role object with the role "User"
+     * Used to get the role object with the role "CustomUser"
      */
     @Mock
     private RoleRepository roleRepository;
     /**
-     * Used to assign the user name and password from the registration form into a User object's
+     * Used to assign the user name and password from the registration form into a CustomUser object's
      * username and password fields.
      */
     @Mock
-    private Converter<RegistrationFormCommand, User> converter;
+    private Converter<RegistrationFormCommand, CustomUser> converter;
     /**
      * Used to encrypt the password.
      */

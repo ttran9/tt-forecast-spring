@@ -3,16 +3,19 @@ package tran.example.weatherforecast.converters;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 
+/**
+ * Converts the user entered user name and password into a CustomUser domain object.
+ */
 @Component
-public class RegistrationFormCommandToUser implements Converter<RegistrationFormCommand, User> {
+public class RegistrationFormCommandToCustomUser implements Converter<RegistrationFormCommand, CustomUser> {
     @Override
-    public User convert(RegistrationFormCommand registrationFormCommand) {
+    public CustomUser convert(RegistrationFormCommand registrationFormCommand) {
         if(registrationFormCommand == null) {
             return null;
         }
-        User user = new User();
+        CustomUser user = new CustomUser();
         if(registrationFormCommand.getPassword() != null) {
             user.setPassword(registrationFormCommand.getPassword());
         }

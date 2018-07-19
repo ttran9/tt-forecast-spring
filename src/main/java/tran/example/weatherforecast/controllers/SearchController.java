@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import tran.example.weatherforecast.commands.SearchCommand;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.Search;
-import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.domain.pagination.Pager;
 import tran.example.weatherforecast.services.forecastservices.SearchService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
@@ -106,7 +106,7 @@ public class SearchController extends ControllerHelper {
         log.debug("Showing a user's prior searches!");
         addTitleAttribute(model, PRIOR_USER_SEARCHES_TITLE);
         // with the help of spring security the below is expected to not be null.
-        User user = userAuthenticationService.checkIfUserIsLoggedIn();
+        CustomUser user = userAuthenticationService.checkIfUserIsLoggedIn();
         if(user == null) {
             return IndexController.URL_PATH_SEPARATOR + IndexController.LOGIN_PAGE_MAPPING;
         }
@@ -122,7 +122,7 @@ public class SearchController extends ControllerHelper {
      * @param user The user currently logged in.
      */
     private void setModelWithPaginatedContent(Model model, @RequestParam(value = "page")
-            Optional<Integer> page, User user) {
+            Optional<Integer> page, CustomUser user) {
         int defaultPage = 1;
         int currentPage = page.orElse(defaultPage);
         Page<Search> searches = searchService.getSearchesByUserId(user.getId(), currentPage);

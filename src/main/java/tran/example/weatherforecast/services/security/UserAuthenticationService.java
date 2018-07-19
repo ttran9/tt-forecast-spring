@@ -1,6 +1,6 @@
 package tran.example.weatherforecast.services.security;
 
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 
 /**
  * Declares method(s) to check if a user is logged in based a request token from the controller.
@@ -11,5 +11,5 @@ public interface UserAuthenticationService {
      * and returns a user object if the user is logged in and null if not logged in.
      * @return Returns a user object if the user is logged in, otherwise null.
      */
-    User checkIfUserIsLoggedIn();
+    CustomUser checkIfUserIsLoggedIn();
 }

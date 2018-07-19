@@ -3,7 +3,7 @@ package tran.example.weatherforecast.domain.security;
 import lombok.Getter;
 import lombok.Setter;
 import tran.example.weatherforecast.domain.AbstractDomainClass;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,5 +28,5 @@ public class Role extends AbstractDomainClass {
      * A list holding the users that are associated with this specific role.
      */
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private List<User> users = new ArrayList<>();
+    private List<CustomUser> users = new ArrayList<>();
 }

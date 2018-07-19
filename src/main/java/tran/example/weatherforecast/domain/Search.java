@@ -22,7 +22,7 @@ public class Search extends AbstractDomainClass {
      * only be made to one user. Cascading operations are not needed here.
      */
     @ManyToOne
-    private User user;
+    private CustomUser user;
     /**
      * The entered address while making this search
      */

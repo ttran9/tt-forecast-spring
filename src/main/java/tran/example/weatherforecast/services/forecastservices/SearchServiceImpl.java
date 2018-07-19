@@ -6,22 +6,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.Search;
-import tran.example.weatherforecast.domain.User;
 import tran.example.weatherforecast.domain.forecast.Forecast;
 import tran.example.weatherforecast.domain.geocode.Location;
 import tran.example.weatherforecast.exceptions.NotFoundException;
 import tran.example.weatherforecast.repositories.SearchRepository;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementation of methods to save a Search made by a specified User and to find all the
+ * Implementation of methods to save a Search made by a specified CustomUser and to find all the
  * searches made by a user.
  */
 @Service
@@ -32,9 +31,9 @@ public class SearchServiceImpl implements SearchService {
      */
     public static final int INITIAL_PAGE = 0;
     /**
-     * Allows access to retrieve the User and to update the associated user object.
+     * Allows access to retrieve the CustomUser and to update the associated user object.
      */
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
      * Allows access to make API requests to get the latitude and longitude of an address.
      */
@@ -59,7 +58,7 @@ public class SearchServiceImpl implements SearchService {
      *                       operations.
      */
     @Autowired
-    public SearchServiceImpl(UserRepository userRepository, GoogleGeocodeService
+    public SearchServiceImpl(CustomUserRepository userRepository, GoogleGeocodeService
             googleGeocodeService, DarkskyService darkskyService, UserAuthenticationService
             userAuthenticationService, SearchRepository searchRepository) {
         this.userRepository = userRepository;
@@ -109,7 +108,7 @@ public class SearchServiceImpl implements SearchService {
         String exceptionMessage = "The user could not be found while attempting to retrieve" +
                 " the searches";
         try {
-            User user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
+            CustomUser user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
             search.setUser(user);
             Search savedSearch = searchRepository.save(search);
             savedSearch.setFormattedDateSearch();
@@ -147,7 +146,7 @@ public class SearchServiceImpl implements SearchService {
             search.getDailyForecasts().forEach(dailyForecast -> dailyForecast.setSearch(search));
             search.getHourlyForecasts().forEach(hourlyForecast -> hourlyForecast.setSearch(search));
             // get the user id of the currently logged in user.
-            User user = userAuthenticationService.checkIfUserIsLoggedIn();
+            CustomUser user = userAuthenticationService.checkIfUserIsLoggedIn();
             if(user != null) {
                 // make the search if the user is logged in.
                 return saveSearch(search, user.getId());
@@ -172,10 +171,10 @@ public class SearchServiceImpl implements SearchService {
      *                                 user if applicable
      * @param userId The id of the logged in user.
      */
-    private User checkIfUserIsPresent(String debugMessage, String notFoundExceptionMessage, Long
+    private CustomUser checkIfUserIsPresent(String debugMessage, String notFoundExceptionMessage, Long
             userId) {
         log.debug(debugMessage);
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<CustomUser> userOptional = userRepository.findById(userId);
         if(!userOptional.isPresent()) {
             throw new NotFoundException(notFoundExceptionMessage);
         }

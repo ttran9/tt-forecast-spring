@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -34,7 +34,7 @@ public class RegistrationControllerIT {
      * Used get the number of users in the database.
      */
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
      * Used to bind the entered user parameter inside of post calls to the userName input field.
      */

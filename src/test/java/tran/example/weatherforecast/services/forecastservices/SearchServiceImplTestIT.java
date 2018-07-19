@@ -16,7 +16,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.repositories.SearchRepository;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
@@ -38,10 +38,10 @@ public class SearchServiceImplTestIT {
      */
     public static final int EXPECTED_NUMBER_OF_DAILY_FORECASTS = 8;
     /**
-     * Allows access to retrieve the User and to update the associated user object.
+     * Allows access to retrieve the CustomUser and to update the associated user object.
      */
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
      * Allows access to make API requests to get the latitude and longitude of an address.
      */

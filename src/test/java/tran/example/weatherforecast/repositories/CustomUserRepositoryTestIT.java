@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 
 import static org.junit.Assert.*;
 
@@ -14,21 +14,21 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserRepositoryTestIT {
+public class CustomUserRepositoryTestIT {
 
     /**
-     * An object to allowing interfacing with the data layer and the User table.
+     * An object to allowing interfacing with the data layer and the CustomUser table.
      */
     @Autowired
-    UserRepository userRepository;
+    CustomUserRepository userRepository;
 
     /**
-     * Tests if a User object can be found given a user name.
+     * Tests if a CustomUser object can be found given a user name.
      */
     @Test
     public void findByUserName() {
         String userName = "mweston";
-        User user = userRepository.findByUsername(userName);
+        CustomUser user = userRepository.findByUsername(userName);
         assertEquals(userName, user.getUsername());
     }
 
@@ -38,7 +38,7 @@ public class UserRepositoryTestIT {
     @Test
     public void findNonExistentUserName() {
         String nonExistantUser = "reallyweirdusername";
-        User user = userRepository.findByUsername(nonExistantUser);
+        CustomUser user = userRepository.findByUsername(nonExistantUser);
         assertNull(user);
     }
 }

@@ -3,9 +3,9 @@ package tran.example.weatherforecast.services.repositoryservices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.exceptions.NotFoundException;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.UserService;
 import tran.example.weatherforecast.services.security.EncryptionService;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * A service implementing CRUD operations on the User entities and table.
+ * A service implementing CRUD operations on the CustomUser entities and table.
  */
 @Slf4j
 @Service
@@ -23,7 +23,7 @@ public class UserServiceRepositoryImpl implements UserService {
     /**
      * Allows access to the user table.
      */
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
      * A service used to assist with encrypting a password for storage.
      */
@@ -34,7 +34,7 @@ public class UserServiceRepositoryImpl implements UserService {
      * @param userRepository The user repository required to perform CRUD operation(s) on Users.
      */
     @Autowired
-    public UserServiceRepositoryImpl(UserRepository userRepository) {
+    public UserServiceRepositoryImpl(CustomUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -52,9 +52,9 @@ public class UserServiceRepositoryImpl implements UserService {
      * @return A list of user objects.
      */
     @Override
-    public List<User> listAll() {
+    public List<CustomUser> listAll() {
         log.debug("Retrieving the users from the database!");
-        List<User> users = new LinkedList<>();
+        List<CustomUser> users = new LinkedList<>();
         userRepository.findAll().forEach(users::add);
         return users;
     }
@@ -65,14 +65,14 @@ public class UserServiceRepositoryImpl implements UserService {
      * @return A user object with the specified id.
      */
     @Override
-    public User getById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
+    public CustomUser getById(Long id) {
+        Optional<CustomUser> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()) {
             log.debug("Retrieving a user by ID!");
             return userOptional.get();
         }
-        log.debug("User cannot be found with given ID.");
-        throw new NotFoundException("User cannot be found!");
+        log.debug("CustomUser cannot be found with given ID.");
+        throw new NotFoundException("CustomUser cannot be found!");
     }
 
     /**
@@ -82,7 +82,7 @@ public class UserServiceRepositoryImpl implements UserService {
      * @return The user object after being saved or updated.
      */
     @Override
-    public User saveOrUpdate(User domainObject) {
+    public CustomUser saveOrUpdate(CustomUser domainObject) {
         log.debug("Saving or updating a user!");
         if(domainObject.getPassword() != null){
             log.debug("Encrypting password of user: " + domainObject.getUsername());
@@ -107,7 +107,7 @@ public class UserServiceRepositoryImpl implements UserService {
      * @return The user with the associated user name.
      */
     @Override
-    public User findByUserName(String userName) {
+    public CustomUser findByUserName(String userName) {
         log.debug("Attempting to find a user by the specified user name!");
         return userRepository.findByUsername(userName);
     }

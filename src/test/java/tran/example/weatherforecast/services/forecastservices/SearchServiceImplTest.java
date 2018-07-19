@@ -8,7 +8,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.exceptions.NotFoundException;
 import tran.example.weatherforecast.repositories.SearchRepository;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeServiceImpl;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
@@ -27,7 +27,7 @@ public class SearchServiceImplTest {
      * Allows access to the data layer and to the users table.
      */
     @Mock
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
      * Allows access to the data layer to verify if the user is logged in.
      */

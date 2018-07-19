@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.services.UserService;
 
 /**
@@ -24,7 +24,7 @@ public class SpringSecurityUserDetailsServiceImpl implements UserDetailsService 
     /**
      * A converter to transfer information to be used to assist with authentication.
      */
-    private Converter<User, UserDetails> userToUserDetailsConverter;
+    private Converter<CustomUser, UserDetails> userToUserDetailsConverter;
 
     /**
      * Initializes the service to be used to grab information about the stored user(s).
@@ -42,8 +42,8 @@ public class SpringSecurityUserDetailsServiceImpl implements UserDetailsService 
      *                  holding necessary user information.
      */
     @Autowired
-    @Qualifier("userToUserDetails")
-    public void setUserToUserDetailsConverter(Converter<User, UserDetails> converter) {
+    @Qualifier("customUserToUserDetails")
+    public void setUserToUserDetailsConverter(Converter<CustomUser, UserDetails> converter) {
         this.userToUserDetailsConverter = converter;
     }
 

@@ -8,29 +8,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
-import tran.example.weatherforecast.converters.UserToUserDetails;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.converters.CustomUserToUserDetails;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.repositoryservices.UserServiceRepositoryImpl;
 
 import static org.junit.Assert.*;
 
 /**
- * The below will test if a User can be retrieved and converted properly.
+ * The below will test if a CustomUser can be retrieved and converted properly.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringSecurityUserDetailsServiceImplTestIT {
+public class SpringSecurityCustomUserDetailsServiceImplTestIT {
     /**
-     * An object to allowing interfacing with the data layer and the User table.
+     * An object to allowing interfacing with the data layer and the CustomUser table.
      */
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
-     * A service providing access to CRUD methods on the User table.
+     * A service providing access to CRUD methods on the CustomUser table.
      */
     private UserServiceRepositoryImpl userServiceRepository;
     /**
-     * A service providing the ability to grab a User through a specified user name and if it can
+     * A service providing the ability to grab a CustomUser through a specified user name and if it can
      * be converted to a domain object without error.
      */
     private SpringSecurityUserDetailsServiceImpl springSecurityUserDetailsService;
@@ -40,7 +40,7 @@ public class SpringSecurityUserDetailsServiceImplTestIT {
         userServiceRepository = new UserServiceRepositoryImpl(userRepository);
         springSecurityUserDetailsService = new SpringSecurityUserDetailsServiceImpl();
         springSecurityUserDetailsService.setUserService(userServiceRepository);
-        springSecurityUserDetailsService.setUserToUserDetailsConverter(new UserToUserDetails());
+        springSecurityUserDetailsService.setUserToUserDetailsConverter(new CustomUserToUserDetails());
     }
 
     /**

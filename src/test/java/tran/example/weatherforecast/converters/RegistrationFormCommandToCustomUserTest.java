@@ -3,20 +3,20 @@ package tran.example.weatherforecast.converters;
 import org.junit.Before;
 import org.junit.Test;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 
 import static org.junit.Assert.*;
 
 /**
- * These tests will verify if information can be converted from a form to a domain (User) object.
+ * These tests will verify if information can be converted from a form to a domain (CustomUser) object.
  */
-public class RegistrationFormCommandToUserTest {
+public class RegistrationFormCommandToCustomUserTest {
 
-    private RegistrationFormCommandToUser converter;
+    private RegistrationFormCommandToCustomUser converter;
 
     @Before
     public void setUp() {
-        converter = new RegistrationFormCommandToUser();
+        converter = new RegistrationFormCommandToCustomUser();
     }
 
     /**
@@ -50,7 +50,7 @@ public class RegistrationFormCommandToUserTest {
         registrationForm.setPassword(password);
 
         // when
-        User user = converter.convert(registrationForm);
+        CustomUser user = converter.convert(registrationForm);
 
         // then.
         assertNotNull(user);

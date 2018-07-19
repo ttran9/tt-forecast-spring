@@ -3,7 +3,6 @@ package tran.example.weatherforecast.controllers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,10 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.UserService;
-import tran.example.weatherforecast.services.repositoryservices.UserServiceRepositoryImpl;
-import tran.example.weatherforecast.services.security.UserAuthenticationServiceImpl;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -42,7 +39,7 @@ public class IndexControllerTestIT {
      * Allows the UserService to interface with the Users table .
      */
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
      * Holds the configuration of the context for the below tests.
      */

@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.services.UserService;
 
 
@@ -43,7 +43,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
      * @return True if the user has been authenticated, false otherwise.
      */
     @Override
-    public User checkIfUserIsLoggedIn() {
+    public CustomUser checkIfUserIsLoggedIn() {
         log.debug("check if user is logged in");
         SecurityContext securityContext = SecurityContextHolder.getContext();
         if(securityContext != null) {

@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A persisted object holding fields for an authenticated User.
+ * A persisted object holding fields for an authenticated CustomUser.
  */
 @Entity
 @Getter
 @Setter
-public class User extends AbstractDomainClass {
+public class CustomUser extends AbstractDomainClass {
     /**
      * The user name.
      */
@@ -40,7 +40,7 @@ public class User extends AbstractDomainClass {
      * A list of the roles associated with this user.
      */
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "CUSTOM_USER_ROLE", joinColumns = @JoinColumn(name = "custom_user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
     /**

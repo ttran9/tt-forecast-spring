@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.exceptions.NotFoundException;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -21,15 +21,15 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceRepositoryImplIT {
+public class CustomUserServiceRepositoryImplIT {
 
     /**
-     * An object to allowing interfacing with the data layer and the User table.
+     * An object to allowing interfacing with the data layer and the CustomUser table.
      */
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
     /**
-     * A service providing access to CRUD methods on the User table.
+     * A service providing access to CRUD methods on the CustomUser table.
      */
     private UserServiceRepositoryImpl userServiceRepository;
 
@@ -43,7 +43,7 @@ public class UserServiceRepositoryImplIT {
      */
     @Test
     public void listAll() {
-        List<User> users = userServiceRepository.listAll();
+        List<CustomUser> users = userServiceRepository.listAll();
         long expectedNumberOfUsers = userRepository.count();
         assertEquals(expectedNumberOfUsers, users.size());
     }
@@ -65,12 +65,12 @@ public class UserServiceRepositoryImplIT {
     @Test
     public void updateUser() {
         // given
-        Iterable<User> users = userRepository.findAll();
-        User user = users.iterator().next();
+        Iterable<CustomUser> users = userRepository.findAll();
+        CustomUser user = users.iterator().next();
         Date currentDate = new Date();
         user.setLastUpdated(currentDate);
         // when
-        User updatedUser = userServiceRepository.saveOrUpdate(user);
+        CustomUser updatedUser = userServiceRepository.saveOrUpdate(user);
         Date updatedTime = updatedUser.getLastUpdated();
         // then
         assertEquals(currentDate.toString(), updatedTime.toString());
@@ -84,7 +84,7 @@ public class UserServiceRepositoryImplIT {
     @Test
     public void findByUserName() {
         String validUserName = "mweston";
-        User user = userServiceRepository.findByUserName(validUserName);
+        CustomUser user = userServiceRepository.findByUserName(validUserName);
         assertEquals(validUserName, user.getUsername());
     }
 
@@ -95,7 +95,7 @@ public class UserServiceRepositoryImplIT {
     @Test
     public void findByInvalidUserName() {
         String invalidUserName = "aninvalidname";
-        User user = userServiceRepository.findByUserName(invalidUserName);
+        CustomUser user = userServiceRepository.findByUserName(invalidUserName);
         assertNull(user);
     }
 }

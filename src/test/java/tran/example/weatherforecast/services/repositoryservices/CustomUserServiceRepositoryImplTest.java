@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import tran.example.weatherforecast.domain.User;
-import tran.example.weatherforecast.repositories.UserRepository;
+import tran.example.weatherforecast.domain.CustomUser;
+import tran.example.weatherforecast.repositories.CustomUserRepository;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,21 +19,21 @@ import static org.mockito.Mockito.*;
 /**
  * The tests below will test for expected behavior when using the user repository service.
  */
-public class UserServiceRepositoryImplTest {
+public class CustomUserServiceRepositoryImplTest {
 
     /**
      * An example user name for a sample test user.
      */
     private static final String USER_NAME = "username";
     /**
-     * A service providing access to CRUD methods on the User table.
+     * A service providing access to CRUD methods on the CustomUser table.
      */
     private UserServiceRepositoryImpl userServiceRepository;
     /**
-     * An object to allowing interfacing with the data layer and the User table.
+     * An object to allowing interfacing with the data layer and the CustomUser table.
      */
     @Mock
-    private UserRepository userRepository;
+    private CustomUserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -49,13 +49,13 @@ public class UserServiceRepositoryImplTest {
     @Test
     public void listAll() {
         // given
-        User user = new User();
-        List<User> users = new LinkedList<>();
+        CustomUser user = new CustomUser();
+        List<CustomUser> users = new LinkedList<>();
         users.add(user);
         when(userRepository.findAll()).thenReturn(users);
 
         // when
-        List<User> expectedUsers = userServiceRepository.listAll();
+        List<CustomUser> expectedUsers = userServiceRepository.listAll();
 
         // then
         assertEquals(users.size(), expectedUsers.size());
@@ -69,12 +69,12 @@ public class UserServiceRepositoryImplTest {
     @Test
     public void getById() {
         // given
-        User user = new User();
-        Optional<User> optionalUser = Optional.of(user);
+        CustomUser user = new CustomUser();
+        Optional<CustomUser> optionalUser = Optional.of(user);
         when(userRepository.findById(anyLong())).thenReturn(optionalUser);
 
         // when
-        User obtainedUser = userServiceRepository.getById(anyLong());
+        CustomUser obtainedUser = userServiceRepository.getById(anyLong());
 
         // then
         assertNotNull(obtainedUser);
@@ -88,17 +88,17 @@ public class UserServiceRepositoryImplTest {
     @Test
     public void saveUser() {
         // given
-        User user = new User();
+        CustomUser user = new CustomUser();
         user.setUsername(USER_NAME);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.save(any(CustomUser.class))).thenReturn(user);
 
         // when
-        User savedUser = userServiceRepository.saveOrUpdate(user);
+        CustomUser savedUser = userServiceRepository.saveOrUpdate(user);
 
         // then
         assertNotNull(savedUser);
         assertEquals(user.getUsername(), savedUser.getUsername());
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(userRepository, times(1)).save(any(CustomUser.class));
     }
 
     /**
