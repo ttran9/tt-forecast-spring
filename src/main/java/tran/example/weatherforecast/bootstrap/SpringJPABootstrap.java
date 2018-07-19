@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
-import tran.example.weatherforecast.domain.User;
+import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.security.Role;
 import tran.example.weatherforecast.services.RoleService;
 import tran.example.weatherforecast.services.UserService;
@@ -60,7 +60,7 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     public static final String STONERIDGE_MALL_RD_SAMPLE_ADDRESS = "1 Stoneridge Mall Rd";
     /**
-     * An object allowing for interfacing with the data layer and the User table.
+     * An object allowing for interfacing with the data layer and the CustomUser table.
      */
     private UserService userService;
     /**
@@ -117,20 +117,22 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
     }
 
     /**
-     * Assigns the "User" role to all of the bootstrapped users.
+     * Assigns the "CustomUser" role to all of the bootstrapped users.
      * There is also one user without a role that gets generated from this method.
      */
     private void assignUsersToDefaultRole() {
         List<Role> roles = (List<Role>) roleService.listAll();
-        List<User> users = (List<User>) userService.listAll();
+        List<CustomUser> users = (List<CustomUser>) userService.listAll();
 
         users.forEach(user -> {
-            roles.forEach(role -> {
-                if(role.getRole().equals(USER)) {
-                    user.addRole(role);
-                    userService.saveOrUpdate(user);
-                }
-            });
+            if(user.getRoles().size() < 1) {
+                roles.forEach(role -> {
+                    if(role.getRole().equals(USER)) {
+                        user.addRole(role);
+                        userService.saveOrUpdate(user);
+                    }
+                });
+            }
         });
         log.debug("Default roles have been assigned to users!");
     }
@@ -139,16 +141,24 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create users.
      */
     public void loadUsers() {
-        User user1 = new User();
-        user1.setUsername(MWESTON);
-        user1.setPassword(PASSWORD);
 
-        User user2 = new User();
-        user2.setUsername(USER_WITH_ROLE);
-        user2.setPassword(THIRD_ACCOUNT_PASSWORD);
+        // if the below is true data has already been bootstrapped.
+        if(userService.findByUserName(MWESTON) != null && userService.findByUserName
+                (USER_WITH_ROLE) != null) {
+            log.debug("Users already exist so no need to load in the users again!");
+            return ;
+        }
 
-        userService.saveOrUpdate(user1);
-        userService.saveOrUpdate(user2);
+        CustomUser userOne = new CustomUser();
+        userOne.setUsername(MWESTON);
+        userOne.setPassword(PASSWORD);
+
+        CustomUser userTwo = new CustomUser();
+        userTwo.setUsername(USER_WITH_ROLE);
+        userTwo.setPassword(THIRD_ACCOUNT_PASSWORD);
+
+        userService.saveOrUpdate(userOne);
+        userService.saveOrUpdate(userTwo);
 
         log.debug("Test user accounts have been loaded!");
     }
@@ -157,6 +167,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create roles.
      */
     private void loadRoles() {
+        if(roleService.listAll().size() > 0) {
+            log.debug("Test roles have already been loaded.");
+            return ;
+        }
+
         Role role = new Role();
         role.setRole(USER);
         roleService.saveOrUpdate(role);
@@ -169,8 +184,15 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     private void createSampleSearch() {
         String userNameToFind = "mweston";
-        User user = userService.findByUserName(userNameToFind);
+        CustomUser user = userService.findByUserName(userNameToFind);
         List<Search> searches = user.getSearches();
+
+        if(searches.size() > 0) {
+            log.debug(userNameToFind + " has already made searches and there is no need to " +
+                    "bootstrap in default searches");
+            return ;
+        }
+
         /**
          * The below check is done because when using a mysql database I will not be using the
          * create-drop but instead validate so I do not want to make too many sample API requests
