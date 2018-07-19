@@ -70,12 +70,13 @@ public class RoleServiceRepositoryImplIT {
     }
 
     /**
-     * This test checks if there are two roles inserted into the database.
+     * This test verifies if there is a certain number of roles (at this time just a single role)
+     * has been inserted into the database.
      */
     @Test
     public void listAll() {
         List<Role> roles = roleServiceRepository.listAll();
-        int expectedNumberOfRoles = 1;
+        long expectedNumberOfRoles = roleRepository.count();
         assertEquals(expectedNumberOfRoles, roles.size());
     }
 }
