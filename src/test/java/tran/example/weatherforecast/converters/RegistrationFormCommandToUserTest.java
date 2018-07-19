@@ -7,6 +7,9 @@ import tran.example.weatherforecast.domain.User;
 
 import static org.junit.Assert.*;
 
+/**
+ * These tests will verify if information can be converted from a form to a domain (User) object.
+ */
 public class RegistrationFormCommandToUserTest {
 
     private RegistrationFormCommandToUser converter;
@@ -16,16 +19,27 @@ public class RegistrationFormCommandToUserTest {
         converter = new RegistrationFormCommandToUser();
     }
 
+    /**
+     * Tests the case where a null object is converted.
+     * A null object is expected to be returned in this case.
+     */
     @Test
     public void testNullObject() {
         assertNull(converter.convert(null));
     }
 
+    /**
+     * Tests the case where the object being converted is not null so the returned object is not
+     * null.
+     */
     @Test
     public void testEmptyObject() {
         assertNotNull(converter.convert(new RegistrationFormCommand()));
     }
 
+    /**
+     * Checks if the contents from a form can be transferred to a user object.
+     */
     @Test
     public void convert() {
         // given
