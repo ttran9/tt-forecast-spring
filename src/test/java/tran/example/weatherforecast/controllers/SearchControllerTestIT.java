@@ -57,6 +57,10 @@ public class SearchControllerTestIT {
      */
     public static final String IMPROPER_FORMATTED_PAGE_NUMBER = "asdf";
     /**
+     *
+     */
+    public static final String INVALID_ADDRESS = "1";
+    /**
      * Entry point for MVC testing.
      */
     private MockMvc mockMvc;
@@ -217,14 +221,13 @@ public class SearchControllerTestIT {
     @Test
     public void processSearchForForecastWithInvalidAddress() throws Exception {
         long expectedSearchId = searchRepository.count() + 1;
-        String invalidAddress = "1";
         String expectedViewReturn = SearchController.REDIRECT + ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING + SearchController.FIRST_PARAMETER_SEPARATOR +
                 ForecastController.SEARCH_PARAMETER + SearchController.PARAMETER_KEY_VALUE_SEPARATOR
                 + expectedSearchId;
         mockMvc.perform(post(SearchController.BASE_URL + SearchController
                 .FORECAST_SEARCH_RESULT_MAPPING)
-                .param(SearchController.ADDRESS_PARAMETER, invalidAddress))
+                .param(SearchController.ADDRESS_PARAMETER, INVALID_ADDRESS))
                 .andExpect(view().name(expectedViewReturn))
                 .andExpect(status().is3xxRedirection());
     }
@@ -276,14 +279,13 @@ public class SearchControllerTestIT {
     public void processSearchForeCastWhileLoggedInWithInvalidAddress() throws Exception {
         logUserIn();
         Long expectedSearchId = searchRepository.count() + 1;
-        String invalidAddress = "1";
         String expectedViewReturn = SearchController.REDIRECT + ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING + SearchController.FIRST_PARAMETER_SEPARATOR +
                 ForecastController.SEARCH_PARAMETER + SearchController.PARAMETER_KEY_VALUE_SEPARATOR
                 + expectedSearchId;
         mockMvc.perform(post(SearchController.BASE_URL + SearchController
                 .FORECAST_SEARCH_RESULT_MAPPING)
-                .param(SearchController.ADDRESS_PARAMETER, invalidAddress))
+                .param(SearchController.ADDRESS_PARAMETER, INVALID_ADDRESS))
                 .andExpect(view().name(expectedViewReturn))
                 .andExpect(status().is3xxRedirection());
         Search savedSearch = searchRepository.findById(expectedSearchId).get();
