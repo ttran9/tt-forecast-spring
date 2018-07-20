@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.security.Role;
 import tran.example.weatherforecast.exceptions.NotFoundException;
 import tran.example.weatherforecast.repositories.RoleRepository;
@@ -48,16 +49,15 @@ public class RoleServiceRepositoryImplIT {
         // given
         Iterable<Role> roles = roleRepository.findAll();
         Role testRole = roles.iterator().next(); // grab the first role.
-        String oldRoleName = testRole.getRole();
-        String newRole = "NewRole";
+        String newRole = SpringJPABootstrap.USER;
         testRole.setRole(newRole);
 
         // when
         Role savedRole = roleServiceRepository.saveOrUpdate(testRole);
 
         // then
-        assertNotEquals(oldRoleName, savedRole.getRole());
         assertEquals(newRole, savedRole.getRole());
+
     }
 
     /**
