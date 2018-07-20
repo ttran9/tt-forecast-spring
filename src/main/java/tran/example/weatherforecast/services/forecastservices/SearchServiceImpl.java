@@ -15,6 +15,7 @@ import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
+import java.util.Date;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -110,9 +111,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             CustomUser user = checkIfUserIsPresent(debugMessage, exceptionMessage, userId);
             search.setUser(user);
-            Search savedSearch = searchRepository.save(search);
-            savedSearch.setFormattedDateSearch();
-            return savedSearch;
+            return searchRepository.save(search);
         } catch (NotFoundException notFoundException) {
             log.debug("user that is logged in cannot be found!");
             return search;
@@ -140,6 +139,7 @@ public class SearchServiceImpl implements SearchService {
             // transfer data from the forecast object to the search object.
             Search search = new Search();
             search.setAddress(address);
+            search.setFormattedDateSearch();
             // create a reference from the forecast to this search.
             search.setDailyForecasts(forecast.getDailyForecastList().getDailyForecasts());
             search.setHourlyForecasts(forecast.getHourlyForecastList().getHourlyForecasts());

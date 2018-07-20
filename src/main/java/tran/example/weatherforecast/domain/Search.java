@@ -8,6 +8,7 @@ import tran.example.weatherforecast.domain.forecast.HourlyForecast;
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,6 +65,9 @@ public class Search extends AbstractDomainClass {
     public void setFormattedDateSearch() {
         // Multiplied a factor of one thousand because it is in seconds when it is
         // obtained from the Darksky API.
+        if(dateCreated == null) {
+            dateCreated = new Date();
+        }
         formattedDateSearch = monthDayYear.format(dateCreated) + at + timeFormat.format(dateCreated);
     }
 
