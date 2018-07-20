@@ -14,7 +14,7 @@ built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weath
     on Heroku).
         - For a local database I ran the latest PostgreSQL docker image inside of a docker container.
 
-# Summary of this branch (this branch will be more detailed than the prior branches!)
+# Summary of this branch
 
 - The main focus of this branch will be to go from using a H2 database to a Postgres database.
 
