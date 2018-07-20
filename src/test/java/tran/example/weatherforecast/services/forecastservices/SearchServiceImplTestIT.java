@@ -100,7 +100,6 @@ public class SearchServiceImplTestIT {
      * passed into the createSearch method is a null value.
      */
     @Test
-    @Transactional
     public void createSearchWhenLoggedIn() throws MissingServletRequestParameterException {
         // given
         Search search = new Search();
