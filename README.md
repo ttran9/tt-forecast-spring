@@ -1,6 +1,6 @@
 # Weather-Forecast Prototype
 - Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/postgres-integration/graph/badge.svg)
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/test-coverage/graph/badge.svg)
     
 - CircleCI build status:
 ![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
@@ -8,26 +8,18 @@
 # Brief Overview Of This Repository
 
 - This repository is my implementation for a weather forecast prototype web application I previously
-built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weather-forecast) and 
-[C# (using ASP.NET and no TDD)](https://github.com/ttran9/weather-forecast-aspnet).
+built in both [Ruby (using Rails with tests)](https://github.com/ttran9/rails-weather-forecast) and 
+[C# (using ASP.NET and no tests)](https://github.com/ttran9/weather-forecast-aspnet).
     - Some technologies used would be Spring Boot, Java 8, Hibernate 5, PostgreSQL (used locally and 
     on Heroku).
         - For a local database I ran the latest PostgreSQL docker image inside of a docker container.
 
 # Summary of this branch
 
-- The main focus of this branch will be to go from using a H2 database to a Postgres database.
-
-- I will be using the .gitignore file for the application-production.properties from here as it 
-will be storing credentials I do not want to be made public.
-
-- Currently the test coverage for this application is only 60% as can be seen above, in future 
-releases I will be looking into the tests and seeing if I can get the coverage back to around 
-70-80%.
-
-- Previously I was using the domain class User, but because this is a keyword in postgres it is 
-recommended to avoid creating tables with the same name as a reserved word so there will be much 
-refactoring/renaming of variables, fields, and a few classes.
+- Since I did not follow TDD completely (such as testing all classes) this branch will focus on 
+code cleanup and adding tests where applicable and refactoring if necessary.
+    - Note: I'm aware that I should've written more detailed tests and more concise code if I 
+    were following TDD.
 
 # Docker Information (for using the database in development mode)
 
