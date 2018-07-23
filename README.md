@@ -8,6 +8,7 @@ built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weath
     - Some technologies used would be Spring Boot, Java 8, Hibernate 5, PostgreSQL (used locally and 
     on Heroku).
         - For a local database I ran the latest PostgreSQL docker image inside of a docker container.
+- The most up to date branch is [here](https://github.com/ttran9/tt-forecast-spring/tree/test-coverage) and I will merge the changes back on to the master branch once I have refactored the code enough to have higher test coverage (I am aiming for the 70-80% range).         
         
 # Details about this Repository
 
