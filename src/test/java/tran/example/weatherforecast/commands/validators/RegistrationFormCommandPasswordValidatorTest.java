@@ -1,5 +1,6 @@
 package tran.example.weatherforecast.commands.validators;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -15,22 +16,38 @@ import static org.junit.Assert.*;
  * https://stackoverflow.com/questions/9744988/writing-junit-tests-for-spring-validator-implementation
  */
 public class RegistrationFormCommandPasswordValidatorTest {
+    /**
+     * The custom domain object that holds in the user name, password, and verify password fields.
+     */
+    private RegistrationFormCommand registrationFormCommand;
+
+    /**
+     * The custom validator which will validate if the password fields are filled out and if they
+     * match.
+     */
+    private RegistrationFormCommandPasswordValidator validator;
+
+    /**
+     * An object which can store error(s) when a user is filling out a form.
+     */
+    private Errors errors;
+
+    @Before
+    public void setUp() {
+        registrationFormCommand = new RegistrationFormCommand();
+        validator = new RegistrationFormCommandPasswordValidator();
+        errors = new BeanPropertyBindingResult(registrationFormCommand, "registrationFormCommand");
+    }
 
     /**
      * Tests the case where the entered form data is valid.
      */
     @Test
     public void validate() {
-        RegistrationFormCommandPasswordValidator validator = new
-                RegistrationFormCommandPasswordValidator();
 
-        RegistrationFormCommand registrationFormCommand = new RegistrationFormCommand();
         registrationFormCommand.setUserName(SpringJPABootstrap.USER);
         registrationFormCommand.setPassword(SpringJPABootstrap.PASSWORD);
         registrationFormCommand.setVerifyPassword(SpringJPABootstrap.PASSWORD);
-
-        Errors errors = new BeanPropertyBindingResult(registrationFormCommand,
-                "registrationFormCommand");
 
         validator.validate(registrationFormCommand, errors);
 
@@ -46,14 +63,10 @@ public class RegistrationFormCommandPasswordValidatorTest {
         RegistrationFormCommandPasswordValidator validator = new
                 RegistrationFormCommandPasswordValidator();
 
-        RegistrationFormCommand registrationFormCommand = new RegistrationFormCommand();
         registrationFormCommand.setUserName(SpringJPABootstrap.USER);
         registrationFormCommand.setPassword(SpringJPABootstrap.PASSWORD);
         // verify password doesn't match the password.
         registrationFormCommand.setVerifyPassword(SpringJPABootstrap.PASSWORD + "1");
-
-        Errors errors = new BeanPropertyBindingResult(registrationFormCommand,
-                "registrationFormCommand");
 
         validator.validate(registrationFormCommand, errors);
 
@@ -67,20 +80,24 @@ public class RegistrationFormCommandPasswordValidatorTest {
      */
     @Test
     public void validateWithNullPassword() {
-        RegistrationFormCommandPasswordValidator validator = new
-                RegistrationFormCommandPasswordValidator();
 
-        RegistrationFormCommand registrationFormCommand = new RegistrationFormCommand();
         registrationFormCommand.setUserName(SpringJPABootstrap.USER);
         // no password present (null)
         registrationFormCommand.setVerifyPassword(SpringJPABootstrap.PASSWORD + "1");
-
-        Errors errors = new BeanPropertyBindingResult(registrationFormCommand,
-                "registrationFormCommand");
 
         validator.validate(registrationFormCommand, errors);
 
         assertTrue(errors.hasErrors());
         assertNotNull(errors.getFieldError("verifyPassword"));
+    }
+
+    /**
+     * Tests if this custom validator can validate the RegistrationFormCommand object.
+     */
+    @Test
+    public void supports() throws ClassNotFoundException {
+        Class<?> rfcClass = Class.forName(RegistrationFormCommand.class.getName());
+        assertTrue(validator.supports(rfcClass));
+
     }
 }
