@@ -92,6 +92,22 @@ public class RegistrationFormCommandPasswordValidatorTest {
     }
 
     /**
+     * Tests when there is a missing (null) verify password field.
+     */
+    @Test
+    public void validateWithNullVerifyPassword() {
+
+        registrationFormCommand.setUserName(SpringJPABootstrap.USER);
+        registrationFormCommand.setPassword(SpringJPABootstrap.PASSWORD);
+        // no verify password present (null)
+
+        validator.validate(registrationFormCommand, errors);
+
+        assertTrue(errors.hasErrors());
+        assertNotNull(errors.getFieldError("verifyPassword"));
+    }
+
+    /**
      * Tests if this custom validator can validate the RegistrationFormCommand object.
      */
     @Test
