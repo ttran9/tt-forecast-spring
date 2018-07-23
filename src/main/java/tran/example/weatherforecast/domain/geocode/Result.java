@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"address_components", "place_id", "types"})
+@JsonIgnoreProperties(value = {"address_components", "place_id", "types", "plus_code"})
 public class Result {
     @JsonProperty(value = "formatted_address")
     private String formattedAddress;

@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"status"})
+@JsonIgnoreProperties(value = {"status", "plus_code"})
 public class GeocodeResult {
     /**
      * An object holding the latitude and longitude of the address and the entered address.
