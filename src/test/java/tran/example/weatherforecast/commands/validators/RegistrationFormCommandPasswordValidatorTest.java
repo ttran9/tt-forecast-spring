@@ -61,4 +61,26 @@ public class RegistrationFormCommandPasswordValidatorTest {
         assertNotNull(errors.getFieldError("verifyPassword"));
 
     }
+
+    /**
+     * Tests when there is a missing (null) password.
+     */
+    @Test
+    public void validateWithNullPassword() {
+        RegistrationFormCommandPasswordValidator validator = new
+                RegistrationFormCommandPasswordValidator();
+
+        RegistrationFormCommand registrationFormCommand = new RegistrationFormCommand();
+        registrationFormCommand.setUserName(SpringJPABootstrap.USER);
+        // no password present (null)
+        registrationFormCommand.setVerifyPassword(SpringJPABootstrap.PASSWORD + "1");
+
+        Errors errors = new BeanPropertyBindingResult(registrationFormCommand,
+                "registrationFormCommand");
+
+        validator.validate(registrationFormCommand, errors);
+
+        assertTrue(errors.hasErrors());
+        assertNotNull(errors.getFieldError("verifyPassword"));
+    }
 }
