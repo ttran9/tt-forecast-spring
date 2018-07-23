@@ -20,6 +20,7 @@ public class RegistrationFormCommandPasswordValidator implements Validator {
     /**
      * Verifies if the "password" and the "password again" fields are identical from the
      * registration page.
+     * @see org.springframework.validation.AbstractErrors rejectValue
      * @param o The binding object from the registration form which holds the fields entered into
      *          this form.
      * @param errors An object to store the errors as key/value pairs which will hold a
@@ -30,9 +31,13 @@ public class RegistrationFormCommandPasswordValidator implements Validator {
         RegistrationFormCommand registrationFormCommand = (RegistrationFormCommand) o;
         if(registrationFormCommand.getPassword() == null || registrationFormCommand
                 .getVerifyPassword() == null) {
+            // this will show up below the verifyPassword field.
+            errors.rejectValue("verifyPassword", "ErrorWithPasswords", "Both passwords fields " +
+                    "must be filled in!");
             return ;
         }
-        if(!registrationFormCommand.getPassword().equals(registrationFormCommand.getVerifyPassword
+        else if(!registrationFormCommand.getPassword().equals(registrationFormCommand
+                .getVerifyPassword
                 ())) {
             errors.rejectValue("verifyPassword", "PasswordsDontMatch", "passwords don't " +
                     "match!");
