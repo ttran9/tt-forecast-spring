@@ -90,6 +90,8 @@ public class RegistrationControllerTest {
         mockMvc.perform(get(RegistrationController.BASE_URL))
                 .andExpect(view().name(RegistrationController.REGISTRATION_DIRECTORY
                         + RegistrationController.REGISTRATION_PAGE_NAME))
+                .andExpect(forwardedUrl(RegistrationController.REGISTRATION_DIRECTORY
+                        + RegistrationController.REGISTRATION_PAGE_NAME))
                 .andExpect(model().attribute(IndexController.PAGE_ATTRIBUTE,
                         RegistrationController.REGISTRATION_VIEW_TITLE))
                 .andExpect(status().isOk());
