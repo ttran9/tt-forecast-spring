@@ -1,3 +1,4 @@
+-- step 2.
 create table custom_user_role (custom_user_id int8 not null, role_id int8 not null, primary key
 (custom_user_id, role_id));
 create table custom_user (id  bigserial not null, date_created timestamp, last_updated timestamp,
