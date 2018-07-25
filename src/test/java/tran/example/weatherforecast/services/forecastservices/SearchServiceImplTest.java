@@ -7,8 +7,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.exceptions.NotFoundException;
-import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeServiceImpl;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
@@ -57,7 +57,7 @@ public class SearchServiceImplTest {
     }
 
     /**
-     * A search without an address (blank) will return a default latitude and longitude.
+     * A search without an address (blank) and will return a Search object.
      * This test will expect a null Search object because the response from the Google Geocoding
      * API cannot be parsed.
      * @throws MissingServletRequestParameterException Throws this exception if the address passed
