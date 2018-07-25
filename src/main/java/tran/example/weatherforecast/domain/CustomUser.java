@@ -63,26 +63,4 @@ public class CustomUser extends AbstractDomainClass {
             role.getUsers().add(this);
         }
     }
-
-    /**
-     * Removes the association between a user and a role.
-     * @param role The role to be removed.
-     */
-    public void removeRole(Role role){
-        this.roles.remove(role);
-        role.getUsers().remove(this);
-    }
-
-    /**
-     * Two searches are not likely made by the user at the same time so there is on need to check
-     * if the search already exists before appending it to the list of searches.
-     * @param search The search to be added.
-     */
-    public void addSearch(Search search) {
-        // associate the search to the user.
-        search.setUser(this);
-        // add the search to the list of searches.
-        this.searches.add(search);
-    }
-
 }
