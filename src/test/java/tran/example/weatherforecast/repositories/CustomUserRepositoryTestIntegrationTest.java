@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CustomUserRepositoryTestIT {
+public class CustomUserRepositoryTestIntegrationTest {
 
     /**
      * An object to allowing interfacing with the data layer and the CustomUser table.
