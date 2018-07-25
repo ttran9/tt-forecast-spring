@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CustomUserServiceRepositoryImplIT {
+public class CustomUserServiceRepositoryImplIntegrationTest {
 
     /**
      * An object to allowing interfacing with the data layer and the CustomUser table.

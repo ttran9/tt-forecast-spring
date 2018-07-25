@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotEquals;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RoleServiceRepositoryImplIT {
+public class RoleServiceRepositoryImplIntegrationTest {
 
     /**
      * An object to allowing interfacing with the data layer and the Role table.
