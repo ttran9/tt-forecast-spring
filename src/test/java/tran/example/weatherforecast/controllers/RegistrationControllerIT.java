@@ -73,22 +73,6 @@ public class RegistrationControllerIT {
     }
 
     /**
-     * Tests if the user can make the request to the registration page and if there is a title
-     * attribute.
-     * @throws Exception Throws an exception if the GET request cannot be made to the
-     * registration page.
-     */
-    @Test
-    public void getRegistrationPage() throws Exception {
-        mockMvc.perform(get(RegistrationController.BASE_URL))
-                .andExpect(view().name(RegistrationController.REGISTRATION_DIRECTORY
-                        + RegistrationController.REGISTRATION_PAGE_NAME))
-                .andExpect(model().attribute(IndexController.PAGE_ATTRIBUTE,
-                        RegistrationController.REGISTRATION_VIEW_TITLE))
-                .andExpect(status().isOk());
-    }
-
-    /**
      * Tests when the user attempts to view the registration page while already logged in.
      * @throws Exception Throws an exception if the GET request to the registration page cannot
      * be made.
@@ -124,22 +108,6 @@ public class RegistrationControllerIT {
                 .andExpect(status().is3xxRedirection());
         long updatedNumberOfUsers = userRepository.count();
         assertEquals(numberOfExpectedUsers, updatedNumberOfUsers);
-    }
-
-    /**
-     * This will attempt to create a user with a missing field (no password).
-     * @throws Exception Throws an exception if there is an error making a POST request to
-     * process the registration.
-     */
-    @Test
-    public void processRegistrationWithMissingField() throws Exception {
-        String newUserName = "greatusername";
-        mockMvc.perform(post(RegistrationController.BASE_URL)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param(userNameField, newUserName)
-                .param(verifyPasswordField, samplePasswordValue))
-                .andExpect(view().name(expectedErrorViewName))
-                .andExpect(status().isOk());
     }
 
     /**
