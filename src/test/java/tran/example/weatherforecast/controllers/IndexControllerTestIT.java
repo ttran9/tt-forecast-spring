@@ -13,14 +13,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
-import tran.example.weatherforecast.repositories.CustomUserRepository;
-import tran.example.weatherforecast.services.UserService;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -31,16 +30,6 @@ public class IndexControllerTestIT {
      */
     private MockMvc mockMvc;
     /**
-     * Object used to verify if the user is logged in.
-     */
-    @Autowired
-    private UserService userService;
-    /**
-     * Allows the UserService to interface with the Users table .
-     */
-    @Autowired
-    private CustomUserRepository userRepository;
-    /**
      * Holds the configuration of the context for the below tests.
      */
     @Autowired
@@ -48,7 +37,9 @@ public class IndexControllerTestIT {
 
     @Before
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     /**
@@ -62,6 +53,7 @@ public class IndexControllerTestIT {
                 (SpringJPABootstrap.MWESTON, SpringJPABootstrap.PASSWORD, authorities));
         mockMvc.perform(get(IndexController.URL_PATH_SEPARATOR +
                 IndexController.LOGIN_PAGE_MAPPING))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(forwardedUrl(IndexController.DENIED_PAGE_MAPPING))
+                .andExpect(status().is4xxClientError());
     }
 }

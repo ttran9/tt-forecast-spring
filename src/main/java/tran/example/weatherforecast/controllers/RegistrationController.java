@@ -42,10 +42,6 @@ public class RegistrationController extends ControllerHelper {
      */
     public static final String REGISTRATION_VIEW_TITLE = "Registration!";
     /**
-     * Message to indicate the user cannot perform the registration while logged in.
-     */
-    public static final String UNABLE_TO_REGISTER = "you cannot register while logged in";
-    /**
      * Allows for the creation of users.
      */
     private final RegistrationService registrationService;
@@ -57,18 +53,13 @@ public class RegistrationController extends ControllerHelper {
      * Used to verify if the two passwords are identical.
      */
     private Validator validator;
-    /**
-     * A service used to determine if the user is logged in.
-     */
-    private final UserAuthenticationService userAuthenticationService;
 
     @Autowired
     public RegistrationController(RegistrationService registrationService, @Qualifier
             ("registrationFormCommandPasswordValidator") Validator
-            validator, UserAuthenticationService userAuthenticationService) {
+            validator) {
         this.registrationService = registrationService;
         this.validator = validator;
-        this.userAuthenticationService = userAuthenticationService;
     }
 
     /**
@@ -83,12 +74,7 @@ public class RegistrationController extends ControllerHelper {
                                                   Model model) {
         log.debug("displaying registration page!");
         addTitleAttribute(model, REGISTRATION_VIEW_TITLE);
-        if(userAuthenticationService.checkIfUserIsLoggedIn() == null) {
-            return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
-        }
-        model.addAttribute(ControllerExceptionHandler.EXCEPTION_KEY, new Exception(UNABLE_TO_REGISTER));
-        model.addAttribute(ForecastController.SEARCH_PARAMETER, new SearchCommand());
-        return IndexController.URL_PATH_SEPARATOR + IndexController.INDEX_VIEW_NAME;
+        return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
     }
 
     /**
@@ -96,16 +82,14 @@ public class RegistrationController extends ControllerHelper {
      * with an encrypted password and the user will be redirected to the home page.
      * @param registrationFormCommand An object to transfer/bind entered data values.
      * @param bindingResult An object which will hold errors if any.
-     * @param model An object holding attributes such as the title of the registration page.
      * @return Returns the path to the home page if the registration had no errors, if there were
      * errors the user then the path to the registration page.
      */
     @PostMapping
     public String processRegistration(@Valid @ModelAttribute(RegistrationController.registrationFormCommand)
                                       RegistrationFormCommand registrationFormCommand,
-                                      BindingResult bindingResult, Model model) {
+                                      BindingResult bindingResult) {
         log.debug("processing the registration from the controller!");
-        if(userAuthenticationService.checkIfUserIsLoggedIn() == null) {
             validator.validate(registrationFormCommand, bindingResult);
             if(bindingResult.hasErrors()) {
                 bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
@@ -113,12 +97,5 @@ public class RegistrationController extends ControllerHelper {
             }
             registrationService.registerUser(registrationFormCommand);
             return SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR;
-        } else {
-            // user is logged in so the user cannot register during this time.
-            model.addAttribute(ControllerExceptionHandler.EXCEPTION_KEY, UNABLE_TO_REGISTER);
-            return IndexController.INDEX_VIEW_NAME;
-        }
-
     }
-
 }

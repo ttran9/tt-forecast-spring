@@ -6,17 +6,25 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,6 +70,39 @@ public class RegistrationControllerIT {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+    }
+
+    /**
+     * Tests if the user can make the request to the registration page and if there is a title
+     * attribute.
+     * @throws Exception Throws an exception if the GET request cannot be made to the
+     * registration page.
+     */
+    @Test
+    public void getRegistrationPage() throws Exception {
+        mockMvc.perform(get(RegistrationController.BASE_URL))
+                .andExpect(view().name(RegistrationController.REGISTRATION_DIRECTORY
+                        + RegistrationController.REGISTRATION_PAGE_NAME))
+                .andExpect(model().attribute(IndexController.PAGE_ATTRIBUTE,
+                        RegistrationController.REGISTRATION_VIEW_TITLE))
+                .andExpect(status().isOk());
+    }
+
+    /**
+     * Tests when the user attempts to view the registration page while already logged in.
+     * @throws Exception Throws an exception if the GET request to the registration page cannot
+     * be made.
+     */
+    @Test
+    public void getRegistrationPageWhileLoggedIn() throws Exception {
+        // simulate a user being logged in.
+        Collection<GrantedAuthority> authorities = new LinkedList<>();
+        authorities.add(new SimpleGrantedAuthority("User"));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken
+                (SpringJPABootstrap.MWESTON, SpringJPABootstrap.PASSWORD, authorities));
+        mockMvc.perform(get(RegistrationController.BASE_URL))
+                .andExpect(forwardedUrl(IndexController.DENIED_PAGE_MAPPING))
+                .andExpect(status().is4xxClientError());
     }
 
     /**

@@ -2,23 +2,9 @@ package tran.example.weatherforecast.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
-import tran.example.weatherforecast.services.UserService;
-import tran.example.weatherforecast.services.security.UserAuthenticationService;
-import tran.example.weatherforecast.services.security.UserAuthenticationServiceImpl;
-
-import java.util.Collection;
-import java.util.LinkedList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,16 +18,11 @@ public class IndexControllerTest {
      * Entry point for MVC testing.
      */
     private MockMvc mockMvc;
-    /**
-     * Object used to verify if the user is logged in.
-     */
-    @Mock
-    private UserService userService;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        IndexController indexController = new IndexController(new UserAuthenticationServiceImpl(userService));
+        IndexController indexController = new IndexController();
         mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
     }
 

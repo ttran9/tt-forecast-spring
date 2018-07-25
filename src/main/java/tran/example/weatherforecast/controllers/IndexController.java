@@ -64,19 +64,6 @@ public class IndexController extends ControllerHelper {
      * The name of the not found page.
      */
     public static final String NOT_FOUND_VIEW_NAME = "resourcenotfound";
-    /**
-     * String to redirect to the home/index page.
-     */
-    public static final String REDIRECT_TO_INDEX_PAGE = "redirect:/";
-    /**
-     * A service used to determine if the user is logged in.
-      */
-    private final UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    public IndexController(UserAuthenticationService userAuthenticationService) {
-        this.userAuthenticationService = userAuthenticationService;
-    }
 
     /**
      * Processes the request to retrieve the index page.
@@ -112,12 +99,8 @@ public class IndexController extends ControllerHelper {
     @GetMapping(LOGIN_PAGE_MAPPING)
     public String loginForm(Model model) {
         log.debug("Displaying the login page/form!");
-        if(userAuthenticationService.checkIfUserIsLoggedIn() == null) {
-            addTitleAttribute(model, LOGIN_PAGE_TITLE);
-            return SIGNIN_VIEW_NAME;
-        }
-        return REDIRECT_TO_INDEX_PAGE;
-
+        addTitleAttribute(model, LOGIN_PAGE_TITLE);
+        return SIGNIN_VIEW_NAME;
     }
 
     /**
