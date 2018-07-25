@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringSecurityCustomUserDetailsServiceImplTestIT {
+public class SpringSecurityCustomUserDetailsServiceImplIntegrationTest {
     /**
      * An object to allowing interfacing with the data layer and the CustomUser table.
      */
@@ -61,6 +61,8 @@ public class SpringSecurityCustomUserDetailsServiceImplTestIT {
     @Test(expected = UsernameNotFoundException.class)
     public void loadUserByInvalidUserName() {
         String invalidUserName = "notmweston";
-        springSecurityUserDetailsService.loadUserByUsername(invalidUserName);
+        UserDetails userDetails = springSecurityUserDetailsService.loadUserByUsername
+                (invalidUserName);
+        assertNull(userDetails);
     }
 }
