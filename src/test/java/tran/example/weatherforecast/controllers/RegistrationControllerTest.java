@@ -63,10 +63,6 @@ public class RegistrationControllerTest {
      */
     private final String userNameField = "userName";
     /**
-     * Used to bind the entered password inside of post calls to the password input field.
-     */
-    private final String passwordField = "password";
-    /**
      * Used to bind the entered verify password inside of post calls to the password input field.
      */
     private final String verifyPasswordField = "verifyPassword";
@@ -121,6 +117,4 @@ public class RegistrationControllerTest {
                 .andExpect(view().name(expectedErrorViewName))
                 .andExpect(status().isOk());
     }
-
-
 }
