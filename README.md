@@ -20,6 +20,11 @@ built in both [Ruby (using Rails with tests)](https://github.com/ttran9/rails-we
 code cleanup and adding tests where applicable and refactoring if necessary.
     - Note: I'm aware that I should've written more detailed tests and more concise code if I 
     were following TDD.
+    
+    # What I learned:
+        - I need to be more careful while naming my "integration test" files because I 
+        misnamed this it caused for my tests to not be detected by Codecov's line coverage and my 
+        coverage was appearing to be much lower than it was.
 
 # Docker Information (for using the database in development mode)
 
