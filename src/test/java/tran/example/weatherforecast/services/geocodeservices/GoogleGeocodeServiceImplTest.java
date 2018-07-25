@@ -50,17 +50,38 @@ public class GoogleGeocodeServiceImplTest {
     }
 
     /**
-     * This test will make the API request without a required parameter which is expected to
-     * return content but this will not contain the latitude and longitude but instead key/value
-     * pairs which contain information about the error.
+     * This test will make the API request with a blank address which is expected to return content
+     * but this will not contain the latitude and longitude but instead key/value pairs which
+     * contain information about the error.
      * @throws IOException Throws an exception if the request cannot be made.
      * @throws MissingServletRequestParameterException Throws this exception if the address
      * passed into the getContent method is a null value.
      */
     @Test
-    public void getContentWithInvalidAddress() throws IOException, MissingServletRequestParameterException {
+    public void getContentWithBlankAddress() throws IOException,
+            MissingServletRequestParameterException {
         String response = googleGeocodeService.getContent("");
         String errorMessage = googleGeocodeService.getErrorFromContent(response, ERROR_MESSAGE_KEY);
         assertEquals(EXPECTED_ERROR_MESSAGE, errorMessage);
+    }
+
+    /**
+     * This test will make the API request with an erroneous address which is expected to return
+     * no results but the service returns a default latitude and longitude.
+     * @throws IOException Throws an exception if the request cannot be made.
+     * @throws MissingServletRequestParameterException Throws this exception if the address
+     * passed into the getContent method is a null value.
+     */
+    @Test
+    public void getContentWithInvalidAddress() throws IOException,
+            MissingServletRequestParameterException {
+        double delta = 0.0;
+        double expectedLatitude = 37.4224764;
+        double expectedLongitude = -122.0842499;
+        String response = googleGeocodeService.getContent("fdsfdsfsdfsdfds");
+        Location location = googleGeocodeService.getLatitudeAndLongitude(response);
+        assertNotNull(location);
+        assertEquals(expectedLatitude, location.getLatitude(), delta);
+        assertEquals(expectedLongitude, location.getLongitude(), delta);
     }
 }
