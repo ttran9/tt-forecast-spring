@@ -90,12 +90,12 @@ public class RegistrationController extends ControllerHelper {
                                       RegistrationFormCommand registrationFormCommand,
                                       BindingResult bindingResult) {
         log.debug("processing the registration from the controller!");
-            validator.validate(registrationFormCommand, bindingResult);
-            if(bindingResult.hasErrors()) {
-                bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
-                return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
-            }
-            registrationService.registerUser(registrationFormCommand);
-            return SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR;
+        validator.validate(registrationFormCommand, bindingResult);
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
+        }
+        registrationService.registerUser(registrationFormCommand);
+        return SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR;
     }
 }
