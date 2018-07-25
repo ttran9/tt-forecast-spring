@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IndexControllerTestIT {
+public class IndexControllerIntegrationTest {
     /**
      * Entry point for MVC testing.
      */

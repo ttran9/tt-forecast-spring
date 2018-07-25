@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SearchControllerTestIT {
+public class SearchControllerIntegrationTest {
 
     /**
      * a string representing a role that does not have the authorization to access certain URL

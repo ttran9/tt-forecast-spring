@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ForecastControllerTestIT {
+public class ForecastControllerIntegrationTest {
     /**
      * Entry point for MVC testing.
      */
@@ -97,7 +97,7 @@ public class ForecastControllerTestIT {
         mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.DAILY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
-                .param(ForecastController.PAGE_PARAMETER, SearchControllerTestIT.INVALID_PAGE_NUMBER))
+                .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.INVALID_PAGE_NUMBER))
                 .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR +
                         ForecastController.DAILY_FORECASTS_VIEW_NAME))
@@ -123,7 +123,7 @@ public class ForecastControllerTestIT {
         MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.DAILY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
-                .param(ForecastController.PAGE_PARAMETER, SearchControllerTestIT.IMPROPER_FORMATTED_PAGE_NUMBER))
+                .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.IMPROPER_FORMATTED_PAGE_NUMBER))
                 .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
                 .andExpect(status().is4xxClientError()).andReturn();
         ModelAndView modelAndView = mvcResult.getModelAndView();
@@ -179,7 +179,7 @@ public class ForecastControllerTestIT {
         MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
-                .param(ForecastController.PAGE_PARAMETER, SearchControllerTestIT.INVALID_PAGE_NUMBER))
+                .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.INVALID_PAGE_NUMBER))
                 .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR +
                         ForecastController.HOURLY_FORECASTS_VIEW_NAME))
@@ -206,7 +206,7 @@ public class ForecastControllerTestIT {
         MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
-                .param(ForecastController.PAGE_PARAMETER, SearchControllerTestIT.IMPROPER_FORMATTED_PAGE_NUMBER))
+                .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.IMPROPER_FORMATTED_PAGE_NUMBER))
                 .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
                 .andExpect(status().is4xxClientError()).andReturn();
         ModelAndView modelAndView = mvcResult.getModelAndView();
