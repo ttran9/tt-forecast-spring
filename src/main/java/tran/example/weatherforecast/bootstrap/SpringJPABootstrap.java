@@ -41,11 +41,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
     /**
      * A user that doesn't make searches but has a role.
      */
-    public static final String USER_WITH_ROLE = "testAccount";
+    public static final String TEST_ACCOUNT_USER_NAME = "testAccount";
     /**
      * The password for this test account
      */
-    public static final String THIRD_ACCOUNT_PASSWORD = "samplepw";
+    public static final String TEST_ACCOUNT_PASSWORD = "samplepw";
     /**
      * The address to make a sample search and forecast research for.
      */
@@ -144,7 +144,7 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
         // if the below is true data has already been bootstrapped.
         if(userService.findByUserName(MWESTON) != null && userService.findByUserName
-                (USER_WITH_ROLE) != null) {
+                (TEST_ACCOUNT_USER_NAME) != null) {
             log.debug("Users already exist so no need to load in the users again!");
             return ;
         }
@@ -154,8 +154,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         userOne.setPassword(PASSWORD);
 
         CustomUser userTwo = new CustomUser();
-        userTwo.setUsername(USER_WITH_ROLE);
-        userTwo.setPassword(THIRD_ACCOUNT_PASSWORD);
+        userTwo.setUsername(TEST_ACCOUNT_USER_NAME);
+        userTwo.setPassword(TEST_ACCOUNT_PASSWORD);
 
         userService.saveOrUpdate(userOne);
         userService.saveOrUpdate(userTwo);
