@@ -153,25 +153,11 @@ public class SearchControllerIntegrationTest {
     }
 
     /**
-     * simulates when the user is authenticated but not authorized to view the page.
-     * @throws Exception Throws an exception if there is an error while attempting to view the
-     * searches page.
-     */
-    @Test
-    @WithMockUser(authorities = INVALID_ROLE)
-    public void getSearchesPageInvalidUserRole() throws Exception {
-        mockMvc.perform(get(SearchController.BASE_URL +
-                SearchController.PRIOR_USER_SEARCHES_MAPPING))
-                .andExpect(status().is4xxClientError());
-    }
-
-    /**
      * simulates when the user is not logged in and trying to view a page that requires
      * authentication.
      * @throws Exception Throws an exception if there is an error performing the get request.
      */
     @Test
-    @WithAnonymousUser
     public void getSearchesPageUserNotLoggedIn() throws Exception {
         mockMvc.perform(get(SearchController.BASE_URL +
                 SearchController.PRIOR_USER_SEARCHES_MAPPING))
