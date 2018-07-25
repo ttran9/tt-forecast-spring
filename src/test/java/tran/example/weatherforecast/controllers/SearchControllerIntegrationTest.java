@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,12 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SearchControllerIntegrationTest {
-
-    /**
-     * a string representing a role that does not have the authorization to access certain URL
-     * mappings.
-     */
-    private static final String INVALID_ROLE = "NoRole";
     /**
      * Invalid page number as a string.
      */
@@ -101,6 +96,29 @@ public class SearchControllerIntegrationTest {
         ModelAndView modelAndView = mvcResult.getModelAndView();
         Map<String, Object> modelMap = modelAndView.getModel();
         assertNotNull(modelMap.get(SearchController.LIST_KEY));
+        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
+        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
+        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+    }
+
+    /**
+     * simulates when a user is authenticated but has not made a search.
+     * @throws Exception Throws an exception if there is an error performing the get request to
+     * show the searches page.
+     */
+    @Test
+    public void getSearchesPageWhileLoggedInWithNoSearchesMade() throws Exception {
+        logUserInWithoutSearches();
+        MvcResult mvcResult = mockMvc.perform(get(SearchController.BASE_URL +
+                SearchController.PRIOR_USER_SEARCHES_MAPPING))
+                .andExpect(view().name(SearchController.SEARCH_BASE_VIEW_URL_RETURN +
+                        IndexController.URL_PATH_SEPARATOR + SearchController.USER_SEARCH_VIEW_NAME))
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
+                        SearchController.PRIOR_USER_SEARCHES_TITLE))
+                .andExpect(status().isOk()).andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        Map<String, Object> modelMap = modelAndView.getModel();
+        assertNull(modelMap.get(SearchController.LIST_KEY));
         assertNotNull(modelMap.get(SearchController.PAGER_KEY));
         assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
         assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
@@ -287,5 +305,16 @@ public class SearchControllerIntegrationTest {
         authorities.add(new SimpleGrantedAuthority("User"));
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken
                 (SpringJPABootstrap.MWESTON, SpringJPABootstrap.PASSWORD, authorities));
+    }
+
+    /**
+     * simulate user login that has no made no searches
+     */
+    private void logUserInWithoutSearches() {
+        Collection<GrantedAuthority> authorities = new LinkedList<>();
+        authorities.add(new SimpleGrantedAuthority("User"));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken
+                (SpringJPABootstrap.TEST_ACCOUNT_USER_NAME, SpringJPABootstrap.TEST_ACCOUNT_PASSWORD,
+                        authorities));
     }
 }
