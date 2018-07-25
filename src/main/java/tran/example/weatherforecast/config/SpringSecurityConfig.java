@@ -1,5 +1,6 @@
 package tran.example.weatherforecast.config;
 
+import org.jboss.jandex.Index;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.controllers.IndexController;
+import tran.example.weatherforecast.controllers.RegistrationController;
 import tran.example.weatherforecast.controllers.SearchController;
 
 /**
@@ -84,7 +86,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/static/css").permitAll()
                 .and().authorizeRequests().antMatchers("/js").permitAll()
                 .and().formLogin().loginPage(IndexController.URL_PATH_SEPARATOR + IndexController
-                .LOGIN_PAGE_MAPPING).permitAll()
+                .LOGIN_PAGE_MAPPING)
+                .and().authorizeRequests().antMatchers(IndexController.URL_PATH_SEPARATOR +
+                IndexController.LOGIN_PAGE_MAPPING).anonymous()
+                .and().authorizeRequests().antMatchers(RegistrationController.BASE_URL).anonymous()
                 .and().authorizeRequests().antMatchers(IndexController.URL_PATH_SEPARATOR).permitAll()
                 .and().authorizeRequests().antMatchers(SearchController.BASE_URL +
                                         SearchController.PRIOR_USER_SEARCHES_MAPPING)
