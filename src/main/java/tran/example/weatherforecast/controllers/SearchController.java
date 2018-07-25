@@ -107,9 +107,6 @@ public class SearchController extends ControllerHelper {
         addTitleAttribute(model, PRIOR_USER_SEARCHES_TITLE);
         // with the help of spring security the below is expected to not be null.
         CustomUser user = userAuthenticationService.checkIfUserIsLoggedIn();
-        if(user == null) {
-            return IndexController.URL_PATH_SEPARATOR + IndexController.LOGIN_PAGE_MAPPING;
-        }
         setModelWithPaginatedContent(model, pageOptional, user);
         return SEARCH_BASE_VIEW_URL_RETURN + IndexController.URL_PATH_SEPARATOR + USER_SEARCH_VIEW_NAME;
     }
@@ -127,9 +124,7 @@ public class SearchController extends ControllerHelper {
         int currentPage = page.orElse(defaultPage);
         Page<Search> searches = searchService.getSearchesByUserId(user.getId(), currentPage);
         Pager pager = new Pager(searches.getTotalPages(), searches.getNumber());
-        if(searches.getTotalElements() == 0) {
-            model.addAttribute(LIST_KEY, null);
-        } else {
+        if(searches.getTotalElements() > 0) {
             model.addAttribute(LIST_KEY, searches);
         }
         model.addAttribute(PAGER_KEY, pager);
