@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SearchServiceImplTestIT {
+public class SearchServiceImplIntegrationTest {
     /**
      * The expected number of hourly forecasts from a search.
      */

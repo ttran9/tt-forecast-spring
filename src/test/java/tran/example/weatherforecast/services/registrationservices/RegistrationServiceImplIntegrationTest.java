@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RegistrationServiceImplTestIT {
+public class RegistrationServiceImplIntegrationTest {
     /**
      * Used to save the user to the CustomUser table.
      */
