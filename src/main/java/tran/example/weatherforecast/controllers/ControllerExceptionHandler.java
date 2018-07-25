@@ -55,21 +55,6 @@ public class ControllerExceptionHandler {
     }
 
     /**
-     * This can occur when the user has made a search and the forecasts cannot be parsed to JSON
-     * strings to be displayed.
-     * @param exception The object with information about the exception.
-     * @return Returns an object that holds a view's name (the index page) and another object
-     * containing information describing the error.
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST) // TODO : May have to change this 422? (unprocessable
-    // entity)
-    @ExceptionHandler(JsonProcessingException.class)
-    public ModelAndView handleErrorForParsingJsonStrings(JsonProcessingException exception) {
-        log.error("Handling the error where the forecast contents cannot be parsed to JSON!");
-        return populateModelAndViewWithInformation(exception, IndexController.INDEX_VIEW_NAME);
-    }
-
-    /**
      * Helper method to populate the ModelAndView object with the view name to be returned and
      * an object that contains information about the exception.
      * @param exception An object holding specific information (a message) about the error for
