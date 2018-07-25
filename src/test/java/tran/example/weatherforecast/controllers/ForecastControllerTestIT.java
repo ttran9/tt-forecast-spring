@@ -94,7 +94,7 @@ public class ForecastControllerTestIT {
      */
     @Test
     public void getDailyForecastsFromSearchWithIdAndInvalidPageNumber() throws Exception{
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.DAILY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
                 .param(ForecastController.PAGE_PARAMETER, SearchControllerTestIT.INVALID_PAGE_NUMBER))
@@ -103,13 +103,13 @@ public class ForecastControllerTestIT {
                         ForecastController.DAILY_FORECASTS_VIEW_NAME))
                 .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
                         ForecastController.DAILY_FORECAST_TITLE))
-                .andExpect(status().isOk()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(SearchController.LIST_KEY));
-        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
-        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
-        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+                .andExpect(model().attributeExists(ForecastController.DAILY_FORECAST_LOW_TEMPERATURE_LIST_PARAMETER))
+                .andExpect(model().attributeExists(ForecastController.DAILY_FORECAST_HIGH_TEMPERATURE_LIST_PARAMETER))
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
     }
 
     /**
