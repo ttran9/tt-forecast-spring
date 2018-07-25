@@ -82,6 +82,7 @@ public class UserToCustomUserDetailsTest {
         assertTrue(userDetails.isAccountNonLocked());
         assertTrue(userDetails.isCredentialsNonExpired());
         assertTrue(userDetails.isAccountNonLocked());
+        assertTrue(userDetails.isEnabled());
     }
 
 
