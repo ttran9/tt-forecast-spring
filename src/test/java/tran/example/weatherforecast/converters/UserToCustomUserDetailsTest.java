@@ -77,6 +77,11 @@ public class UserToCustomUserDetailsTest {
         assertEquals(user.getUsername(), userDetails.getUsername());
         assertEquals(user.getEncryptedPassword(), userDetails.getPassword());
         assertEquals(expectedSize, userDetails.getAuthorities().size());
+        assertTrue(userDetails.getEnabled());
+        assertTrue(userDetails.isAccountNonExpired());
+        assertTrue(userDetails.isAccountNonLocked());
+        assertTrue(userDetails.isCredentialsNonExpired());
+        assertTrue(userDetails.isAccountNonLocked());
     }
 
 
