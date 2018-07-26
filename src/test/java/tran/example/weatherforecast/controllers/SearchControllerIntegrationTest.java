@@ -78,27 +78,24 @@ public class SearchControllerIntegrationTest {
     }
 
     /**
-     * simulates when a user is authenticated and has the proper role to view their prior searches
-     * page.
+     * simulates when a user is authenticated and attempts to view their prior searches page.
      * @throws Exception If there is an error performing the get request.
      */
     @Test
     public void getSearchesPage() throws Exception {
         // simulate a user being logged in.
         logUserIn();
-        MvcResult mvcResult = mockMvc.perform(get(SearchController.BASE_URL +
+        mockMvc.perform(get(SearchController.BASE_URL +
                 SearchController.PRIOR_USER_SEARCHES_MAPPING))
                 .andExpect(view().name(SearchController.SEARCH_BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR + SearchController.USER_SEARCH_VIEW_NAME))
                 .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
                         SearchController.PRIOR_USER_SEARCHES_TITLE))
-                .andExpect(status().isOk()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(SearchController.LIST_KEY));
-        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
-        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
-        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
     }
 
     /**
@@ -109,44 +106,39 @@ public class SearchControllerIntegrationTest {
     @Test
     public void getSearchesPageWhileLoggedInWithNoSearchesMade() throws Exception {
         logUserInWithoutSearches();
-        MvcResult mvcResult = mockMvc.perform(get(SearchController.BASE_URL +
+        mockMvc.perform(get(SearchController.BASE_URL +
                 SearchController.PRIOR_USER_SEARCHES_MAPPING))
                 .andExpect(view().name(SearchController.SEARCH_BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR + SearchController.USER_SEARCH_VIEW_NAME))
                 .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
                         SearchController.PRIOR_USER_SEARCHES_TITLE))
-                .andExpect(status().isOk()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNull(modelMap.get(SearchController.LIST_KEY));
-        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
-        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
-        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+                .andExpect(model().attributeDoesNotExist(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
     }
 
     /**
-     * simulates when a user is authenticated and has the proper role to view their prior searches
-     * page but enters in an improper page value (such as "asdf" instead of a number such as "1").
+     * simulates when a user is authenticated and attempts to view their prior searches page but
+     * enters in an improper page value (such as "asdf" instead of a number such as "1").
      * @throws Exception If there is an error performing the get request.
      */
     @Test
     public void getSearchesPageWithInvalidFormattedParameter() throws Exception {
         // simulate a user being logged in.
         logUserIn();
-        MvcResult mvcResult = mockMvc.perform(get(SearchController.BASE_URL +
+        mockMvc.perform(get(SearchController.BASE_URL +
                 SearchController.PRIOR_USER_SEARCHES_MAPPING)
                 .param(ForecastController.PAGE_PARAMETER, IMPROPER_FORMATTED_PAGE_NUMBER))
                 .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
-                .andExpect(status().is4xxClientError()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(ControllerExceptionHandler.EXCEPTION_KEY));
+                .andExpect(model().attributeExists(ControllerExceptionHandler.EXCEPTION_KEY))
+                .andExpect(status().is4xxClientError());
     }
 
     /**
-     * simulates when a user is authenticated and has the proper role to view their prior searches
-     * page but enters in a page value that is out of range ("-1" instead of a a positive such as
-     * "1").
+     * simulates when a user is authenticated and attempts to view their prior searches page but
+     * enters in a page value that is out of range ("-1" instead of a a positive such as "1").
      * The expected result is that this will actually function as a good search because the
      * service will just default the page parameter to page 1.
      * @throws Exception Throws an exception if there is an error performing the get request.
@@ -156,18 +148,16 @@ public class SearchControllerIntegrationTest {
         // simulate a user being logged in.
         logUserIn();
         // make the request
-        MvcResult mvcResult = mockMvc.perform(get(SearchController.BASE_URL +
+        mockMvc.perform(get(SearchController.BASE_URL +
                 SearchController.PRIOR_USER_SEARCHES_MAPPING)
                 .param(ForecastController.PAGE_PARAMETER, INVALID_PAGE_NUMBER))
                 .andExpect(view().name(SearchController.SEARCH_BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR + SearchController.USER_SEARCH_VIEW_NAME))
-                .andExpect(status().isOk()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(SearchController.LIST_KEY));
-        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
-        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
-        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
     }
 
     /**
@@ -317,4 +307,5 @@ public class SearchControllerIntegrationTest {
                 (SpringJPABootstrap.TEST_ACCOUNT_USER_NAME, SpringJPABootstrap.TEST_ACCOUNT_PASSWORD,
                         authorities));
     }
+
 }
