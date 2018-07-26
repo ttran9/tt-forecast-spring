@@ -2,17 +2,19 @@ package tran.example.weatherforecast.services.forecastservices;
 
 import org.junit.Before;
 import org.junit.Test;
+import tran.example.weatherforecast.domain.forecast.DailyForecast;
 import tran.example.weatherforecast.domain.forecast.Forecast;
+import tran.example.weatherforecast.domain.forecast.HourlyForecast;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests the functionality of the service that leverages the Darksky API to get forecasts.
  */
 public class DarkskyServiceImplTest {
-
     /**
      * Accesses the service makes HTTP get requests to the Darksky API.
      */
@@ -37,7 +39,7 @@ public class DarkskyServiceImplTest {
         final double expectedLatitude = 37.8267;
         final double expectedLongitude = -122.4233;
         final double delta = 0.0;
-        final int expectedValue = 0;
+        final int expectedValue = 0, firstIndex = 0;
         final int expectedNumberOfHourlyForecasts = 49;
         final int expectedNumberOfDailyForecasts = 8;
 
@@ -50,6 +52,46 @@ public class DarkskyServiceImplTest {
                 .getHourlyForecasts().size());
         assertEquals(expectedNumberOfDailyForecasts, forecast.getDailyForecastList()
                 .getDailyForecasts().size());
+
+        DailyForecast dailyForecast = forecast.getDailyForecastList().getDailyForecasts().get
+                (firstIndex);
+        HourlyForecast hourlyForecast = forecast.getHourlyForecastList().getHourlyForecasts().get
+                (firstIndex);
+
+        // perform extra validation.
+        checkForDataMembers(dailyForecast, hourlyForecast);
+    }
+
+    /**
+     * Helper method to check if other fields in the daily and hourly forecasts are not null and
+     * if some have certain expected values.
+     * @param dailyForecast The daily forecast with fields to be checked.
+     * @param hourlyForecast The hourly forecast with fields to be checked.
+     */
+    private void checkForDataMembers(DailyForecast dailyForecast, HourlyForecast hourlyForecast) {
+        final int expectedMillisecondsFactor = 1000;
+        String at = " at ";
+
+        assertNotNull(dailyForecast.getSummary());
+        assertNotNull(dailyForecast.getTime());
+        assertNotNull(dailyForecast.getTemperatureHighTime());
+        assertNotNull(dailyForecast.getTemperatureLowTime());
+        // the below are used to help format the date which is displayed on the daily forecast
+        // graphs.
+        assertNotNull(dailyForecast.getMonthDayYear());
+        assertNotNull(dailyForecast.getTimeFormat());
+        assertEquals(expectedMillisecondsFactor, dailyForecast.getSecondsToMilliSecondsFactor());
+        assertEquals(at, dailyForecast.getAt());
+
+        // check the fields for the hourly forecasts.
+        assertNotNull(hourlyForecast.getSummary());
+        assertNotNull(hourlyForecast.getTime());
+        // the below are used to help format the date which is displayed on the daily forecast
+        // graphs.
+        assertNotNull(hourlyForecast.getMonthDayYear());
+        assertNotNull(hourlyForecast.getTimeFormat());
+        assertEquals(expectedMillisecondsFactor, hourlyForecast.getSecondsToMilliSecondsFactor());
+        assertEquals(at, hourlyForecast.getAt());
     }
 
     /**
