@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import tran.example.weatherforecast.domain.AbstractDomainClass;
+import tran.example.weatherforecast.domain.Search;
 
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.text.SimpleDateFormat;
@@ -27,7 +29,7 @@ public abstract class AbstractForecast extends AbstractDomainClass {
      * The time of this forecast object since Jan 1, 1970 in seconds.
      */
     @JsonProperty(value = "time")
-    private long time;
+    private Long time;
     /**
      * An object to define how the date portion of the formattedTime string will appear.
      */
@@ -53,6 +55,11 @@ public abstract class AbstractForecast extends AbstractDomainClass {
      */
     @Transient
     protected String formattedTime;
+    /**
+     * The search that contains the associated forecast.
+     */
+    @ManyToOne
+    private Search search;
 
     /**
      * Uses the seconds from Jan 1st 1970 to convert this into a custom formatted string which
