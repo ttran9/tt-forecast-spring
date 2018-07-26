@@ -63,8 +63,6 @@ public class Search extends AbstractDomainClass {
      * this search was made.
      */
     public void setFormattedDateSearch() {
-        // Multiplied a factor of one thousand because it is in seconds when it is
-        // obtained from the Darksky API.
         if(dateCreated == null) {
             dateCreated = new Date();
         }
