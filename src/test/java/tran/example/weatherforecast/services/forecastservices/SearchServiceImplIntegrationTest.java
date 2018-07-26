@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
-import tran.example.weatherforecast.exceptions.NotFoundException;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
