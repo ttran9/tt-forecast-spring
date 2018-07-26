@@ -114,7 +114,7 @@ public class SearchServiceImpl implements SearchService {
             return searchRepository.save(search);
         } catch (NotFoundException notFoundException) {
             log.debug("user that is logged in cannot be found!");
-            return search;
+            return searchRepository.save(search);
         }
     }
 
