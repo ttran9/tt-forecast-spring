@@ -63,9 +63,9 @@ public class Search extends AbstractDomainClass {
      * this search was made.
      */
     public void setFormattedDateSearch() {
-        if(dateCreated == null) {
-            dateCreated = new Date();
-        }
+        // the check is removed because the caller of this method will always set the dateCreated
+        // to be null.
+        dateCreated = new Date();
         formattedDateSearch = monthDayYear.format(dateCreated) + at + timeFormat.format(dateCreated);
     }
 
