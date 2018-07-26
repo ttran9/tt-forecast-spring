@@ -66,7 +66,13 @@ public class DailyForecast extends AbstractForecast {
      * will display the date of the highest temperature.
      */
     public void convertTemperatureHighTime() {
-        Date date = new Date(temperatureHighTime * secondsToMilliSecondsFactor);
+        Date date;
+        if(temperatureHighTime > 0) {
+            date = new Date(temperatureHighTime * secondsToMilliSecondsFactor);
+        }
+        else {
+            date = new Date();
+        }
         formattedTemperatureHighTime = monthDayYear.format(date) + at + timeFormat.format(date);
     }
 
