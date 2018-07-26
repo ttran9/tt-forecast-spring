@@ -125,12 +125,12 @@ public class SearchServiceImplIntegrationTest {
           */
         Long createdSearchId = createdSearch.getId();
         assertNotNull(createdSearchId);
-        // check the id of all the daily forecasts to ensure it matches the search's id.
         createdSearch.getDailyForecasts().forEach(dailyForecast -> {
+            // check the id of all the daily forecasts to ensure it matches the search's id.
             assertEquals(createdSearchId, dailyForecast.getSearch().getId());
         });
-        // check the id of all the hourly forecasts to ensure it matches the search's id.
         createdSearch.getHourlyForecasts().forEach(hourlyForecast -> {
+            // check the id of all the hourly forecasts to ensure it matches the search's id.
             assertEquals(createdSearchId, hourlyForecast.getSearch().getId());
         });
     }
@@ -156,6 +156,11 @@ public class SearchServiceImplIntegrationTest {
         assertNotNull(savedSearch.getId());
         assertEquals(enteredAddress, savedSearch.getAddress());
         assertEquals(userId, search.getUser().getId());
+
+        // additional checks to verify fields are properly initialized.
+        assertNotNull(search.getMonthDayYear());
+        assertNotNull(search.getTimeFormat());
+        assertNotNull(search.getAt());
     }
 
     /**
