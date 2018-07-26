@@ -3,7 +3,7 @@
  */
 function generateHourlyForecast(hourlyList) {
     var title = "Hourly Forecast";
-    var yAxisLabel = "Temperature";
+    var yAxisLabel = "Temperature (In Fahrenheit)";
     var xAxisLabel = "Time And Date";
     var chartId = "hourlyForecastChart";
 

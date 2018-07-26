@@ -3,9 +3,9 @@
  */
 function generateDailyForecasts(listWithHighTemps, listWithLowTemps) {
     var lowTempsTitle = "Daily Forecast (Low Temps)";
-    var lowTempsYAxisLabel = "Low Temperature";
+    var lowTempsYAxisLabel = "Low Temperature (In Fahrenheit)";
     var highTempsTitle = "Daily Forecast (High Temps)";
-    var highTempsYAxisLabel = "High Temperature";
+    var highTempsYAxisLabel = "High Temperature (In Fahrenheit)";
     var xAxisLabel = "Time And Date";
     var highTempsChartId = "dailyForecastChartHighTemps";
     var lowTempsChartId = "dailyForecastChartLowTemps";
