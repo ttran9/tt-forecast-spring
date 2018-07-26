@@ -20,6 +20,7 @@ import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeServic
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
@@ -133,6 +134,9 @@ public class SearchServiceImplIntegrationTest {
             // check the id of all the hourly forecasts to ensure it matches the search's id.
             assertEquals(createdSearchId, hourlyForecast.getSearch().getId());
         });
+
+        // additional data members check.
+        verifyAdditionalSearchFields(createdSearch);
     }
 
     /**
@@ -148,6 +152,8 @@ public class SearchServiceImplIntegrationTest {
         Long userId = 1L;
         Search search = new Search();
         search.setAddress(enteredAddress);
+        // this is the other case for when the dateCreated is already set before creating a search.
+        search.setDateCreated(new Date());
 
         // when
         Search savedSearch = searchService.saveSearch(search, userId);
@@ -157,10 +163,8 @@ public class SearchServiceImplIntegrationTest {
         assertEquals(enteredAddress, savedSearch.getAddress());
         assertEquals(userId, search.getUser().getId());
 
-        // additional checks to verify fields are properly initialized.
-        assertNotNull(search.getMonthDayYear());
-        assertNotNull(search.getTimeFormat());
-        assertNotNull(search.getAt());
+        // additional data members check.
+        verifyAdditionalSearchFields(savedSearch);
     }
 
     /**
@@ -185,6 +189,9 @@ public class SearchServiceImplIntegrationTest {
         assertNotNull(savedSearch.getId());
         assertEquals(enteredAddress, savedSearch.getAddress());
         assertNull(search.getUser());
+
+        // additional data members check.
+        verifyAdditionalSearchFields(savedSearch);
     }
 
     /**
@@ -207,5 +214,19 @@ public class SearchServiceImplIntegrationTest {
         assertNotNull(createdSearch.getId()); // ensure persistence.
         assertEquals(EXPECTED_NUMBER_OF_HOURLY_FORECASTS, createdSearch.getHourlyForecasts().size());
         assertEquals(EXPECTED_NUMBER_OF_DAILY_FORECASTS, createdSearch.getDailyForecasts().size());
+
+        // additional data members check.
+        verifyAdditionalSearchFields(createdSearch);
+    }
+
+    /**
+     * helper method to verify additional fields were set.
+     * @param search The search object with fields to be verified.
+     */
+    private void verifyAdditionalSearchFields(Search search) {
+        // additional checks to verify fields are properly initialized.
+        assertNotNull(search.getMonthDayYear());
+        assertNotNull(search.getTimeFormat());
+        assertNotNull(search.getAt());
     }
 }
