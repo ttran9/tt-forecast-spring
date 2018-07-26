@@ -24,6 +24,7 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -138,7 +139,7 @@ public class SearchServiceImplIntegrationTest {
      * This will test for the search to be successful so it will look at the search object being
      * persisted (being assigned an ID) as well as properly saving the entered address (used in
      * the search), and to ensure the correct user ID was associated with the search.
-     * Note: this is simulating to saving a search to when a user is logged in.
+     * Note: This is simulating to saving a search to when a user is logged in.
      */
     @Test
     public void saveSearch() {
@@ -155,6 +156,30 @@ public class SearchServiceImplIntegrationTest {
         assertNotNull(savedSearch.getId());
         assertEquals(enteredAddress, savedSearch.getAddress());
         assertEquals(userId, search.getUser().getId());
+    }
+
+    /**
+     * This will test for the search to be successful so it will look at the search object being
+     * persisted (being assigned an ID) as well as properly saving the entered address (used in
+     * the search), but there is no user associated with the search (this value should be null).
+     * Note: This is simulating when the search is being saved by a user that cannot be found
+     * from the database.
+     */
+    @Test
+    public void saveSearchWithInvalidUserId() {
+        // given
+        String enteredAddress = SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS;
+        Long invalidUserId = -1L;
+        Search search = new Search();
+        search.setAddress(enteredAddress);
+
+        // when
+        Search savedSearch = searchService.saveSearch(search, invalidUserId);
+
+        // then
+        assertNotNull(savedSearch.getId());
+        assertEquals(enteredAddress, savedSearch.getAddress());
+        assertNull(search.getUser());
     }
 
     /**
