@@ -35,7 +35,7 @@ public class DailyForecast extends AbstractForecast {
      * The time in seconds from Jan 1st, 1970 of the high temperature.
      */
     @JsonProperty(value = "temperatureHighTime")
-    private long temperatureHighTime;
+    private Long temperatureHighTime;
     /**
      * The low temperature for the day
      */
@@ -45,7 +45,7 @@ public class DailyForecast extends AbstractForecast {
      * The time in seconds from Jan 1st, 1970 of the low temperature.
      */
     @JsonProperty(value = "temperatureLowTime")
-    private long temperatureLowTime;
+    private Long temperatureLowTime;
 
     /**
      * The date of the high temperature in a custom format defined by a helper method.
@@ -55,24 +55,13 @@ public class DailyForecast extends AbstractForecast {
      * The date of the low temperature in a custom format defined by a helper method.
      */
     private String formattedTemperatureLowTime;
-    /**
-     * The search that contains this associated daily forecast.
-     */
-    @ManyToOne
-    private Search search;
 
     /**
      * Uses the seconds from Jan 1st 1970 to convert this into a custom formatted string which
      * will display the date of the highest temperature.
      */
     public void convertTemperatureHighTime() {
-        Date date;
-        if(temperatureHighTime > 0) {
-            date = new Date(temperatureHighTime * secondsToMilliSecondsFactor);
-        }
-        else {
-            date = new Date();
-        }
+        Date date = new Date(temperatureHighTime * secondsToMilliSecondsFactor);
         formattedTemperatureHighTime = monthDayYear.format(date) + at + timeFormat.format(date);
     }
 
