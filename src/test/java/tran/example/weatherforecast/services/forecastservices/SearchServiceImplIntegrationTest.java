@@ -105,6 +105,8 @@ public class SearchServiceImplIntegrationTest {
         // given
         Search search = new Search();
         search.setAddress(SpringJPABootstrap.SAMPLE_ADDRESS);
+        // this is the other case for when the dateCreated is already set before creating a search.
+        search.setDateCreated(new Date());
         // simulate a user being logged in.
         Collection<GrantedAuthority> authorities = new LinkedList<>();
         authorities.add(new SimpleGrantedAuthority("User"));
@@ -152,8 +154,6 @@ public class SearchServiceImplIntegrationTest {
         Long userId = 1L;
         Search search = new Search();
         search.setAddress(enteredAddress);
-        // this is the other case for when the dateCreated is already set before creating a search.
-        search.setDateCreated(new Date());
 
         // when
         Search savedSearch = searchService.saveSearch(search, userId);
