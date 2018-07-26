@@ -85,5 +85,47 @@ public class UserToCustomUserDetailsTest {
         assertTrue(userDetails.isEnabled());
     }
 
+    /**
+     * Tests if a CustomUser objects with some fields can be converted and attempting to add the
+     * same role will cause any issues.
+     * It is expected that adding the same role object more than once will have no undesired side
+     * effect).
+     */
+    @Test
+    public void convertWithMultipleIdenticalRoleInsertions() {
+        // given
+        String password = "diffpw";
+        String username = "customusername";
+        String roleName = "User";
+        int invalidSize = 2;
+        int expectedSize = 1;
+        Role role = new Role();
+        role.setRole(roleName);
+        CustomUser user = new CustomUser();
+        user.setPassword(password);
+        user.setEncryptedPassword(encryptionService.encryptString(password));
+        user.setUsername(username);
+        user.addRole(role);
+        user.addRole(role);
+
+        // when
+        UserDetailsImpl userDetails = (UserDetailsImpl) customUserToUserDetailsConverter.convert(user);
+        // then
+        assertNotNull(userDetails); // conversion test.
+        // validity below
+        assertEquals(user.getUsername(), userDetails.getUsername());
+        assertEquals(user.getEncryptedPassword(), userDetails.getPassword());
+        // instead of checking for an expected size ensure there is only one role.
+        assertNotEquals(invalidSize, userDetails.getAuthorities().size());
+        // now that we know there is not an un-expected size verify it has the expected size.
+        assertEquals(expectedSize, userDetails.getAuthorities().size());
+        assertTrue(userDetails.getEnabled());
+        assertTrue(userDetails.isAccountNonExpired());
+        assertTrue(userDetails.isAccountNonLocked());
+        assertTrue(userDetails.isCredentialsNonExpired());
+        assertTrue(userDetails.isAccountNonLocked());
+        assertTrue(userDetails.isEnabled());
+    }
+
 
 }
