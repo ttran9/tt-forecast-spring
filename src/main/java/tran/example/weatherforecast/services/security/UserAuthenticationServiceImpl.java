@@ -45,18 +45,18 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     @Override
     public CustomUser checkIfUserIsLoggedIn() {
         log.debug("check if user is logged in");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if(securityContext != null) {
-            Authentication authentication = securityContext.getAuthentication();
-            if(authentication != null) {
-                if(authentication.getName() != null) {
-                    String userName = authentication.getName();
-                    if (userName.equals(ANONYMOUS_USER)) {
-                        return null;
-                    } else {
-                        return userService.findByUserName(userName);
-                    }
-                }
+        SecurityContext securityContext = SecurityContextHolder.getContext(); // never null.
+        Authentication authentication = securityContext.getAuthentication();
+        if(authentication != null) {
+            /*
+             * the userName if the user is not logged in will not be null it will have the
+             * value 'anonymousUser'.
+             */
+            String userName = authentication.getName();
+            if (userName.equals(ANONYMOUS_USER)) {
+                return null;
+            } else {
+                return userService.findByUserName(userName);
             }
         }
         return null;
