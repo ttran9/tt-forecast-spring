@@ -25,9 +25,4 @@ public class HourlyForecast extends AbstractForecast {
      */
     @JsonProperty(value = "temperature")
     private double temperature;
-    /**
-     * The search that contains this associated hourly forecast.
-     */
-    @ManyToOne
-    private Search search;
 }
