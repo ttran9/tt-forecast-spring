@@ -12,13 +12,8 @@ import java.util.List;
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"icon"})
+@JsonIgnoreProperties(value = {"icon", "summary"})
 public class HourlyForecastList {
-    /**
-     * A summary of the hourly forecasts.
-     */
-    @JsonProperty(value = "summary")
-    private String summary;
     /**
      * A list of hourly forecasts.
      */

@@ -15,10 +15,6 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"icon", "summary"})
 public class DailyForecastList {
     /**
-     * A summary of the daily forecasts.
-     */
-    private String summary;
-    /**
      * A list of daily forecasts.
      */
     @JsonProperty(value = "data")
