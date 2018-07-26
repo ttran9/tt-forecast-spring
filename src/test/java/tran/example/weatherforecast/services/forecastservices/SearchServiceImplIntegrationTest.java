@@ -11,12 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
-import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
