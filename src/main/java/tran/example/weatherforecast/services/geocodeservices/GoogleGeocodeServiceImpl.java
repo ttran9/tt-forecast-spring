@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.geocode.GeocodeResult;
 import tran.example.weatherforecast.domain.geocode.Geometry;
 import tran.example.weatherforecast.domain.geocode.Location;
@@ -21,28 +22,23 @@ import java.util.List;
 @Service
 @Slf4j
 public class GoogleGeocodeServiceImpl extends ApiService implements GoogleGeocodeService {
-
-    private final static String GEOCODE_URL = "https://maps.googleapis" +
-            ".com/maps/api/geocode/json?address=";
     /**
-     * Calls a parent method with a properly formated URL such as the necessary API key and the
+     * Calls a parent method with a properly formatted URL such as the necessary API key and the
      * address being URL encoded to obtain a JSON object containing the latitude and longitude.
      * @param address The address to be used in the request to get location information.
      * @return Returns a JSON object containing key/value pairs including the latitude and
      * longitude values.
      * @throws IOException Throws an IOException if there is an error while trying to make the
      * API request.
-     * @throws MissingServletRequestParameterException Throws this exception if the address is
-     * null (wasn't provided from the controller or in the tests).
      */
     @Override
-    public String getContent(String address) throws IOException, MissingServletRequestParameterException {
+    public String getContent(String address) throws IOException {
         log.debug("Making a GET request to get the latitude and longitude from the Geocoding API!");
         String encodeScheme = "UTF-8";
         String geocodeUrlKeyParam = "&key=";
         String geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
         if(address == null) {
-            throw new MissingServletRequestParameterException("address", "String/string");
+            throw new IOException("error with processing the entered address");
         }
         String urlEncodedAddress = URLEncoder.encode(address, encodeScheme);
         String googleGeocodeApiKeyVariableName = "GOOGLE_MAPS_GC_KEY";
