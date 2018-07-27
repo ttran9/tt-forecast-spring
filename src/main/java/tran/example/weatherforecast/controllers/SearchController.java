@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import tran.example.weatherforecast.commands.SearchCommand;
 import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.pagination.Pager;
+import tran.example.weatherforecast.exceptions.ImproperParamException;
 import tran.example.weatherforecast.services.forecastservices.SearchService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
@@ -136,15 +136,19 @@ public class SearchController extends ControllerHelper {
      * This will take an address entered from the form, save the search, and display a list of
      * hourly forecasts.
      * @param search An object holding the search address entered from the form submission.
-     * @throws MissingServletRequestParameterException Throws this exception if the address is
-     * null.
      * @return Returns the path to view the hourly forecasts of this search.
      */
     @PostMapping(FORECAST_SEARCH_RESULT_MAPPING)
     public String processSearchForForecast(@ModelAttribute(ForecastController.SEARCH_PARAMETER)
-                                                       SearchCommand search) throws MissingServletRequestParameterException {
+                                                       SearchCommand search) {
 
         Search savedSearch = searchService.createSearch(search.getAddress());
+
+        if(savedSearch == null) {
+            String errorWithTheEnteredAddress = "error with the entered address";
+            log.debug(errorWithTheEnteredAddress);
+            throw new ImproperParamException(errorWithTheEnteredAddress);
+        }
 
         return REDIRECT + ForecastController.BASE_URL + ForecastController
                 .HOURLY_FORECASTS_MAPPING + FIRST_PARAMETER_SEPARATOR + ForecastController
