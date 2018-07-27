@@ -3,6 +3,7 @@ package tran.example.weatherforecast.bootstrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@Profile({"default"})
 public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedEvent> {
     /**
      * A generic role that is required to view certain pages.
@@ -125,14 +127,10 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         List<CustomUser> users = (List<CustomUser>) userService.listAll();
 
         users.forEach(user -> {
-            if(user.getRoles().size() < 1) {
-                roles.forEach(role -> {
-                    if(role.getRole().equals(USER)) {
-                        user.addRole(role);
-                        userService.saveOrUpdate(user);
-                    }
-                });
-            }
+            roles.forEach(role -> {
+                user.addRole(role);
+                userService.saveOrUpdate(user);
+            });
         });
         log.debug("Default roles have been assigned to users!");
     }
@@ -141,14 +139,6 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create users.
      */
     public void loadUsers() {
-
-        // if the below is true data has already been bootstrapped.
-        if(userService.findByUserName(MWESTON) != null && userService.findByUserName
-                (TEST_ACCOUNT_USER_NAME) != null) {
-            log.debug("Users already exist so no need to load in the users again!");
-            return ;
-        }
-
         CustomUser userOne = new CustomUser();
         userOne.setUsername(MWESTON);
         userOne.setPassword(PASSWORD);
@@ -167,11 +157,6 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create roles.
      */
     private void loadRoles() {
-        if(roleService.listAll().size() > 0) {
-            log.debug("Test roles have already been loaded.");
-            return ;
-        }
-
         Role role = new Role();
         role.setRole(USER);
         roleService.saveOrUpdate(role);
@@ -183,26 +168,6 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to make a request for the fore at 1600 amphitheater pkwy by the user "mweston".
      */
     private void createSampleSearch() {
-        String userNameToFind = "mweston";
-        CustomUser user = userService.findByUserName(userNameToFind);
-        List<Search> searches = user.getSearches();
-
-        if(searches.size() > 0) {
-            log.debug(userNameToFind + " has already made searches and there is no need to " +
-                    "bootstrap in default searches");
-            return ;
-        }
-
-        /**
-         * The below check is done because when using a mysql database I will not be using the
-         * create-drop but instead validate so I do not want to make too many sample API requests
-         * (such as every time I start up this application).
-         */
-        searches.forEach(search -> {
-            if(search.getAddress().equals(SAMPLE_ADDRESS)) {
-                return ;
-            }
-        });
         try {
             Search search = searchService.createSearch(SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
@@ -223,6 +188,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
             search = searchService.createSearch(SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
+
+            searchService.createSearch(null);
         } catch(MissingServletRequestParameterException exception) {
             log.debug("error while trying to create sample/bootstrapped searches!");
         }
