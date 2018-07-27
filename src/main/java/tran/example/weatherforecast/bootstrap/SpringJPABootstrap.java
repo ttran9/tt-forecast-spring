@@ -125,10 +125,14 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         List<CustomUser> users = (List<CustomUser>) userService.listAll();
 
         users.forEach(user -> {
-            roles.forEach(role -> {
-                user.addRole(role);
-                userService.saveOrUpdate(user);
-            });
+            if(user.getRoles().size() < 1) {
+                roles.forEach(role -> {
+                    if(role.getRole().equals(USER)) {
+                        user.addRole(role);
+                        userService.saveOrUpdate(user);
+                    }
+                });
+            }
         });
         log.debug("Default roles have been assigned to users!");
     }
@@ -137,6 +141,13 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create users.
      */
     public void loadUsers() {
+        // if the below is true data has already been bootstrapped.
+        if(userService.findByUserName(MWESTON) != null && userService.findByUserName
+                (TEST_ACCOUNT_USER_NAME) != null) {
+            log.debug("Users already exist so no need to load in the users again!");
+            return ;
+        }
+
         CustomUser userOne = new CustomUser();
         userOne.setUsername(MWESTON);
         userOne.setPassword(PASSWORD);
@@ -155,6 +166,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create roles.
      */
     private void loadRoles() {
+        if(roleService.listAll().size() > 0) {
+            log.debug("Test roles have already been loaded.");
+            return ;
+        }
+
         Role role = new Role();
         role.setRole(USER);
         roleService.saveOrUpdate(role);
@@ -177,7 +193,7 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         }
 
         /**
-         * The below check is done because when using a mysql database I will not be using the
+         * The below check is done because when using a Postgres database I will not be using the
          * create-drop but instead validate so I do not want to make too many sample API requests
          * (such as every time I start up this application).
          */
