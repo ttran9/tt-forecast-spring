@@ -3,13 +3,12 @@ package tran.example.weatherforecast.bootstrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.CustomUser;
+import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.security.Role;
 import tran.example.weatherforecast.services.RoleService;
 import tran.example.weatherforecast.services.UserService;
@@ -25,7 +24,6 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@Profile({"default"})
 public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedEvent> {
     /**
      * A generic role that is required to view certain pages.
@@ -168,28 +166,46 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to make a request for the fore at 1600 amphitheater pkwy by the user "mweston".
      */
     private void createSampleSearch() {
+        String userNameToFind = "mweston";
+        CustomUser user = userService.findByUserName(userNameToFind);
+        List<Search> searches = user.getSearches();
+
+        if(searches.size() > 0) {
+            log.debug(userNameToFind + " has already made searches and there is no need to " +
+                    "bootstrap in default searches");
+            return ;
+        }
+
+        /**
+         * The below check is done because when using a mysql database I will not be using the
+         * create-drop but instead validate so I do not want to make too many sample API requests
+         * (such as every time I start up this application).
+         */
+        searches.forEach(search -> {
+            if(search.getAddress().equals(SpringJPABootstrap.SAMPLE_ADDRESS)) {
+                return ;
+            }
+        });
         try {
-            Search search = searchService.createSearch(SAMPLE_ADDRESS);
+            Search search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
 
-            Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
+            Search secondSearch = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS_TWO);
             searchService.saveSearch(secondSearch, 1L);
 
-            searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
+            searchService.createSearch(SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
             searchService.saveSearch(search, 1L);
-
-            searchService.createSearch(null);
         } catch(MissingServletRequestParameterException exception) {
             log.debug("error while trying to create sample/bootstrapped searches!");
         }
