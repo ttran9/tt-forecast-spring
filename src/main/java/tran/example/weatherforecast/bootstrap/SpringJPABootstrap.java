@@ -192,7 +192,6 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
             searchService.createSearch(null);
         } catch(MissingServletRequestParameterException exception) {
             log.debug("error while trying to create sample/bootstrapped searches!");
-            return ;
         }
     }
 
