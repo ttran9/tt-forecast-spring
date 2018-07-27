@@ -127,10 +127,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         users.forEach(user -> {
             if(user.getRoles().size() < 1) {
                 roles.forEach(role -> {
-                    if(role.getRole().equals(USER)) {
-                        user.addRole(role);
-                        userService.saveOrUpdate(user);
-                    }
+                    user.addRole(role);
+                    userService.saveOrUpdate(user);
                 });
             }
         });
