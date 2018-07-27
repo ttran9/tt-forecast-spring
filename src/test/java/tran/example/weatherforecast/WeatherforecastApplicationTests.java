@@ -18,7 +18,7 @@ public class WeatherforecastApplicationTests {
 
     @Test
     public void contextLoads() {
-        assertNotNull(SpringApplication.run(WeatherforecastApplication.class));
+        WeatherforecastApplication.main(new String[]{});
     }
 
 }
