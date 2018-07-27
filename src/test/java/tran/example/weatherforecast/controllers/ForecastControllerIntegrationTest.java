@@ -24,6 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * scenarios such as passing in valid parameters an invalid parameters and expecting different
  * results back such as getting back paginated results and sometimes being redirected to a page
  * indicating the user passed in an improperly formatted parameter.
+ * Pager Tests Description/Overview (below):
+ * There are a series of tests which will test the custom Pager object which is used to display
+ * the five pages a user can view as well as 4 other buttons which allow to go to the first page,
+ * the previous page, the next page, and the final page. However, the focus of these tests
+ * looking at the Pager will focus more on which five pages are generated. In order to do so, the
+ * hourly forecasts will be used because the daily forecasts will not have enough pages to be
+ * able to test the Pager.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -78,13 +85,11 @@ public class ForecastControllerIntegrationTest {
      */
     @Test
     public void getDailyForecastsFromSearchWithoutId() throws Exception{
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.DAILY_FORECASTS_MAPPING))
                 .andExpect(view().name(IndexController.INDEX_VIEW_NAME))
-                .andExpect(status().is4xxClientError()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(ControllerExceptionHandler.EXCEPTION_KEY));
+                .andExpect(model().attributeExists(ControllerExceptionHandler.EXCEPTION_KEY))
+                .andExpect(status().is4xxClientError());
     }
 
     /**
@@ -120,15 +125,13 @@ public class ForecastControllerIntegrationTest {
      */
     @Test
     public void getDailyForecastsFromSearchWithIdAndImproperFormattedPageNumber() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.DAILY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
                 .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.IMPROPER_FORMATTED_PAGE_NUMBER))
                 .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
-                .andExpect(status().is4xxClientError()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(ControllerExceptionHandler.EXCEPTION_KEY));
+                .andExpect(model().attributeExists(ControllerExceptionHandler.EXCEPTION_KEY))
+                .andExpect(status().is4xxClientError());
     }
 
     /**
@@ -136,7 +139,7 @@ public class ForecastControllerIntegrationTest {
      */
     @Test
     public void getHourlyForecastsFromSearch() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne))
                 .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
@@ -144,13 +147,11 @@ public class ForecastControllerIntegrationTest {
                         ForecastController.HOURLY_FORECASTS_VIEW_NAME))
                 .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
                         ForecastController.HOURLY_FORECAST_TITLE))
-                .andExpect(status().isOk()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(SearchController.LIST_KEY));
-        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
-        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
-        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
     }
 
     /**
@@ -160,13 +161,11 @@ public class ForecastControllerIntegrationTest {
      */
     @Test
     public void getHourlyForecastsFromSearchWithoutId() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING))
                 .andExpect(view().name(IndexController.INDEX_VIEW_NAME))
-                .andExpect(status().is4xxClientError()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(ControllerExceptionHandler.EXCEPTION_KEY));
+                .andExpect(model().attributeExists(ControllerExceptionHandler.EXCEPTION_KEY))
+                .andExpect(status().is4xxClientError());
     }
 
     /**
@@ -176,7 +175,7 @@ public class ForecastControllerIntegrationTest {
      */
     @Test
     public void getHourlyForecastsFromSearchWithIdAndInvalidPageNumber() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
                 .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.INVALID_PAGE_NUMBER))
@@ -185,13 +184,11 @@ public class ForecastControllerIntegrationTest {
                         ForecastController.HOURLY_FORECASTS_VIEW_NAME))
                 .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
                         ForecastController.HOURLY_FORECAST_TITLE))
-                .andExpect(status().isOk()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(SearchController.LIST_KEY));
-        assertNotNull(modelMap.get(SearchController.PAGER_KEY));
-        assertNotNull(modelMap.get(SearchController.TOTAL_PAGES_KEY));
-        assertNotNull(modelMap.get(SearchController.CURRENT_PAGE_KEY));
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
     }
 
     /**
@@ -203,16 +200,101 @@ public class ForecastControllerIntegrationTest {
     @Test
     public void getHourlyForecastsFromSearchWithIdAndImproperFormattedPageNumber() throws
             Exception {
-        MvcResult mvcResult = mockMvc.perform(get(ForecastController.BASE_URL +
+        mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
                 .param(ForecastController.PAGE_PARAMETER, SearchControllerIntegrationTest.IMPROPER_FORMATTED_PAGE_NUMBER))
                 .andExpect(view().name(IndexController.NOT_FOUND_VIEW_NAME))
-                .andExpect(status().is4xxClientError()).andReturn();
-        ModelAndView modelAndView = mvcResult.getModelAndView();
-        Map<String, Object> modelMap = modelAndView.getModel();
-        assertNotNull(modelMap.get(ControllerExceptionHandler.EXCEPTION_KEY));
+                .andExpect(model().attributeExists(ControllerExceptionHandler.EXCEPTION_KEY))
+                .andExpect(status().is4xxClientError());
     }
 
+    /**
+     * Gets the hourly forecasts while specifying a valid search id and a page number meeting
+     * the condition of line 45 in the Pager class.
+     */
+    @Test
+    public void getHourlyForecastsFromSearchWithSearchIdAndPageZero() throws Exception {
+        mockMvc.perform(get(ForecastController.BASE_URL +
+                ForecastController.HOURLY_FORECASTS_MAPPING)
+                .param(ForecastController.SEARCH_PARAMETER, idOne)
+                .param(ForecastController.PAGE_PARAMETER, "0"))
+                .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
+                        IndexController.URL_PATH_SEPARATOR +
+                        ForecastController.HOURLY_FORECASTS_VIEW_NAME))
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
+                        ForecastController.HOURLY_FORECAST_TITLE))
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
+    }
 
+    /**
+     * Gets the hourly forecasts while specifying a valid search id and the page number meeting the
+     * condition of line 52 in the Pager class.
+     */
+    @Test
+    public void getHourlyForecastsFromSearchWithSearchIdAndPageIsTotal() throws Exception {
+        mockMvc.perform(get(ForecastController.BASE_URL +
+                ForecastController.HOURLY_FORECASTS_MAPPING)
+                .param(ForecastController.SEARCH_PARAMETER, idOne)
+                .param(ForecastController.PAGE_PARAMETER, "9"))
+                .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
+                        IndexController.URL_PATH_SEPARATOR +
+                        ForecastController.HOURLY_FORECASTS_VIEW_NAME))
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
+                        ForecastController.HOURLY_FORECAST_TITLE))
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
+    }
+
+    /**
+     * Gets the hourly forecasts while specifying a valid search id and the page number meeting the
+     * condition of line 59 in the Pager class.
+     */
+    @Test
+    public void getHourlyForecastsFromSearchWithSearchIdAndPageIsGreaterThanTotal()
+            throws Exception {
+        mockMvc.perform(get(ForecastController.BASE_URL +
+                ForecastController.HOURLY_FORECASTS_MAPPING)
+                .param(ForecastController.SEARCH_PARAMETER, idOne)
+                .param(ForecastController.PAGE_PARAMETER, "10"))
+                .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
+                        IndexController.URL_PATH_SEPARATOR +
+                        ForecastController.HOURLY_FORECASTS_VIEW_NAME))
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
+                        ForecastController.HOURLY_FORECAST_TITLE))
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
+    }
+
+    /**
+     * Gets the hourly forecasts while specifying a valid search id and the page number meeting the
+     * condition of line 66 in the Pager class.
+     */
+    @Test
+    public void getHourlyForecastsFromSearchWithSearchIdAndPageisHalfTotalPages() throws Exception {
+        mockMvc.perform(get(ForecastController.BASE_URL +
+                ForecastController.HOURLY_FORECASTS_MAPPING)
+                .param(ForecastController.SEARCH_PARAMETER, idOne)
+                .param(ForecastController.PAGE_PARAMETER, "10"))
+                .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
+                        IndexController.URL_PATH_SEPARATOR +
+                        ForecastController.HOURLY_FORECASTS_VIEW_NAME))
+                .andExpect(model().attribute(ControllerHelper.PAGE_ATTRIBUTE,
+                        ForecastController.HOURLY_FORECAST_TITLE))
+                .andExpect(model().attributeExists(SearchController.LIST_KEY))
+                .andExpect(model().attributeExists(SearchController.PAGER_KEY))
+                .andExpect(model().attributeExists(SearchController.TOTAL_PAGES_KEY))
+                .andExpect(model().attributeExists(SearchController.CURRENT_PAGE_KEY))
+                .andExpect(status().isOk());
+    }
 }
