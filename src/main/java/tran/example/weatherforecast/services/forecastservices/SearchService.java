@@ -1,7 +1,6 @@
 package tran.example.weatherforecast.services.forecastservices;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.Search;
 
 /**
@@ -33,5 +32,5 @@ public interface SearchService {
      * @param address The address to get the forecasts for.
      * @return Returns a search object that contains the hourly and daily forecasts.
      */
-    Search createSearch(String address) throws MissingServletRequestParameterException;
+    Search createSearch(String address);
 }

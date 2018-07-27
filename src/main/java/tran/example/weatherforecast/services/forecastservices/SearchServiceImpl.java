@@ -5,17 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.forecast.Forecast;
 import tran.example.weatherforecast.domain.geocode.Location;
 import tran.example.weatherforecast.exceptions.NotFoundException;
-import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
+import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
-import java.util.Date;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -122,12 +120,10 @@ public class SearchServiceImpl implements SearchService {
      * Takes in an address and obtains a location and gets forecasts for the location specified.
      * If the user is not logged in this method does not attempt to save the search.
      * @param address The address to get the forecasts for.
-     * @throws MissingServletRequestParameterException Throws this exception if the address is
-     * null (wasn't provided from the controller).
      * @return A search object with the user entered address and the forecasts.
      */
     @Override
-    public Search createSearch(String address) throws MissingServletRequestParameterException {
+    public Search createSearch(String address) {
         try {
             // get the location
             String locationContent = googleGeocodeService.getContent(address);
