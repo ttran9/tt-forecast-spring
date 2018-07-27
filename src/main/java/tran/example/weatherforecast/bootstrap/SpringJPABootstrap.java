@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.security.Role;
@@ -168,31 +167,25 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to make a request for the fore at 1600 amphitheater pkwy by the user "mweston".
      */
     private void createSampleSearch() {
-        try {
-            Search search = searchService.createSearch(SAMPLE_ADDRESS);
-            searchService.saveSearch(search, 1L);
+        Search search = searchService.createSearch(SAMPLE_ADDRESS);
+        searchService.saveSearch(search, 1L);
 
-            Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
-            searchService.saveSearch(secondSearch, 1L);
+        Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
+        searchService.saveSearch(secondSearch, 1L);
 
-            searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
+        searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
-            searchService.saveSearch(search, 1L);
+        search = searchService.createSearch(SAMPLE_ADDRESS);
+        searchService.saveSearch(search, 1L);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
-            searchService.saveSearch(search, 1L);
+        search = searchService.createSearch(SAMPLE_ADDRESS);
+        searchService.saveSearch(search, 1L);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
-            searchService.saveSearch(search, 1L);
+        search = searchService.createSearch(SAMPLE_ADDRESS);
+        searchService.saveSearch(search, 1L);
 
-            search = searchService.createSearch(SAMPLE_ADDRESS);
-            searchService.saveSearch(search, 1L);
-
-            searchService.createSearch(null); // throw the exception below.
-        } catch(MissingServletRequestParameterException exception) {
-            log.debug("error while trying to create sample/bootstrapped searches!");
-        }
+        search = searchService.createSearch(SAMPLE_ADDRESS);
+        searchService.saveSearch(search, 1L);
     }
 
 }
