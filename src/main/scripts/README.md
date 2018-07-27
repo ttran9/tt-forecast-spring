@@ -10,5 +10,6 @@
         - Before running this application and the tests using the Postgres database you must have
          the user created as well as the tables generated and the proper permissions granted.
          
-    - Run the contents of the two scripts: samplepostgresuser.sql and schemacreate.sql step by 
-    step by how they are labeled (steps 1-3) for the corresponding segments.
+    - Run the contents of the three scripts: samplepostgresuser.sql, schemacreate.sql, and 
+    sampleusergrant.sql step by step by how they are labeled (steps 1-3) for the corresponding 
+    segments.
