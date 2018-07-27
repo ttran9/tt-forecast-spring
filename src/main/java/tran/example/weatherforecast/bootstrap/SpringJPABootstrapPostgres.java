@@ -17,9 +17,14 @@ import tran.example.weatherforecast.services.forecastservices.SearchService;
 
 import java.util.List;
 
+/**
+ * This class will be run for the development and production profiles. It will create sample data
+ * if it does not already exist. This is expected to be run against a database with a ddl
+ * strategy of "validate" and not something such as create-drop.
+ */
 @Slf4j
 @Component
-@Profile({"development"})
+@Profile({"development", "production"})
 public class SpringJPABootstrapPostgres implements ApplicationListener<ContextRefreshedEvent> {
     /**
      * An object allowing for interfacing with the data layer and the CustomUser table.
