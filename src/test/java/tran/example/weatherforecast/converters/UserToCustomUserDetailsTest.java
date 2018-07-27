@@ -24,6 +24,10 @@ public class UserToCustomUserDetailsTest {
      * encrypted passwords.
      */
     private EncryptionServiceImpl encryptionService;
+    /**
+     * Expected size for an empty list.
+     */
+    private int emptyListSize = 0;
 
     @Before
     public void setUp() {
@@ -83,6 +87,11 @@ public class UserToCustomUserDetailsTest {
         assertTrue(userDetails.isCredentialsNonExpired());
         assertTrue(userDetails.isAccountNonLocked());
         assertTrue(userDetails.isEnabled());
+
+        // ensure a converted CustonUser has a list of searches that can be added to.
+        assertNotNull(user.getSearches());
+        assertEquals(emptyListSize, user.getSearches().size());
+
     }
 
     /**
@@ -125,6 +134,11 @@ public class UserToCustomUserDetailsTest {
         assertTrue(userDetails.isCredentialsNonExpired());
         assertTrue(userDetails.isAccountNonLocked());
         assertTrue(userDetails.isEnabled());
+
+        // ensure a converted CustonUser has a list of searches that can be added to.
+        assertNotNull(user.getSearches());
+        assertEquals(emptyListSize, user.getSearches().size());
+
     }
 
 

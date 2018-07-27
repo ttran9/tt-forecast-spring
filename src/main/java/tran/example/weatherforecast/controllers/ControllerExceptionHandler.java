@@ -1,6 +1,5 @@
 package tran.example.weatherforecast.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import tran.example.weatherforecast.commands.SearchCommand;
+import tran.example.weatherforecast.exceptions.ImproperParamException;
 import tran.example.weatherforecast.exceptions.NotFoundException;
 
 /**
@@ -67,6 +67,13 @@ public class ControllerExceptionHandler {
         modelAndView.addObject("search", new SearchCommand());
         modelAndView.addObject(EXCEPTION_KEY, exception);
         return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ImproperParamException.class)
+    public ModelAndView handleImproperParam(ImproperParamException exception) {
+        log.error("Handling when parameter entered is invalid!");
+        return populateModelAndViewWithInformation(exception, IndexController.INDEX_VIEW_NAME);
     }
 
 
