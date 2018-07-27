@@ -285,7 +285,7 @@ public class ForecastControllerIntegrationTest {
         mockMvc.perform(get(ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING)
                 .param(ForecastController.SEARCH_PARAMETER, idOne)
-                .param(ForecastController.PAGE_PARAMETER, "10"))
+                .param(ForecastController.PAGE_PARAMETER, "5"))
                 .andExpect(view().name(ForecastController.FORECAST_BASE_VIEW_URL_RETURN +
                         IndexController.URL_PATH_SEPARATOR +
                         ForecastController.HOURLY_FORECASTS_VIEW_NAME))
