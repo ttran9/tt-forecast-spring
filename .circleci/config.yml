@@ -29,10 +29,6 @@ jobs:
           -h 127.0.0.1
           -U postgres
           -c "CREATE DATABASE forecast_dev;"
-          psql \
-          -h 127.0.0.1
-          -U postgres
-          -c "CREATE USER sample_user WITH PASSWORD 'testpw';"
       # Download and cache dependencies
       - restore_cache:
           keys:
