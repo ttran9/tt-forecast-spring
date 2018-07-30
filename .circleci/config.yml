@@ -9,8 +9,8 @@ jobs:
       - image: maven:3.5.0-jdk-8
         environment:
           DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/forecast_dev
-          DATABASE_USER: username
-          DATABASE_PASSWORD: password
+          DATABASE_USER: sample_user
+          DATABASE_PASSWORD: testpw
       - image: postgres:9.6
 
     working_directory: ~/repo
