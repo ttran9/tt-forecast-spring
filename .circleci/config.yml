@@ -8,9 +8,9 @@ jobs:
     docker:
       - image: maven:3.5.0-jdk-8
         environment:
-          DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/forecast_dev
-          DATABASE_USER: sample_user
-          DATABASE_PASSWORD: testpw
+          DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/databasename
+          DATABASE_USER: username
+          DATABASE_PASSWORD: password
       - image: postgres:9.6
 
     working_directory: ~/repo
@@ -21,8 +21,8 @@ jobs:
       - run:
           command: |
             psql -h 127.0.0.1 -U postgres -c "CREATE DATABASE databasename;"
-            psql -h 127.0.0.1 -U postgres -c "CREATE USER sample_user WITH PASSWORD 'testpw';
-            GRANT ALL PRIVILEGES ON DATABASE forecast_dev TO sample_user;"
+            psql -h 127.0.0.1 -U postgres -c "CREATE USER username WITH PASSWORD 'password';
+            GRANT ALL PRIVILEGES ON DATABASE databasename TO username;"
 
       - run: mvn test
 
