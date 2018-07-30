@@ -21,7 +21,7 @@ jobs:
       - run:
           command: |
             psql -h 127.0.0.1 -U postgres -c "CREATE DATABASE forecast_dev;"
-            psql -h 127.0.0.1 -U postgres -c "CREATE USER username WITH PASSWORD 'password';
+            psql -h 127.0.0.1 -U postgres -c "CREATE USER sample_user WITH PASSWORD 'testpw';
             GRANT ALL PRIVILEGES ON DATABASE forecast_dev TO username;"
 
       - run: mvn test
