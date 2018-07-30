@@ -29,7 +29,6 @@ jobs:
       - checkout
       - run: sudo apt-get update
       - run: sudo apt-get install postgresql-9.6
-      - run: sudo systemctl start postgresql
       - run: |
           psql \
           -d $DATABASE_URL \
