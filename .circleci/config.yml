@@ -9,7 +9,7 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk-browsers
         environment:
-          DATABASE_URL: jdbc:postgresql://root@localhost/circle_test
+          DATABASE_URL: jdbc:postgresql://localhost:5432/circle_test
           DATABASE_USER: sample_user
           DATABASE_PASSWORD: testpw
 
