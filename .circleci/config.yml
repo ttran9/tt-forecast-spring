@@ -13,9 +13,6 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
       - image: circleci/postgres:9.6
-        environment:
-          DATABASE_URL: jdbc:postgresql://localhost:5432/circle_test
-          DATABASE_USER: postgres
 
     working_directory: ~/tt-j-weatherforecast
 
@@ -29,10 +26,12 @@ jobs:
       - run: sudo service postgresql start
       - run: |
           psql \
-          -d $DATABASE_URL \
+          -h 127.0.0.1
+          -U postgres
           -c "CREATE DATABASE forecast_dev;"
           psql \
-          -d $DATABASE_URL \
+          -h 127.0.0.1
+          -U postgres
           -c "CREATE USER sample_user WITH PASSWORD 'testpw';"
       # Download and cache dependencies
       - restore_cache:
