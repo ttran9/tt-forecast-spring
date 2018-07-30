@@ -9,7 +9,7 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk-browsers
         environment:
-          DATABASE_URL: jdbc:postgresql://localhost/circle_test
+          DATABASE_URL: jdbc:postgresql://localhost:5432/circle_test
           DATABASE_USER: sample_user
           DATABASE_PASSWORD: testpw
 
@@ -17,9 +17,9 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
-      - image: circleci/postgres:10.4-alpine-ram
+      - image: postgres:9.6
 
-    working_directory: ~/circleci-demo-java-spring
+    working_directory: ~/repo
 
     environment:
       # Customize the JVM maximum heap limit
