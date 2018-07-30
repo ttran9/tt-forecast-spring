@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: maven:3.5.0-jdk-8
+      - image: circleci/openjdk:8-jdk-browsers
         environment:
           DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/databasename
           DATABASE_USER: username
