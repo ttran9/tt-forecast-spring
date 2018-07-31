@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/headcontent :: metaContent"></th:block>
+    <th:block th:include="/headcontent :: titleContent"></th:block>
+    <th:block th:include="/headcontent :: bootstrapCss"></th:block>
+    <th:block th:include="/headcontent :: baseCss"></th:block>
+    <th:block th:include="/headcontent :: javascriptContent"></th:block>
+</head>
+<body>
+<th:block th:include="/navigationcontent :: navigationContent"></th:block>
+
+    <div class="container separator">
+        <div class="row">
+            <div class="col-md-5 offset-md-4">
+                <h2 class="offset-md-1">Create User Below:</h2>
+                <div>
+                    <form class="form-horizontal" th:object="${registrationFormCommand}"
+                          th:action="@{/register}" method="post">
+
+                        <div class="form-group" th:class="${#fields.hasErrors('userName')} ?
+                            'form-group has-error' : 'form-group'">
+                            <label class="col-sm-2 control-label">Username:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:field="*{userName}"/>
+                                <span class="form-text text-muted" th:if="${#fields.hasErrors('userName')}">
+                                    <ul>
+                                        <li th:each="error: ${#fields.errors('userName')}" th:text="${error}"></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" th:class="${#fields.hasErrors('password')} ?
+                            'form-group has-error' : 'form-group'">
+                            <label class="col-sm-2 control-label">Password:</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" th:field="*{password}"/>
+                                <span class="form-text text-muted" th:if="${#fields.hasErrors('password')}">
+                                    <ul>
+                                        <li th:each="error: ${#fields.errors('password')}" th:text="${error}"></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" th:class="${#fields.hasErrors('verifyPassword')} ?
+                            'form-group has-error' : 'form-group'">
+                            <label class="col-sm-2 control-label">Password Again:</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" th:field="*{verifyPassword}"/>
+                                <span class="form-text text-muted" th:if="${#fields.hasErrors('verifyPassword')}">
+                                    <ul>
+                                        <li th:each="error : ${#fields.errors('verifyPassword')}" th:text="${error}"></li>
+                                    </ul>
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-default offset-1">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

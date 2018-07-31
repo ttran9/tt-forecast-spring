@@ -1,0 +1,44 @@
+<th:block th:fragment="metaContent">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8"/>
+</th:block>
+
+<th:block th:fragment="titleContent">
+    <title th:text="${title}">Title Filler</title>
+</th:block>
+
+<th:block th:fragment="bootstrapCss">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}"
+          href="webjars/bootstrap/4.1.1/css/bootstrap.min.css">
+</th:block>
+
+<th:block th:fragment="javascriptContent">
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    <script th:src="@{/webjars/popper.js/1.14.3/dist/umd/popper.min.js}"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+    <script th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}"
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+</th:block>
+
+<th:block th:fragment="canvasJSInclude">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</th:block>
+
+<th:block th:fragment="hourlyForecastParser">
+    <script th:src="@{/javascript/parsehourlyforecasts.js}"></script>
+</th:block>
+
+<th:block th:fragment="dailyForecastParser">
+    <script th:src="@{/javascript/parsedailyforecasts.js}"></script>
+</th:block>
+
+<th:block th:fragment="baseCss">
+    <link rel="stylesheet" th:href="@{/stylesheets/base.css}">
+</th:block>
+
+<th:block th:fragment="chartsCss">
+    <link rel="stylesheet" th:href="@{/stylesheets/charts.css}">
+</th:block>

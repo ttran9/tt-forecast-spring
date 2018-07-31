@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/headcontent :: metaContent"></th:block>
+    <th:block th:include="/headcontent :: titleContent"></th:block>
+    <th:block th:include="/headcontent :: bootstrapCss"></th:block>
+    <th:block th:include="/headcontent :: baseCss"></th:block>
+    <th:block th:include="/headcontent :: chartsCss"></th:block>
+    <th:block th:include="/headcontent :: javascriptContent"></th:block>
+    <th:block th:include="/headcontent :: canvasJSInclude"></th:block>
+    <th:block th:include="/headcontent :: hourlyForecastParser"></th:block>
+</head>
+<body>
+    <th:block th:include="/navigationcontent :: navigationContent"></th:block>
+
+    <div class="container separator">
+        <div class="row">
+            <a th:href="@{/forecast/daily_forecast(search=${searchId},page=1)}">
+                <h3>View Daily Forecasts!</h3></a>
+        </div>
+        <div class="row">
+            <div id="hourlyForecastChart" class="chartDimensions"></div>
+        </div>
+        <div th:if="${list.totalPages != 1}" class="form-group col-md-12 pagination-centered">
+            <div class="row">
+                <div class="col-md-2">
+                    <p th:text="${'Page ' + currentPage + ' of ' + totalPages}">My Filler</p>
+                </div>
+                <div class="col-md-10">
+                    <ul class="pagination">
+                        <li th:class="${list.number == 0} ? 'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/forecast/hourly_forecast(search=${searchId}, page=1)}">&laquo;</a>
+                        </li>
+                        <li th:class="${list.number == 0} ? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" th:href="@{/forecast/hourly_forecast(
+                            search=${searchId}, page=${list.number})}">&larr;</a>
+                        </li>
+                        <li th:class="${list.number == (page - 1)} ? 'page-item active pointer-disabled'
+                                    : 'page-item'"
+                            th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                            <a class="page-link"
+                               th:href="@{/forecast/hourly_forecast(search=${searchId}, page=${page})}"
+                               th:text="${page}"></a>
+                        </li>
+                        <li th:class="${list.number + 1 == list.totalPages} ? 'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/forecast/hourly_forecast(search=${searchId}, page=${list.number + 2})}">&rarr;</a>
+                        </li>
+                        <li th:class="${list.number + 1 == list.totalPages} ? 'page-item disabled' : 'page-item'">
+                            <a class="page-link"
+                               th:href="@{/forecast/hourly_forecast(search=${searchId}, page=${list.totalPages})}">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        var list = /*[[${hourlyList}]]*/ null;
+        $(window).load(generateHourlyForecast(list));
+    </script>
+
+</body>
+</html>

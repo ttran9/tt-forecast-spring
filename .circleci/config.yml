@@ -6,42 +6,122 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+      - image: maven:3.5.0-jdk-8
+        environment:
+          DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/forecast_dev
+          DATABASE_USER: sample_user
+          DATABASE_PASSWORD: testpw
+      - image: postgres:9.6
 
     working_directory: ~/repo
 
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
-
     steps:
       - checkout
+      - run: apt-get update -qq && apt-get install -y postgresql
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -c "CREATE DATABASE forecast_dev;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "CREATE USER sample_user WITH
+            PASSWORD 'testpw';"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "REVOKE CREATE ON SCHEMA public FROM
+            public;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "ALTER DEFAULT PRIVILEGES in SCHEMA
+            public GRANT SELECT ON TABLES TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "ALTER DEFAULT PRIVILEGES in SCHEMA
+            public GRANT DELETE ON TABLES TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "ALTER DEFAULT PRIVILEGES in SCHEMA
+            public GRANT UPDATE ON TABLES TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "ALTER DEFAULT PRIVILEGES in SCHEMA
+            public GRANT INSERT ON TABLES TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "create table custom_user_role
+            (custom_user_id int8 not null, role_id int8 not null, primary key (custom_user_id,
+            role_id));"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "create table custom_user (id
+            bigserial not null, date_created timestamp, last_updated timestamp, enabled boolean,
+            encrypted_password varchar(255), username varchar(255), primary key (id));"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "create table daily_forecast (id bigserial not null,
+            date_created timestamp, last_updated timestamp, summary varchar(255), time int8 not
+            null, formatted_temperature_high_time varchar(255), formatted_temperature_low_time varchar(255),
+            temperature_high float8 not null, temperature_high_time int8 not null, temperature_low float8 not null,
+            temperature_low_time int8 not null, search_id int8, primary key (id));"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "create table hourly_forecast (id
+            bigserial not null, date_created timestamp, last_updated timestamp, summary varchar(255),
+            time int8 not null, temperature float8 not null, search_id int8, primary key (id));"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "create table role (id bigserial not
+            null, date_created timestamp, last_updated timestamp, role varchar(255), primary key (id));"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "create table search (id  bigserial not
+            null, date_created timestamp, last_updated timestamp, address varchar(255),
+            formatted_date_search varchar(255), user_id int8, primary key (id));"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "alter table custom_user_role add
+            constraint FKh7qj6cm8a96rd71kra0vari0u foreign key (role_id) references role;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "alter table custom_user_role add
+            constraint FKdtaxphll3nif2qrbxpgl0j6lh foreign key (custom_user_id) references custom_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "alter table daily_forecast add
+            constraint FKrhxt3lmrm1agwb8cgtqiuetwg foreign key (search_id) references search;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "alter table hourly_forecast add
+            constraint FK72ytphoknhug1919iboxwkh9n foreign key (search_id) references search;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "alter table search add constraint
+            FKd9pxpeo2tnvxjuc3l01frk9h8 foreign key (user_id) references custom_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
+            search_id_seq TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
+            daily_forecast_id_seq TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
+            hourly_forecast_id_seq TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
+            custom_user_id_seq TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
+            role_id_seq TO sample_user;"
+      - run:
+          command: |
+            psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
+            search_id_seq TO sample_user;"
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run: mvn dependency:go-offline
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      # run IT tests
       - run: mvn integration-test
-
-      - store_test_results:
-          path: target/surefire-reports
 
       # hook to send to codecov.
       - run:

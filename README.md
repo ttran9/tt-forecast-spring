@@ -1,16 +1,45 @@
 # Weather-Forecast Prototype
+- Codecov test coverage:
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/test-coverage/graph/badge.svg)
+    
+- CircleCI build status:
+![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
 
 # Brief Overview Of This Repository
 
 - This repository is my implementation for a weather forecast prototype web application I previously
-built in both [Ruby (using Rails and TDD)](https://github.com/ttran9/rails-weather-forecast) and 
-[C# (using ASP.NET and no TDD)](https://github.com/ttran9/weather-forecast-aspnet).
+built in both [Ruby (using Rails with tests)](https://github.com/ttran9/rails-weather-forecast) and 
+[C# (using ASP.NET and no tests)](https://github.com/ttran9/weather-forecast-aspnet).
     - Some technologies used would be Spring Boot, Java 8, Hibernate 5, PostgreSQL (used locally and 
     on Heroku).
         - For a local database I ran the latest PostgreSQL docker image inside of a docker container.
+<<<<<<< HEAD
 - The most up to date branch is [here](https://github.com/ttran9/tt-forecast-spring/tree/test-coverage) and I will merge the changes back on to the master branch once I have refactored the code enough to have higher test coverage (I am aiming for the 70-80% range).         
         
+=======
+
+# Summary of this branch
+
+- Since I did not follow TDD completely (such as testing all classes) this branch will focus on 
+code cleanup and adding tests where applicable and refactoring if necessary.
+    - Note: I'm aware that I should've written more detailed tests and more concise code if I 
+    were following TDD.
+    
+    # What I learned:
+        - I need to be more careful while naming my "integration test" files because I 
+        misnamed this it caused for my tests to not be detected by Codecov's line coverage and my 
+        coverage was appearing to be much lower than it was.
+
+# Docker Information (for using the database in development mode)
+
+    - Refer to the src/main/scripts/README for information on this.
+
+>>>>>>> test-coverage
 # Details about this Repository
+
+- For the applications.properties file simply change spring.profiles.active to a profile of your 
+choice to use a certain type of datastore, I will be adding it to the .gitignore as I will be 
+modifying it across branches and don't want to commit a minor change every time I push a new change.
 
 - For this application there will also be another user account that I created that has limited 
 permissions, such as DML and not DDL as I do not want to give all user accounts as much power as 
@@ -37,22 +66,3 @@ coverage of my automated tests.
 [J Hipster](https://start.jhipster.tech/#/design-entities) and "Create a new JDL model" if you are 
 logged in and if you are not logged in you can go [here](https://start.jhipster.tech/jdl-studio/)
 to start building the diagram.
-
-# Docker Information (for using the database in development mode)
-
-- I created a development database using the command below:
-    - docker run --name dockerpsql -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=hidden -e 
-    POSTGRES_DB=forecast_dev -p 5432:5432 -d postgres
-    - note: this is just a simple example set of user credentials, for your own you would want to 
-    have a more secure password for the postgres user.
-        - if you use the above command keep in mind that the latest postgres version is pulled down 
-        so your version will change in case some undesired results occur.
-
-- This application doesn't focus too much on Postgres usage so I will be using the public schema.
-
-# Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/master/graph/badge.svg)
-
-# CircleCI build status:
-![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
-

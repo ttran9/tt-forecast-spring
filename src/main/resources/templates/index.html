@@ -1,12 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:include="/headcontent :: metaContent"></th:block>
+    <th:block th:include="/headcontent :: titleContent"></th:block>
+    <th:block th:include="/headcontent :: bootstrapCss"></th:block>
+    <th:block th:include="/headcontent :: baseCss"></th:block>
+    <th:block th:include="/headcontent :: javascriptContent"></th:block>
 </head>
 <body>
+    <th:block th:include="/navigationcontent :: navigationContent"></th:block>
 
-    <h4>Your Home Page!</h4>
-
+    <div class="container separator">
+        <form th:action="@{/searches/search_result}" th:object="${search}" method="POST">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <h2>Enter an Address Below</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:field="*{address}"/>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+        <div class="row" th:if="${exception != null}">
+            <div class="col-md-6 col-md-offset-3">
+                <p th:if="${exception != null}" th:text="${exception.getMessage()}"></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

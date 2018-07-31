@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/headcontent :: metaContent"></th:block>
+    <th:block th:include="/headcontent :: titleContent"></th:block>
+    <th:block th:include="/headcontent :: bootstrapCss"></th:block>
+    <th:block th:include="/headcontent :: javascriptContent"></th:block>
+</head>
+<body>
+    <th:block th:include="/navigationcontent :: navigationContent"></th:block>
+
+    <div class="container">
+        <div class="container-fluid" style="margin-top: 20px">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <h1>You are not authorized to view the page!</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

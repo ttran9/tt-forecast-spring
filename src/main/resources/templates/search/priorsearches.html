@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/headcontent :: metaContent"></th:block>
+    <th:block th:include="/headcontent :: titleContent"></th:block>
+    <th:block th:include="/headcontent :: bootstrapCss"></th:block>
+    <th:block th:include="/headcontent :: baseCss"></th:block>
+    <th:block th:include="/headcontent :: javascriptContent"></th:block>
+</head>
+<body>
+<th:block th:include="/navigationcontent :: navigationContent"></th:block>
+    <div class="container separator">
+        <div th:if="${list != null}">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <h2>Your search history below:</h2>
+                </div>
+                <table class="table table-bordered table-dark">
+                    <thead>
+                    <tr>
+                        <th scope="col">Address Searched For:</th>
+                        <th scope="col">Date When Searched:</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="search : ${list}">
+                        <td><a th:href="@{/forecast/hourly_forecast(search=${search.id},page=1)}"
+                               th:text="${search.address}"></a></td>
+                        <td th:text="${search.formattedDateSearch}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${list.totalPages != 1}" class="form-group col-md-12 pagination-centered">
+                <div class="row">
+                    <div class="col-md-2">
+                        <p th:text="${'Page ' + currentPage + ' of ' + totalPages}">My Filler</p>
+                    </div>
+                    <div class="col-md-10">
+                        <ul class="pagination">
+                            <li th:class="${list.number == 0} ? 'page-item disabled' : 'page-item'">
+                                <a class="page-link" th:href="@{/(page=1)}">&laquo;</a>
+                            </li>
+                            <li th:class="${list.number == 0} ? 'page-item disabled' : 'page-item'">
+                                <a class="page-link" th:href="@{/(page=${list.number})}">&larr;</a>
+                            </li>
+                            <li th:class="${list.number == (page - 1)} ? 'page-item active pointer-disabled'
+                                    : 'page-item'"
+                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                <a class="page-link"
+                                   th:href="@{/searches/prior_searches(page=${page})}"
+                                   th:text="${page}"></a>
+                            </li>
+                            <li th:class="${list.number + 1 == list.totalPages} ? 'page-item disabled' : 'page-item'">
+                                <a class="page-link"
+                                   th:href="@{/(page=${list.number + 2})}">&rarr;</a>
+                            </li>
+                            <li th:class="${list.number + 1 == list.totalPages} ? 'page-item disabled' : 'page-item'">
+                                <a class="page-link"
+                                   th:href="@{/(page=${list.totalPages})}">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" th:unless="${list != null}">
+            <div class="col-md-8 offset-md-3">
+                <h2>You have not made any prior searches</h2>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
