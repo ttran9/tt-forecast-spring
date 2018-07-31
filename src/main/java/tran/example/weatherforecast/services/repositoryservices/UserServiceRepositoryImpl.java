@@ -111,4 +111,18 @@ public class UserServiceRepositoryImpl implements UserService {
         log.debug("Attempting to find a user by the specified user name!");
         return userRepository.findByUsername(userName);
     }
+
+    /**
+     * Checks if the user name is already taken.
+     * @param userName The user name to be checked.
+     * @return True if the user name already exists in the database, false otherwise.
+     */
+    @Override
+    public Boolean isUserNameTaken(String userName) {
+        CustomUser customUser = findByUserName(userName);
+        if(customUser != null) {
+            return findByUserName(userName).getUsername() != null;
+        }
+        return false;
+    }
 }
