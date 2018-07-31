@@ -121,7 +121,7 @@ public class UserServiceRepositoryImpl implements UserService {
     public Boolean isUserNameTaken(String userName) {
         CustomUser customUser = findByUserName(userName);
         if(customUser != null) {
-            return findByUserName(userName).getUsername() != null;
+            return customUser.getUsername() != null;
         }
         return false;
     }
