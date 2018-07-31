@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"development"})
 public class ForecastControllerIntegrationTest {
     /**
      * Entry point for MVC testing.
