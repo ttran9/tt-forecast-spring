@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.domain.security.Role;
@@ -150,12 +149,6 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
         String userNameToFind = "mweston";
         CustomUser user = userService.findByUserName(userNameToFind);
         List<Search> searches = user.getSearches();
-
-        if(searches.size() > 0) {
-            log.debug(userNameToFind + " has already made searches and there is no need to " +
-                    "bootstrap in default searches");
-            return ;
-        }
 
         /**
          * The below check is done because when using a Postgres database I will not be using the
