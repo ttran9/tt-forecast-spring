@@ -123,4 +123,12 @@ public class CustomUserServiceRepositoryImplTest {
         // then
         verify(userRepository, times(1)).findByUsername(any(String.class));
     }
+
+    @Test
+    public void isUserNameTaken() {
+        // when
+        userServiceRepository.isUserNameTaken(USER_NAME);
+        // then
+        verify(userRepository, times(1)).findByUsername(any(String.class));
+    }
 }
