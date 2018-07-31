@@ -105,13 +105,6 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
      * Helper method to create users.
      */
     public void loadUsers() {
-        // if the below is true data has already been bootstrapped.
-        if(userService.findByUserName(SpringJPABootstrap.MWESTON) != null && userService
-                .findByUserName(SpringJPABootstrap.TEST_ACCOUNT_USER_NAME) != null) {
-            log.debug("Users already exist so no need to load in the users again!");
-            return ;
-        }
-
         CustomUser userOne = new CustomUser();
         userOne.setUsername(SpringJPABootstrap.MWESTON);
         userOne.setPassword(SpringJPABootstrap.PASSWORD);
@@ -120,7 +113,18 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
         userTwo.setUsername(SpringJPABootstrap.TEST_ACCOUNT_USER_NAME);
         userTwo.setPassword(SpringJPABootstrap.TEST_ACCOUNT_PASSWORD);
 
+        String firstUserName = userOne.getUsername();
+        String secondUserName = userTwo.getUsername();
+
+        if(userService.isUserNameTaken(firstUserName)) {
+            log.debug(firstUserName + " is already taken");
+            return ;
+        }
         userService.saveOrUpdate(userOne);
+        if(userService.isUserNameTaken(secondUserName)) {
+            log.debug(secondUserName + " is already taken");
+            return ;
+        }
         userService.saveOrUpdate(userTwo);
 
         log.debug("Test user accounts have been loaded!");
