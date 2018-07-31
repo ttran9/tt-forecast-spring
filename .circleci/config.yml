@@ -56,7 +56,7 @@ jobs:
             GRANT USAGE, SELECT ON SEQUENCE role_id_seq TO sample_user;
             GRANT USAGE, SELECT ON SEQUENCE search_id_seq TO sample_user;"
 
-      - run: mvn test
+      - run: mvn integration-test
 
       # hook to send to codecov.
       - run:
