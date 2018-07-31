@@ -119,7 +119,7 @@ jobs:
       - run:
           command: |
             psql -h 127.0.0.1 -U postgres -d forecast_dev -c "GRANT USAGE, SELECT ON SEQUENCE
-            search_id_seq TO sample_user;""
+            search_id_seq TO sample_user;"
 
       - run: mvn integration-test
 
