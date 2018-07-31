@@ -13,10 +13,6 @@ built in both [Ruby (using Rails with tests)](https://github.com/ttran9/rails-we
     - Some technologies used would be Spring Boot, Java 8, Hibernate 5, PostgreSQL (used locally and 
     on Heroku).
         - For a local database I ran the latest PostgreSQL docker image inside of a docker container.
-<<<<<<< HEAD
-- The most up to date branch is [here](https://github.com/ttran9/tt-forecast-spring/tree/test-coverage) and I will merge the changes back on to the master branch once I have refactored the code enough to have higher test coverage (I am aiming for the 70-80% range).         
-        
-=======
 
 # Summary of this branch
 
@@ -32,9 +28,8 @@ code cleanup and adding tests where applicable and refactoring if necessary.
 
 # Docker Information (for using the database in development mode)
 
-    - Refer to the src/main/scripts/README for information on this.
+    - Refer to the src/main/scripts/README directory for information on this.
 
->>>>>>> test-coverage
 # Details about this Repository
 
 - For the applications.properties file simply change spring.profiles.active to a profile of your 
