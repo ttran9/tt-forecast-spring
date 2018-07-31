@@ -26,30 +26,32 @@ jobs:
             psql -h 127.0.0.1 -U postgres -c "CREATE USER sample_user WITH PASSWORD 'testpw';"
       - run:
           command: |
-            "REVOKE CREATE ON SCHEMA public FROM public;"
+            psql -h 127.0.0.1 -U postgres -c "REVOKE CREATE ON SCHEMA public FROM public;"
       - run:
           command: |
-            "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT SELECT ON TABLES TO sample_user;"
+            psql -h 127.0.0.1 -U postgres -c "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT
+            SELECT ON TABLES TO sample_user;"
       - run:
           command: |
-            "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT DELETE ON TABLES TO sample_user;"
+            psql -h 127.0.0.1 -U postgres -c "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT
+            DELETE ON TABLES TO sample_user;"
       - run:
           command: |
-            "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT UPDATE ON TABLES TO sample_user;"
+            psql -h 127.0.0.1 -U postgres -c "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT
+            UPDATE ON TABLES TO sample_user;"
       - run:
           command: |
-            "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT INSERT ON TABLES TO sample_user;"
+            psql -h 127.0.0.1 -U postgres -c "ALTER DEFAULT PRIVILEGES in SCHEMA public GRANT
+            INSERT ON TABLES TO sample_user;"
       - run:
           command: |
-            "create table custom_user_role (custom_user_id int8 not null, role_id int8 not null,
-            primary key
-            (custom_user_id, role_id));"
+            psql -h 127.0.0.1 -U postgres -c "create table custom_user_role (custom_user_id int8
+            not null, role_id int8 not null, primary key (custom_user_id, role_id));"
       - run:
           command: |
-            "create table custom_user (id  bigserial not null, date_created timestamp,
-            last_updated timestamp,
-             enabled boolean, encrypted_password varchar(255), username varchar(255), primary key
-              (id));"
+            psql -h 127.0.0.1 -U postgres -c "create table custom_user (id  bigserial not null,
+            date_created timestamp, last_updated timestamp, enabled boolean, encrypted_password
+            varchar(255), username varchar(255), primary key (id));"
 
       - run: mvn integration-test
 
