@@ -1,6 +1,6 @@
 # Weather-Forecast Prototype
 - Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/test-coverage/graph/badge.svg)
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/master/graph/badge.svg)
     
 - CircleCI build status:
 ![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
