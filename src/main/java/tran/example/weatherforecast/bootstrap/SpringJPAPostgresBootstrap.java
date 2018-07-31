@@ -114,17 +114,18 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
         userTwo.setPassword(SpringJPABootstrap.TEST_ACCOUNT_PASSWORD);
 
         String firstUserName = userOne.getUsername();
-        String secondUserName = userTwo.getUsername();
 
+        /*
+         * for now I am not checking for a second user because there is no delete method being
+         * used so if the first user is created the second user is expected to be created. this
+         * could cause a bug later on but I will add in more logic if that is the case in a
+         * future build.
+         */
         if(userService.isUserNameTaken(firstUserName)) {
             log.debug(firstUserName + " is already taken");
             return ;
         }
         userService.saveOrUpdate(userOne);
-        if(userService.isUserNameTaken(secondUserName)) {
-            log.debug(secondUserName + " is already taken");
-            return ;
-        }
         userService.saveOrUpdate(userTwo);
 
         log.debug("Test user accounts have been loaded!");
