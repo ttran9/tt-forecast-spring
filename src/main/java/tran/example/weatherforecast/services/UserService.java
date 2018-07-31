@@ -12,4 +12,11 @@ public interface UserService extends CRUDService<CustomUser> {
      * @return A user object with the provided userName.
      */
     CustomUser findByUserName(String userName);
+    /**
+     * Verifies if the user already exists, this is expected to be used to prevent
+     * the same user name from being registered more than once.
+     * @param userName The user name to be checked.
+     * @return True if the user name already exists, false otherwise.
+     */
+    Boolean isUserNameTaken(String userName);
 }
