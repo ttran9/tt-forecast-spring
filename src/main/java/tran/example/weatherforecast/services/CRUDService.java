@@ -10,7 +10,7 @@ public interface CRUDService<T> {
     /**
      * @return A list of all the objects of a specified type.
      */
-    List<?> listAll();
+    List<T> listAll();
 
     /**
      * Gets an object by the specified id.
