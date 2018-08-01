@@ -90,22 +90,23 @@ public class RegistrationControllerIntegrationTest {
     }
 
     /**
-     * This will successfully create a user so there should be one extra user.
-     * The user is expected to be redirected to the index page.
+     * This will attempt to create a user name that has already been pre-loaded (bootstrapped)
+     * into the application.
+     * The user is expected to be shown the registration page again.
      * @throws Exception Throws an exception if there is an error making a POST request to
      * process the registration.
      */
     @Test
-    public void processRegistration() throws Exception {
-        String newUserName = "goodusername";
-        long numberOfExpectedUsers = userRepository.count() + 1;
+    public void processRegistrationWithExistingUserName() throws Exception {
+        long numberOfExpectedUsers = userRepository.count();
         mockMvc.perform(post(RegistrationController.BASE_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param(userNameField, newUserName)
+                .param(userNameField, SpringJPABootstrap.MWESTON)
                 .param(passwordField, samplePasswordValue)
                 .param(verifyPasswordField, samplePasswordValue))
-                .andExpect(view().name(SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(view().name(RegistrationController.REGISTRATION_DIRECTORY +
+                        RegistrationController.REGISTRATION_PAGE_NAME))
+                .andExpect(status().isOk());
         long updatedNumberOfUsers = userRepository.count();
         assertEquals(numberOfExpectedUsers, updatedNumberOfUsers);
     }
