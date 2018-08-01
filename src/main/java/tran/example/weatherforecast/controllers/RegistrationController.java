@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
-import tran.example.weatherforecast.commands.SearchCommand;
+import tran.example.weatherforecast.services.UserService;
 import tran.example.weatherforecast.services.registrationservices.RegistrationService;
-import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
 import javax.validation.Valid;
 
@@ -52,14 +51,19 @@ public class RegistrationController extends ControllerHelper {
     /**
      * Used to verify if the two passwords are identical.
      */
-    private Validator validator;
+    private Validator passwordValidator;
+    /**
+     * A service used to verify if the user already exists before registering the user.
+     */
+    private UserService userService;
 
     @Autowired
     public RegistrationController(RegistrationService registrationService, @Qualifier
             ("registrationFormCommandPasswordValidator") Validator
-            validator) {
+            passwordValidator, UserService userService) {
         this.registrationService = registrationService;
-        this.validator = validator;
+        this.passwordValidator = passwordValidator;
+        this.userService = userService;
     }
 
     /**
@@ -70,8 +74,8 @@ public class RegistrationController extends ControllerHelper {
      */
     @GetMapping
     public String getRegistrationPage(@ModelAttribute(RegistrationController.registrationFormCommand)
-                                                  RegistrationFormCommand registrationFormCommand,
-                                                  Model model) {
+                                              RegistrationFormCommand registrationFormCommand,
+                                      Model model) {
         log.debug("displaying registration page!");
         addTitleAttribute(model, REGISTRATION_VIEW_TITLE);
         return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
@@ -87,15 +91,33 @@ public class RegistrationController extends ControllerHelper {
      */
     @PostMapping
     public String processRegistration(@Valid @ModelAttribute(RegistrationController.registrationFormCommand)
-                                      RegistrationFormCommand registrationFormCommand,
+                                              RegistrationFormCommand registrationFormCommand,
                                       BindingResult bindingResult) {
         log.debug("processing the registration from the controller!");
-        validator.validate(registrationFormCommand, bindingResult);
+        passwordValidator.validate(registrationFormCommand, bindingResult);
         if(bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
             return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
         }
-        registrationService.registerUser(registrationFormCommand);
-        return SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR;
+        if(!userService.isUserNameTaken(registrationFormCommand.getUserName())) {
+            registrationService.registerUser(registrationFormCommand);
+            return SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR;
+        } else {
+            return displayRegistrationPageWithUserNameError(bindingResult);
+        }
+    }
+
+    /**
+     * This will add a user name error to an object which will be used on the registration page to
+     * notify the user that the user name is taken.
+     * @param bindingResult An object which will hold information about the user name error.
+     * @return Returns the path to the registration page.
+     */
+    private String displayRegistrationPageWithUserNameError(BindingResult bindingResult) {
+        log.debug("user name exists so the user will not be registered!");
+        bindingResult.rejectValue("userName", "User name exists", "The user name is already " +
+                "taken!");
+        bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+        return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
     }
 }
