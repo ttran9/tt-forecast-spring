@@ -94,7 +94,7 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
             if(user.getRoles().size() < 1) {
                 roles.forEach(role -> {
                     user.addRole(role);
-                    userService.saveOrUpdate(user);
+                    userService.save(user);
                 });
             }
         });
@@ -125,8 +125,8 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
             log.debug(firstUserName + " is already taken");
             return ;
         }
-        userService.saveOrUpdate(userOne);
-        userService.saveOrUpdate(userTwo);
+        userService.save(userOne);
+        userService.save(userTwo);
 
         log.debug("Test user accounts have been loaded!");
     }
@@ -142,7 +142,7 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
 
         Role role = new Role();
         role.setRole(SpringJPABootstrap.USER);
-        roleService.saveOrUpdate(role);
+        roleService.save(role);
 
         log.debug("Test roles have been loaded!");
     }

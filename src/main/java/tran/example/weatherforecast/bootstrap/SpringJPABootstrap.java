@@ -128,7 +128,7 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         users.forEach(user -> {
             roles.forEach(role -> {
                 user.addRole(role);
-                userService.saveOrUpdate(user);
+                userService.save(user);
             });
         });
         log.debug("Default roles have been assigned to users!");
@@ -146,8 +146,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         userTwo.setUsername(TEST_ACCOUNT_USER_NAME);
         userTwo.setPassword(TEST_ACCOUNT_PASSWORD);
 
-        userService.saveOrUpdate(userOne);
-        userService.saveOrUpdate(userTwo);
+        userService.save(userOne);
+        userService.save(userTwo);
 
         log.debug("Test user accounts have been loaded!");
     }
@@ -158,7 +158,7 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
     private void loadRoles() {
         Role role = new Role();
         role.setRole(USER);
-        roleService.saveOrUpdate(role);
+        roleService.save(role);
 
         log.debug("Test roles have been loaded!");
     }
