@@ -76,18 +76,32 @@ public class UserServiceRepositoryImpl implements UserService {
     }
 
     /**
-     * Updates the user if it already exists or saves the user if the user has not yet been
-     * persisted.
-     * @param domainObject The user object to be saved or updated.
-     * @return The user object after being saved or updated.
+     * Saves the user if not in the database.
+     * @param domainObject The user to be saved.
+     * @return Returns the user after being saved, null if it already exists.
      */
     @Override
-    public CustomUser saveOrUpdate(CustomUser domainObject) {
-        log.debug("Saving or updating a user!");
-        if(domainObject.getPassword() != null){
-            log.debug("Encrypting password of user: " + domainObject.getUsername());
-            domainObject.setEncryptedPassword(encryptionService.encryptString(domainObject.getPassword()));
+    public CustomUser save(CustomUser domainObject) {
+        if(isUserNameTaken(domainObject.getUsername())) {
+            log.debug("User already exists!");
+            return null;
+        } else {
+            log.debug("Saving a user!");
+            if(domainObject.getPassword() != null){
+                log.debug("Encrypting password of user: " + domainObject.getUsername());
+                domainObject.setEncryptedPassword(encryptionService.encryptString(domainObject.getPassword()));
+            }
+            return userRepository.save(domainObject);
         }
+    }
+
+    /**
+     * Updates the user.
+     * @param domainObject The user to be updated.
+     * @return Return a user after being updated.
+     */
+    @Override
+    public CustomUser update(CustomUser domainObject) {
         return userRepository.save(domainObject);
     }
 

@@ -62,14 +62,29 @@ public class RoleServiceRepositoryImpl implements RoleService {
     }
 
     /**
-     * Saves the specified role object into the database or updates the existing role object if
-     * already present.
-     * @param domainObject The role object to be persisted.
-     * @return The role object after being persisted to the database.
+     * Saves the role if not in the database.
+     * @param domainObject The role to be saved.
+     * @return Returns a role after being saved, null if it already exists.
      */
     @Override
-    public Role saveOrUpdate(Role domainObject) {
-        log.debug("Saving or updating a role!");
+    public Role save(Role domainObject) {
+        Role role = roleRepository.findRoleByRole(domainObject.getRole());
+        if(role == null) {
+            log.debug("Saving and creating a new role!");
+            return roleRepository.save(domainObject);
+        } else {
+            log.debug("The role already exists and will not be created again!");
+            return null;
+        }
+    }
+
+    /**
+     * Updates the role.
+     * @param domainObject The role to be updated.
+     * @return Return a role after being updated.
+     */
+    @Override
+    public Role update(Role domainObject) {
         return roleRepository.save(domainObject);
     }
 

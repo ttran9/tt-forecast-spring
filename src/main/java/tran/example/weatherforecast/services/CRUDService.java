@@ -20,11 +20,18 @@ public interface CRUDService<T> {
     T getById(Long id);
 
     /**
-     * Saves the object if not in the database and updates it if already persisted.
-     * @param domainObject The object to be saved or updated.
-     * @return An object after being saved or persisted.
+     * Saves the object if not in the database.
+     * @param domainObject The object to be saved.
+     * @return Returns an object after being saved, null if it already exists.
      */
-    T saveOrUpdate(T domainObject);
+    T save(T domainObject);
+
+    /**
+     * Updates the object.
+     * @param domainObject The object to be updated.
+     * @return Return an object after being updated.
+     */
+    T update(T domainObject);
 
     /**
      * Removes an object based on the specified id.
