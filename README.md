@@ -1,6 +1,6 @@
 # Weather-Forecast Prototype
 - Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/master/graph/badge.svg)
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/adding-validation/graph/badge.svg)
     
 - CircleCI build status:
 ![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
@@ -16,15 +16,10 @@ built in both [Ruby (using Rails with tests)](https://github.com/ttran9/rails-we
 
 # Summary of this branch
 
-- Since I did not follow TDD completely (such as testing all classes) this branch will focus on 
-code cleanup and adding tests where applicable and refactoring if necessary.
-    - Note: I'm aware that I should've written more detailed tests and more concise code if I 
-    were following TDD.
-    
-    # What I learned:
-        - I need to be more careful while naming my "integration test" files because I 
-        misnamed this it caused for my tests to not be detected by Codecov's line coverage and my 
-        coverage was appearing to be much lower than it was.
+- There is a run-time bug that I am fixing in this branch where the same user name can be 
+registered more than once.
+
+- I will also be adding in validation for other fields.
 
 # Docker Information (for using the database in development mode)
 
