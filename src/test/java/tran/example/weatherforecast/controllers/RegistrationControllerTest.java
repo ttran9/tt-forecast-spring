@@ -13,6 +13,7 @@ import tran.example.weatherforecast.commands.RegistrationFormCommand;
 import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
 import tran.example.weatherforecast.repositories.RoleRepository;
+import tran.example.weatherforecast.services.UserService;
 import tran.example.weatherforecast.services.registrationservices.RegistrationService;
 import tran.example.weatherforecast.services.registrationservices.RegistrationServiceImpl;
 import tran.example.weatherforecast.services.security.EncryptionService;
@@ -59,6 +60,11 @@ public class RegistrationControllerTest {
     @Mock
     private Validator validator;
     /**
+     * Object used to access the CustomUser table.
+     */
+    @Mock
+    private UserService userService;
+    /**
      * Used to bind the entered user parameter inside of post calls to the userName input field.
      */
     private final String userNameField = "userName";
@@ -82,7 +88,7 @@ public class RegistrationControllerTest {
         RegistrationService registrationService = new RegistrationServiceImpl(userRepository,
                 roleRepository, converter, encryptionService);
         RegistrationController registerController = new RegistrationController
-                (registrationService, validator);
+                (registrationService, validator, userService);
         mockMvc = MockMvcBuilders.standaloneSetup(registerController)
                 .build();
     }
