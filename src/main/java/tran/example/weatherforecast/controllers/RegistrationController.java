@@ -99,8 +99,7 @@ public class RegistrationController extends ControllerHelper {
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
             return REGISTRATION_DIRECTORY + REGISTRATION_PAGE_NAME;
         }
-        if(!userService.isUserNameTaken(registrationFormCommand.getUserName())) {
-            registrationService.registerUser(registrationFormCommand);
+        if(registrationService.registerUser(registrationFormCommand) != null) {
             return SearchController.REDIRECT + IndexController.URL_PATH_SEPARATOR;
         } else {
             return displayRegistrationPageWithUserNameError(bindingResult);
