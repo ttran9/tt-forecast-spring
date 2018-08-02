@@ -171,7 +171,7 @@ public class SpringJPAPostgresBootstrap implements ApplicationListener<ContextRe
             }
         }
 
-        if(!sampleAddressNotFound) {
+        if(sampleAddressNotFound) {
             Search search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
             searchService.saveSearch(search, mwestonUserId);
 
