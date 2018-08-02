@@ -188,8 +188,6 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         CustomUser user = userService.findByUserName(userNameToFind);
         List<Search> searches = user.getSearches();
         long mwestonUserId = user.getId();
-        // we assume that a sample address made by mweston has not been found.
-        boolean sampleAddressNotFound = true;
 
         /**
          * The below check is done because when using a Postgres database I will not be using the
@@ -200,27 +198,25 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
             return ;
         }
 
-        if(sampleAddressNotFound) {
-            Search search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
-            searchService.saveSearch(search, mwestonUserId);
+        Search search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+        searchService.saveSearch(search, mwestonUserId);
 
-            Search secondSearch = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS_TWO);
-            searchService.saveSearch(secondSearch, mwestonUserId);
+        Search secondSearch = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS_TWO);
+        searchService.saveSearch(secondSearch, mwestonUserId);
 
-            searchService.createSearch(SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
+        searchService.createSearch(SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
 
-            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
-            searchService.saveSearch(search, mwestonUserId);
+        search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+        searchService.saveSearch(search, mwestonUserId);
 
-            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
-            searchService.saveSearch(search, mwestonUserId);
+        search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+        searchService.saveSearch(search, mwestonUserId);
 
-            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
-            searchService.saveSearch(search, mwestonUserId);
+        search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+        searchService.saveSearch(search, mwestonUserId);
 
-            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
-            searchService.saveSearch(search, mwestonUserId);
-        }
+        search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+        searchService.saveSearch(search, mwestonUserId);
     }
 
 }
