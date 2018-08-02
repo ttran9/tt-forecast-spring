@@ -11,6 +11,7 @@ import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.domain.security.Role;
 import tran.example.weatherforecast.repositories.RoleRepository;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
+import tran.example.weatherforecast.services.UserService;
 import tran.example.weatherforecast.services.security.EncryptionService;
 
 /**
@@ -36,32 +37,42 @@ public class RegistrationServiceImpl implements RegistrationService {
      * Used to encrypt the password.
      */
     private final EncryptionService encryptionService;
+    /**
+     * A service used to verify if the user already exists before registering the user.
+     */
+    private UserService userService;
 
     @Autowired
     public RegistrationServiceImpl(CustomUserRepository userRepository, RoleRepository roleRepository,
                                    @Qualifier("registrationFormCommandToCustomUser")
                                            Converter<RegistrationFormCommand, CustomUser> converter,
-                                   EncryptionService encryptionService) {
+                                   EncryptionService encryptionService, UserService userService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.converter = converter;
         this.encryptionService = encryptionService;
+        this.userService = userService;
     }
 
     /**
-     * Takes in the user name and password and converts the RecipeFormCommand object to a CustomUser
-     * and then encrypts the CustomUser and finally saves it into the database.
+     * Verifies that the user name is not taken and if not it takes in the userName and password
+     * from the form and saves it into the CustomUser object and then the password is encrypted
+     * and the user is saved into the database.
      * @param registrationFormCommand The object holding the user name and password.
-     * @return Returns a user with the user name and encrypted password fields assigned.
+     * @return Returns a user object with a username and an encrypted password, or null if the
+     * user does not exist.
      */
     @Override
     public CustomUser registerUser(RegistrationFormCommand registrationFormCommand) {
         log.debug("attempting to register/create the user!");
         /*
          * The controller validates the form contents so while testing this method it will be
-         * assumed there are no errors with the RegistrationFormObject.
+         * assumed there are no errors with the password fields of the RegistrationFormObject.
           */
         CustomUser user = converter.convert(registrationFormCommand);
+        if(userService.isUserNameTaken(registrationFormCommand.getUserName())) {
+            return null;
+        }
         // encrypt the password.
         user.setEncryptedPassword(encryptionService.encryptString(user.getPassword()));
         Role userRole = roleRepository.findRoleByRole(SpringJPABootstrap.USER);
