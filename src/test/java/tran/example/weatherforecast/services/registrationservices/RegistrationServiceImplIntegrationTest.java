@@ -6,23 +6,20 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.commands.RegistrationFormCommand;
 import tran.example.weatherforecast.domain.CustomUser;
-import tran.example.weatherforecast.domain.security.Role;
-import tran.example.weatherforecast.repositories.RoleRepository;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
+import tran.example.weatherforecast.repositories.RoleRepository;
+import tran.example.weatherforecast.services.UserService;
 import tran.example.weatherforecast.services.security.EncryptionService;
 
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("default")
 public class RegistrationServiceImplIntegrationTest {
     /**
      * Used to save the user to the CustomUser table.
@@ -49,43 +46,33 @@ public class RegistrationServiceImplIntegrationTest {
      * Allows access to invoke the method to register a user.
      */
     private RegistrationService registrationService;
+    /**
+     * Used to verify if the user name is taken.
+     */
+    @Autowired
+    private UserService userService;
 
     @Before
     public void setUp()  {
         registrationService = new RegistrationServiceImpl(userRepository, roleRepository,
-                converter, encryptionService);
+                converter, encryptionService, userService);
     }
 
     /**
-     * This will test a successful user registration, the user is expected to have the default
-     * a role object which has the role "CustomUser" as well as having an encrypted password and the
-     * username specified.
+     * This will test where the user attempts to register when a user already exists so the user
+     * is not created and the returned object is null.
      */
     @Test
     public void registerUser() {
         // given
-        String newUser = SpringJPABootstrap.MWESTON + "1";
-
         RegistrationFormCommand registrationFormCommand = new RegistrationFormCommand();
-        registrationFormCommand.setUserName(SpringJPABootstrap.MWESTON + "1");
-        registrationFormCommand.setPassword(SpringJPABootstrap.PASSWORD);
+        registrationFormCommand.setUserName(SpringJPABootstrap.MWESTON);
+        registrationFormCommand.setPassword(SpringJPABootstrap.PASSWORD + "123");
 
         // when
-        CustomUser registeredUser = registrationService.registerUser(registrationFormCommand);
+        CustomUser nullUser = registrationService.registerUser(registrationFormCommand);
 
-        assertTrue(encryptionService.checkPassword(SpringJPABootstrap.PASSWORD, registeredUser
-                .getEncryptedPassword()));
         // then
-        assertEquals(newUser, registeredUser.getUsername());
-        assertTrue(encryptionService.checkPassword(SpringJPABootstrap.PASSWORD, registeredUser
-                .getEncryptedPassword()));
-
-        Optional<Role> roleOptional = registeredUser.getRoles().stream()
-                                        .filter(role1 -> role1.getRole().equals(SpringJPABootstrap.USER))
-                                        .findFirst();
-        assertNotNull(roleOptional);
-        Role assignedRole = roleOptional.get();
-        assertEquals(SpringJPABootstrap.USER, assignedRole.getRole());
-
+        assertNull(nullUser);
     }
 }
