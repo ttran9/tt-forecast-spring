@@ -3,7 +3,6 @@ package tran.example.weatherforecast.bootstrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,6 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@Profile({"default"})
 public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedEvent> {
     /**
      * A generic role that is required to view certain pages.
@@ -126,10 +124,12 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         List<CustomUser> users = (List<CustomUser>) userService.listAll();
 
         users.forEach(user -> {
-            roles.forEach(role -> {
-                user.addRole(role);
-                userService.save(user);
-            });
+            if(user.getRoles().size() < 1) {
+                roles.forEach(role -> {
+                    user.addRole(role);
+                    userService.save(user);
+                });
+            }
         });
         log.debug("Default roles have been assigned to users!");
     }
@@ -139,13 +139,25 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      */
     public void loadUsers() {
         CustomUser userOne = new CustomUser();
-        userOne.setUsername(MWESTON);
-        userOne.setPassword(PASSWORD);
+        userOne.setUsername(SpringJPABootstrap.MWESTON);
+        userOne.setPassword(SpringJPABootstrap.PASSWORD);
 
         CustomUser userTwo = new CustomUser();
-        userTwo.setUsername(TEST_ACCOUNT_USER_NAME);
-        userTwo.setPassword(TEST_ACCOUNT_PASSWORD);
+        userTwo.setUsername(SpringJPABootstrap.TEST_ACCOUNT_USER_NAME);
+        userTwo.setPassword(SpringJPABootstrap.TEST_ACCOUNT_PASSWORD);
 
+        String firstUserName = userOne.getUsername();
+
+        /*
+         * for now I am not checking for a second user because there is no delete method being
+         * used so if the first user is created the second user is expected to be created. this
+         * could cause a bug later on but I will add in more logic if that is the case in a
+         * future build.
+         */
+        if(userService.isUserNameTaken(firstUserName)) {
+            log.debug(firstUserName + " is already taken");
+            return ;
+        }
         userService.save(userOne);
         userService.save(userTwo);
 
@@ -156,8 +168,13 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to create roles.
      */
     private void loadRoles() {
+        if(roleService.listAll().size() > 0) {
+            log.debug("Test roles have already been loaded.");
+            return ;
+        }
+
         Role role = new Role();
-        role.setRole(USER);
+        role.setRole(SpringJPABootstrap.USER);
         roleService.save(role);
 
         log.debug("Test roles have been loaded!");
@@ -167,25 +184,47 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
      * Helper method to make a request for the fore at 1600 amphitheater pkwy by the user "mweston".
      */
     private void createSampleSearch() {
-        Search search = searchService.createSearch(SAMPLE_ADDRESS);
-        searchService.saveSearch(search, 1L);
+        String userNameToFind = "mweston";
+        CustomUser user = userService.findByUserName(userNameToFind);
+        List<Search> searches = user.getSearches();
+        long mwestonUserId = user != null ? user.getId() : 1L;
+        // we assume that a sample address made by mweston has not been found.
+        boolean sampleAddressNotFound = true;
 
-        Search secondSearch = searchService.createSearch(SAMPLE_ADDRESS_TWO);
-        searchService.saveSearch(secondSearch, 1L);
+        /**
+         * The below check is done because when using a Postgres database I will not be using the
+         * create-drop but instead validate so I do not want to make too many sample API requests
+         * (such as every time I start up this application).
+         */
+        for(Search search : searches) {
+            if(search.getAddress().equals(SpringJPABootstrap.SAMPLE_ADDRESS) && search.getUser()
+                    .getUsername().equals(userNameToFind)) {
+                sampleAddressNotFound = false;
+                break;
+            }
+        }
 
-        searchService.createSearch(STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
+        if(sampleAddressNotFound) {
+            Search search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+            searchService.saveSearch(search, mwestonUserId);
 
-        search = searchService.createSearch(SAMPLE_ADDRESS);
-        searchService.saveSearch(search, 1L);
+            Search secondSearch = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS_TWO);
+            searchService.saveSearch(secondSearch, mwestonUserId);
 
-        search = searchService.createSearch(SAMPLE_ADDRESS);
-        searchService.saveSearch(search, 1L);
+            searchService.createSearch(SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS);
 
-        search = searchService.createSearch(SAMPLE_ADDRESS);
-        searchService.saveSearch(search, 1L);
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+            searchService.saveSearch(search, mwestonUserId);
 
-        search = searchService.createSearch(SAMPLE_ADDRESS);
-        searchService.saveSearch(search, 1L);
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+            searchService.saveSearch(search, mwestonUserId);
+
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+            searchService.saveSearch(search, mwestonUserId);
+
+            search = searchService.createSearch(SpringJPABootstrap.SAMPLE_ADDRESS);
+            searchService.saveSearch(search, mwestonUserId);
+        }
     }
 
 }
