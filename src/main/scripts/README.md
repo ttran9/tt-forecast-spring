@@ -13,3 +13,10 @@
     - Run the contents of the three scripts: samplepostgresuser.sql, schemacreate.sql, and 
     sampleusergrant.sql step by step by how they are labeled (steps 1-3) for the corresponding 
     segments.
+    
+    - If you are getting errors and you don't want to drop the database you can always drop the 
+    tables before running the three other steps mentioned in the previous bullet point.
+        - Just execute the contents of the droptables.sql file to do this.
+        - If you decide to drop the tables you don't need to re-create the user or re-run the 
+        script corresponding to step 1 (samplepostgresuser.sql), but you should re-run steps 2-3.
+     
