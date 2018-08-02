@@ -14,7 +14,7 @@ import tran.example.weatherforecast.repositories.RoleRepository;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * This class will load in (bootstrap) data and check if the role data was properly loaded into the
@@ -53,11 +53,28 @@ public class RoleServiceRepositoryImplIntegrationTest {
         testRole.setRole(newRole);
 
         // when
-        Role savedRole = roleServiceRepository.saveOrUpdate(testRole);
+        Role savedRole = roleServiceRepository.update(testRole);
 
         // then
         assertEquals(newRole, savedRole.getRole());
 
+    }
+
+    /**
+     * This will attempt to save/create a role that is already there (the role of "User") so it
+     * is expected that this will not be saved/created again and return null.
+     */
+    @Test
+    public void saveAlreadyExistingRole() {
+        // given
+        Role role = new Role();
+        role.setRole(SpringJPABootstrap.USER);
+
+        // when
+        Role nullRole = roleServiceRepository.save(role);
+
+        // then
+        assertNull(nullRole);
     }
 
     /**
