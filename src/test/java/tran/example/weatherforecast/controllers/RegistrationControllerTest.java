@@ -86,7 +86,7 @@ public class RegistrationControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         RegistrationService registrationService = new RegistrationServiceImpl(userRepository,
-                roleRepository, converter, encryptionService);
+                roleRepository, converter, encryptionService, userService);
         RegistrationController registerController = new RegistrationController
                 (registrationService, validator, userService);
         mockMvc = MockMvcBuilders.standaloneSetup(registerController)
