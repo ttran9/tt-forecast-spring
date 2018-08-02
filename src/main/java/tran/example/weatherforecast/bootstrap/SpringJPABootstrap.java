@@ -187,7 +187,7 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         String userNameToFind = "mweston";
         CustomUser user = userService.findByUserName(userNameToFind);
         List<Search> searches = user.getSearches();
-        long mwestonUserId = user != null ? user.getId() : 1L;
+        long mwestonUserId = user.getId();
         // we assume that a sample address made by mweston has not been found.
         boolean sampleAddressNotFound = true;
 
@@ -196,12 +196,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
          * create-drop but instead validate so I do not want to make too many sample API requests
          * (such as every time I start up this application).
          */
-        for(Search search : searches) {
-            if(search.getAddress().equals(SpringJPABootstrap.SAMPLE_ADDRESS) && search.getUser()
-                    .getUsername().equals(userNameToFind)) {
-                sampleAddressNotFound = false;
-                break;
-            }
+        if(searches.size() > 0) {
+            return ;
         }
 
         if(sampleAddressNotFound) {
