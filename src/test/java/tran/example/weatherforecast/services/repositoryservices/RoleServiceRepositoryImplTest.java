@@ -93,7 +93,7 @@ public class RoleServiceRepositoryImplTest {
         role.setRole(SpringJPABootstrap.USER);
         when(roleRepository.save(any(Role.class))).thenReturn(role);
         // when
-        Role savedRole = roleServiceRepository.saveOrUpdate(role);
+        Role savedRole = roleServiceRepository.update(role);
 
         // then
         assertNotNull(savedRole);
