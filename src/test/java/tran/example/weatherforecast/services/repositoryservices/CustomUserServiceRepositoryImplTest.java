@@ -93,7 +93,7 @@ public class CustomUserServiceRepositoryImplTest {
         when(userRepository.save(any(CustomUser.class))).thenReturn(user);
 
         // when
-        CustomUser savedUser = userServiceRepository.saveOrUpdate(user);
+        CustomUser savedUser = userServiceRepository.save(user);
 
         // then
         assertNotNull(savedUser);
