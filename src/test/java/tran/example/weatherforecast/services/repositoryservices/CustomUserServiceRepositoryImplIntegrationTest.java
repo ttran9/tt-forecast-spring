@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.CustomUser;
 import tran.example.weatherforecast.exceptions.NotFoundException;
 import tran.example.weatherforecast.repositories.CustomUserRepository;
@@ -59,6 +60,24 @@ public class CustomUserServiceRepositoryImplIntegrationTest {
     }
 
     /**
+     * This will attempt to save a user with an existing user name, this is expected to return a
+     * null CustomUser object.
+     */
+    @Test
+    public void saveAlreadyExistingUser() {
+        // given
+        CustomUser user = new CustomUser();
+        user.setUsername(SpringJPABootstrap.MWESTON);
+        user.setPassword(SpringJPABootstrap.PASSWORD);
+
+        // when
+        CustomUser nullUser = userServiceRepository.save(user);
+
+        // then
+        assertNull(nullUser);
+    }
+
+    /**
      * This test will attempt to modify a user field and it is expected that this value will
      * differ once it has been updated from the prior stored value.
      */
@@ -70,7 +89,7 @@ public class CustomUserServiceRepositoryImplIntegrationTest {
         Date currentDate = new Date();
         user.setLastUpdated(currentDate);
         // when
-        CustomUser updatedUser = userServiceRepository.saveOrUpdate(user);
+        CustomUser updatedUser = userServiceRepository.update(user);
         Date updatedTime = updatedUser.getLastUpdated();
         // then
         assertEquals(currentDate.toString(), updatedTime.toString());
