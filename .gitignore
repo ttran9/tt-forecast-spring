@@ -24,6 +24,3 @@
 /nbdist/
 /.nb-gradle/
 
-
-### property files ###
-src/main/resources/application-production.yml
