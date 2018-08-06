@@ -1,6 +1,6 @@
 # Weather-Forecast Prototype
 - Codecov test coverage:
-![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/heroku-upload/graph/badge.svg)
+![codecov](https://codecov.io/gh/ttran9/tt-forecast-spring/branch/master/graph/badge.svg)
     
 - CircleCI build status:
 ![CircleCI](https://circleci.com/gh/ttran9/tt-forecast-spring.svg?style=svg)
@@ -16,9 +16,7 @@ built in both [Ruby (using Rails with tests)](https://github.com/ttran9/rails-we
 
 # Summary of this branch
 
-- This branch is just modifying some files for upload to Heroku.
-    - This is uploading to the cloud, something similar is expected to be done in a production 
-    environment.
+- Latest update is merging in the credentials for the production environment.
 
 # Docker Information (for using the database in development mode)
 
