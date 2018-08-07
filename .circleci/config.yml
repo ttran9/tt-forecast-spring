@@ -128,7 +128,7 @@ jobs:
       - run:
           command: |
             psql -h 127.0.0.1 -U postgres -d forecast_production -c "CREATE USER ${FORECAST_PRODUCTION_DS_USERNAME}
-            WITH PASSWORD ${FORECAST_PRODUCTION_DS_PASSWORD};"
+            WITH PASSWORD '${FORECAST_PRODUCTION_DS_PASSWORD}';"
       - run:
           command: |
             psql -h 127.0.0.1 -U postgres -d forecast_production -c "REVOKE CREATE ON SCHEMA public FROM
