@@ -19,6 +19,7 @@ import tran.example.weatherforecast.repositories.SearchRepository;
 import tran.example.weatherforecast.services.geocodeservices.GoogleGeocodeService;
 import tran.example.weatherforecast.services.security.UserAuthenticationService;
 
+import javax.swing.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -81,7 +82,8 @@ public class SearchServiceImplIntegrationTest {
     @Test()
     public void getSearchesByUserId() {
         int expectedNumberOfSearchesByUser = 5;
-        Long userId = 1L;
+        // don't hard-code the user ID in.
+        Long userId = userRepository.findByUsername(SpringJPABootstrap.MWESTON).getId();
         int firstPage = 0; // 0th based index.
         // given
 
@@ -149,7 +151,7 @@ public class SearchServiceImplIntegrationTest {
     public void saveSearch() {
         // given
         String enteredAddress = SpringJPABootstrap.STONERIDGE_MALL_RD_SAMPLE_ADDRESS;
-        Long userId = 1L;
+        Long userId = userRepository.findByUsername(SpringJPABootstrap.MWESTON).getId();
         Search search = new Search();
         search.setAddress(enteredAddress);
 
