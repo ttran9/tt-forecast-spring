@@ -36,7 +36,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
     /**
      * Sample password (not a recommended password)
      */
-    public static final String PASSWORD = "password";
+    public static final String PASSWORD = System.getenv("mweston_password") != null ? System.getenv
+            ("mweston_password"): "password";
     /**
      * A user that doesn't make searches but has a role.
      */
@@ -44,7 +45,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
     /**
      * The password for this test account
      */
-    public static final String TEST_ACCOUNT_PASSWORD = "samplepw";
+    public static final String TEST_ACCOUNT_PASSWORD = System.getenv("test_account_password") !=
+            null ? System.getenv("test_account_password"): "samplepw";
     /**
      * The address to make a sample search and forecast research for.
      */
