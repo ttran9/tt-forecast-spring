@@ -15,7 +15,7 @@ spring:
 #              create-target: src/main/scripts/schemacreate.sql
   datasource:
     platform: postgres
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${FORECAST_PRODUCTION_DS_URL}
+    username: ${FORECAST_PRODUCTION_DS_USERNAME}
+    password: ${FORECAST_PRODUCTION_DS_PASSWORD}
     driverClassName: org.postgresql.Driver
