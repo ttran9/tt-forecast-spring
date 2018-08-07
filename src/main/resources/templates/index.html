@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="/headcontent :: metaContent"></th:block>
-    <th:block th:include="/headcontent :: titleContent"></th:block>
-    <th:block th:include="/headcontent :: bootstrapCss"></th:block>
-    <th:block th:include="/headcontent :: baseCss"></th:block>
-    <th:block th:include="/headcontent :: javascriptContent"></th:block>
+    <th:block th:include="headcontent :: metaContent"></th:block>
+    <th:block th:include="headcontent :: titleContent"></th:block>
+    <th:block th:include="headcontent :: bootstrapCss"></th:block>
+    <th:block th:include="headcontent :: baseCss"></th:block>
+    <th:block th:include="headcontent :: javascriptContent"></th:block>
 </head>
 <body>
-    <th:block th:include="/navigationcontent :: navigationContent"></th:block>
+    <th:block th:include="navigationcontent :: navigationContent"></th:block>
 
     <div class="container separator">
         <form th:action="@{/searches/search_result}" th:object="${search}" method="POST">
