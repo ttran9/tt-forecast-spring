@@ -21,9 +21,7 @@ import tran.example.weatherforecast.bootstrap.SpringJPABootstrap;
 import tran.example.weatherforecast.domain.Search;
 import tran.example.weatherforecast.repositories.SearchRepository;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -180,7 +178,7 @@ public class SearchControllerIntegrationTest {
      */
     @Test
     public void processSearchForForecastWithValidAddress() throws Exception {
-        long expectedSearchId = searchRepository.count() + 1;
+        long expectedSearchId = getLastSearchId() + 1;
         String expectedViewReturn = SearchController.REDIRECT + ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING + SearchController.FIRST_PARAMETER_SEPARATOR +
                 ForecastController.SEARCH_PARAMETER + SearchController.PARAMETER_KEY_VALUE_SEPARATOR
@@ -214,7 +212,7 @@ public class SearchControllerIntegrationTest {
      */
     @Test
     public void processSearchForForecastWithInvalidAddress() throws Exception {
-        long expectedSearchId = searchRepository.count() + 1;
+        long expectedSearchId = getLastSearchId() + 1;
         String expectedViewReturn = SearchController.REDIRECT + ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING + SearchController.FIRST_PARAMETER_SEPARATOR +
                 ForecastController.SEARCH_PARAMETER + SearchController.PARAMETER_KEY_VALUE_SEPARATOR
@@ -234,7 +232,7 @@ public class SearchControllerIntegrationTest {
     @Test
     public void processSearchForForecastWhileLoggedIn() throws Exception {
         logUserIn();
-        Long expectedSearchId = searchRepository.count() + 1;
+        Long expectedSearchId = getLastSearchId() + 1;
         String expectedViewReturn = SearchController.REDIRECT + ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING + SearchController.FIRST_PARAMETER_SEPARATOR +
                 ForecastController.SEARCH_PARAMETER + SearchController.PARAMETER_KEY_VALUE_SEPARATOR
@@ -272,7 +270,7 @@ public class SearchControllerIntegrationTest {
     @Test
     public void processSearchForeCastWhileLoggedInWithInvalidAddress() throws Exception {
         logUserIn();
-        Long expectedSearchId = searchRepository.count() + 1;
+        Long expectedSearchId = getLastSearchId() + 1;
         String expectedViewReturn = SearchController.REDIRECT + ForecastController.BASE_URL +
                 ForecastController.HOURLY_FORECASTS_MAPPING + SearchController.FIRST_PARAMETER_SEPARATOR +
                 ForecastController.SEARCH_PARAMETER + SearchController.PARAMETER_KEY_VALUE_SEPARATOR
@@ -308,4 +306,20 @@ public class SearchControllerIntegrationTest {
                         authorities));
     }
 
+    /**
+     * A convenience method (after using multiple profiles) I noticed that sometimes the search
+     * IDs would be inconsistent and skip some values so this method will get the id of the last
+     * search stored and return that if there are no searches then return -1 but this is not
+     * expected to occur because data will be generated for the profile(s) expected to run this
+     * test.
+     * @return The id of the last search, if not present return -1 (an invalid value).
+     */
+    private Long getLastSearchId() {
+        List<Search> searches = (List<Search>) searchRepository.findAll();
+        Optional<Search> searchOptional = searches.stream().skip(searches.size() - 1).findFirst();
+        if(searchOptional.isPresent()) {
+            return searchOptional.get().getId();
+        }
+        return -1L;
+    }
 }
